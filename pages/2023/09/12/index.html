@@ -55,6 +55,22 @@
       <input type="range" min="0" max="100" value="10">
       <input type="range" min="0" max="100" value="0">
     </main>
+    <script>
+      const inputs = document.querySelectorAll('input[type=range]');
+      const [input] = inputs
+
+      const step = () => {
+        for (let i = 0; i < inputs.length; i++) {
+          const input = inputs[i]
+          const value = parseInt(input.value)
+          const nextValue = Math.random(0, 100) * 3
+          input.value = nextValue
+        }
+        window.requestAnimationFrame(step)
+      }
+
+      window.requestAnimationFrame(step)
+    </script>
   </body>
 
 </html>
