@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>zero consumption</title>
+    <style>
+      body {
+        margin: 0px;
+        display: flex;
+        justify-content: center;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 2rem;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        padding: 5vh;
+      }
+
+      .fade {
+        animation: in-and-out 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes in-and-out {
+        from {
+          opacity: 1;
+        }
+
+        to {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div>
+        <span>zero</span>
+      </div>
+      <div>
+        <span class="fade">con</span>sum<span class="fade">ption</span>
+      </div>
+    </main>
+  </body>
+
+</html>
