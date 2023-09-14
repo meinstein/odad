@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="2023/09/14">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>🔫🇺🇸💊💵</title>
+    <style>
+      main {
+        font-size: 3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        margin: 0px;
+      }
+
+      @keyframes in-and-out {
+        from {
+          scale: 0;
+        }
+
+        to {
+          scale: 1;
+        }
+      }
+
+      .pulse {
+        scale: 0;
+        animation: in-and-out 1.5s ease-in-out infinite alternate;
+        position: absolute;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <audio controls>
+        <source
+          src="./podcast_21830_nzz_akzent_episode_1204955_unterwegs_bei_den_gangs_in_chicago.mp3"
+          type="audio/mpeg">
+      </audio>
+      <div>
+        <span class="pulse">🔫</span>
+        <span class="pulse">🇺🇸</span>
+        <span class="pulse">💊</span>
+        <span class="pulse">💵</span>
+      </div>
+    </main>
+    <script>
+      const emojis = document.querySelectorAll('.pulse');
+      emojis.forEach((emoji, index) => {
+        emoji.style.animationDelay = `${index * 0.5}s`;
+      });
+    </script>
+  </body>
+
+</html>
