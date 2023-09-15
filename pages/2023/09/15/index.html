@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 50px);
+        grid-gap: 5px;
+      }
+
+      .tile {
+        display: relative;
+        height: 50px;
+        width: 50px;
+      }
+
+      .side {
+        position: absolute;
+        height: 50px;
+        width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backface-visibility: hidden;
+        text-transform: uppercase;
+        font-family: 'helvetica';
+        font-weight: bold;
+        font-size: 32px;
+        color: white;
+      }
+
+      @keyframes rotate-animation-front {
+        from {
+          transform: rotateX(0deg);
+        }
+
+        to {
+          transform: rotateX(360deg);
+        }
+      }
+
+      @keyframes rotate-animation-back {
+        from {
+          transform: rotateX(-180deg);
+        }
+
+        to {
+          transform: rotateX(180deg);
+        }
+      }
+
+
+      .rotate-front {
+        animation: rotate-animation-front 2.5s ease-in-out infinite;
+      }
+
+      .rotate-back {
+        animation: rotate-animation-back 2.5s ease-in-out infinite;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="grid"></div>
+    </main>
+    <script>
+      const wrong = {
+        0: 'w',
+        1: 'r',
+        2: 'o',
+        3: 'n',
+        4: 'g'
+      }
+      const right = {
+        0: 'r',
+        1: 'i',
+        2: 'g',
+        3: 'h',
+        4: 't'
+      }
+
+      const tiles = [...new Array(30)].map((_, i) => {
+        const row = Math.floor(i / 5)
+        const col = i % 5
+        return { row, col }
+      }).map(({ row, col }) => {
+        const tile = document.createElement('div')
+
+        const back = document.createElement('div')
+        back.classList.add('side')
+        back.classList.add('rotate-back')
+        back.style.animationDelay = `${Math.sin(row * 0.25)}s`
+        back.innerHTML = wrong[col]
+        back.style.backgroundColor = '#c9b458'
+        tile.appendChild(back)
+
+        const front = document.createElement('div')
+        front.classList.add('side')
+        front.classList.add('rotate-front')
+        front.innerHTML = right[col]
+        front.style.animationDelay = `${Math.sin(row * 0.25)}s`
+        front.style.backgroundColor = '#538d4e'
+        tile.appendChild(front)
+
+
+        tile.classList.add('tile')
+        tile.classList.add(`row-${row}`)
+
+
+        return tile
+      })
+
+      const grid = document.querySelector('.grid')
+      tiles.forEach(tile => grid.appendChild(tile))
+    </script>
+  </body>
+
+</html>
