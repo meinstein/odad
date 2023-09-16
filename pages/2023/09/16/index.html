@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>tic tac toe</title>
+    <style>
+      main {
+        display: grid;
+        grid-template-columns: repeat(3, 50px);
+        grid-gap: 2px;
+      }
+
+      .box {
+        background-color: #000;
+        width: 50px;
+        height: 50px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 32px;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      @keyframes animate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .box:nth-child(1) {
+        animation: animate 1s linear infinite reverse;
+        border: 2px solid #fff;
+      }
+
+      .box:nth-child(5) {
+        animation: animate 1s linear infinite;
+        border: 2px solid #fff;
+      }
+
+      .box:nth-child(9) {
+        animation: animate 1s linear infinite reverse;
+        border: 2px solid #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="box">❌</div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box">🍆</div>
+      <div class="box">❌</div>
+      <div class="box">🍆</div>
+      <div class="box">🍆</div>
+      <div class="box"></div>
+      <div class="box">❌</div>
+    </main>
+    <script>
+    </script>
+  </body>
+
+</html>
