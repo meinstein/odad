@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>me$merizing</title>
+    <title>these colors don't run</title>
     <style>
       main {
         position: relative;
@@ -118,7 +118,10 @@
       </div>
     </main>
     <script>
-      // add js here
+      const masks = document.querySelectorAll('.mask');
+      masks.forEach((mask, idx) => {
+        mask.style.animationDuration = `${Math.cos(idx)}s`;
+      })
     </script>
   </body>
 
