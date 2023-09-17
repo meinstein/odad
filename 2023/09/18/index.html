@@ -7,15 +7,73 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>👀</title>
     <style>
-      /* add styles here */
+      #line {
+        fill: none;
+        stroke: black;
+        stroke-width: 2px;
+        stroke-opacity: 0.85;
+      }
+
+      #outer-circle {
+        fill: salmon;
+        opacity: 0.5;
+      }
+
+      #inner-circle {
+        fill: salmon;
+        opacity: 0.5;
+      }
     </style>
   </head>
 
   <body>
+    <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <path id="line" />
+      <circle id="outer-circle" cx="150" cy="150" r="25"></circle>
+      <circle id="inner-circle" cx="150" cy="150" r="45"></circle>
+    </svg>
     <script>
-      // add js here
+
+      const getPathData = () => {
+        const data = [];
+        for (let i = 0; i < 50; i++) {
+          const angle = i * Math.PI * 2 / 20;
+          const x = Math.cos(angle) * 100 + 150;
+          const y = Math.sin(angle) * 100 + 150;
+          data.push([x, y]);
+        }
+        return data;
+      }
+
+      const data = getPathData();
+
+      const drawLine = (data) => {
+        const line = document.getElementById('line');
+
+        const d = data.reduce((acc, point, i) => {
+          const cmd = i === 0 ? 'M' : 'L';
+          return `${acc} ${cmd} ${point[0]} ${point[1]}`;
+        }, '');
+
+        line.setAttribute('d', d);
+      }
+
+      drawLine(data);
+
+      updateLine = (duration = 0) => {
+        const newData = data.map((point) => {
+          const x = point[0] + Math.sin(duration) + Math.random() * 5;
+          const y = point[1] + Math.cos(duration) - Math.random() * 5;
+          return [x, y];
+        });
+
+        drawLine(newData)
+        setTimeout(() => requestAnimationFrame(updateLine), 100);
+      }
+
+      updateLine()
     </script>
   </body>
 
