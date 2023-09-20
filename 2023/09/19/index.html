@@ -74,7 +74,7 @@
         transform: translateY(640px);
       }
 
-      .video {
+      .gif {
         width: 360px;
         height: 640px;
         object-fit: cover;
@@ -87,9 +87,7 @@
       <div id="outline">
         <div id="notch"></div>
         <div class="slide">
-          <video class="video" muted autoplay>
-            <source src="./smoking.mp4" type="video/mp4" />
-          </video>
+          <img class="gif" src="./smoking.gif" />
         </div>
       </div>
     </main>
@@ -110,12 +108,16 @@
 
       const onAnimationStart = (event) => {
         const prevSlide = event.target;
-        console.log('FOOOO')
         const nextSlide = prevSlide.cloneNode(true);
+        // get img child
+        const [img] = nextSlide.children;
+        // restart the GIF with this hack
+        const srcUrl = new URL(img.src);
+        srcUrl.searchParams.set('t', Date.now());
+        img.src = srcUrl.toString();;
         nextSlide.addEventListener('animationstart', onAnimationStart);
         nextSlide.addEventListener('animationend', onAnimationEnd);
-        // nextSlide.style.animation = `slide-in 4s linear`;
-        nextSlide.style.animationDelay = '1.6s';
+        nextSlide.style.animationDelay = '1.65s';
         outline.appendChild(nextSlide);
 
       }
@@ -126,14 +128,12 @@
       }
 
 
-      const [firstVideo] = document.querySelectorAll('video');
+      const [firstGif] = document.querySelectorAll('.gif');
 
-      firstVideo.addEventListener('canplaythrough', (event) => {
-        const video = event.target;
+      firstGif.addEventListener('load', (event) => {
         const slide = event.target.parentElement;
-        // add the animation to the slide after the video is ready to play
-        slide.style.animation = `slide-in 4s linear`;
-        video.play();
+        // add the animation to the slide after the img is loaded
+        slide.style.animation = `slide-in 4s ease-in`;
       });
 
     </script>
