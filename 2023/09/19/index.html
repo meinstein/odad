@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      main {
+        padding: 10px;
+      }
+
+      #outline {
+        position: relative;
+        width: 360px;
+        height: 640px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: black;
+        z-index: 0;
+      }
+
+      #notch {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        width: 120px;
+        height: 16px;
+        background-color: black;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+
+      @keyframes slide-in {
+        0% {
+          transform: translateY(640px);
+        }
+
+        20% {
+          transform: translateY(0);
+        }
+
+        40% {
+          transform: translateY(0);
+        }
+
+        60% {
+          transform: translateY(-640px);
+        }
+
+        80% {
+          transform: translateY(-640px);
+        }
+
+        100% {
+          transform: translateY(-640px);
+        }
+      }
+
+      .slide {
+        overflow: hidden;
+        z-index: -1;
+        position: absolute;
+        transform: translateY(640px);
+      }
+
+      .video {
+        width: 360px;
+        height: 640px;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div id="outline">
+        <div id="notch"></div>
+        <div class="slide">
+          <video class="video" muted autoplay>
+            <source src="./smoking.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </main>
+    <script>
+      const outline = document.querySelector('#outline');
+
+      const [firstSlide] = document.querySelectorAll('.slide');
+
+
+      firstSlide.addEventListener('animationstart', (event) => {
+        onAnimationStart(event)
+      });
+
+      firstSlide.addEventListener('animationend', (event) => {
+        onAnimationEnd(event)
+      });
+
+
+      const onAnimationStart = (event) => {
+        const prevSlide = event.target;
+        console.log('FOOOO')
+        const nextSlide = prevSlide.cloneNode(true);
+        nextSlide.addEventListener('animationstart', onAnimationStart);
+        nextSlide.addEventListener('animationend', onAnimationEnd);
+        // nextSlide.style.animation = `slide-in 4s linear`;
+        nextSlide.style.animationDelay = '1.6s';
+        outline.appendChild(nextSlide);
+
+      }
+
+      const onAnimationEnd = (event) => {
+        const prevSlide = event.target;
+        prevSlide.remove();
+      }
+
+
+      const [firstVideo] = document.querySelectorAll('video');
+
+      firstVideo.addEventListener('canplaythrough', (event) => {
+        const video = event.target;
+        const slide = event.target.parentElement;
+        // add the animation to the slide after the video is ready to play
+        slide.style.animation = `slide-in 4s linear`;
+        video.play();
+      });
+
+    </script>
+  </body>
+
+</html>
