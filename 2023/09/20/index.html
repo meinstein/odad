@@ -7,18 +7,66 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>🍩</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        margin: 16px;
+      }
+
+      #canvas {
+        position: relative;
+        margin: 50px;
+      }
+
+      .emoji {
+        position: absolute;
+        font-size: 72px;
+        transform: scale(1);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(0.95);
+        }
+
+        70% {
+          transform: scale(1);
+        }
+
+        100% {
+          transform: scale(0.95);
+        }
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <!-- add main content here -->
+      <div id="canvas"></div>
     </main>
     <script>
-      // add js here
+      const canvas = document.getElementById('canvas');
+
+      const list = [...new Array(100)]
+
+      // add emojis in streaking fashion across main
+      list.forEach((_, index) => {
+        const cos = Math.cos(index);
+        const sin = Math.sin(index);
+        const emoji = document.createElement('span');
+        emoji.classList.add('emoji');
+        emoji.textContent = '🍩';
+        emoji.style.left = `${cos * 100 + 50}px`;
+        emoji.style.top = `${sin * 100 + 50}px`;
+        emoji.style.animation = `pulse ${Math.max(Math.random() * 2, 0.5)}s ease-in-out infinite`;
+        canvas.appendChild(emoji);
+      });
+
     </script>
   </body>
 
