@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      img {
+        position: absolute;
+        width: 350px;
+        height: 450px;
+      }
+
+      svg {
+        position: absolute;
+        width: 350px;
+        height: 450px;
+      }
+
+      path {
+        animation: dash 10s ease infinite alternate-reverse;
+      }
+
+      @keyframes dash {
+        from {
+          stroke-dasharray: 1000;
+        }
+
+        to {
+          stroke-dasharray: 100;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <img src="./orange_and_tan.jpeg" alt="">
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '350');
+      svg.setAttribute('height', '450');
+      svg.setAttribute('viewBox', '0 0 350 450');
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M 20 12 L 327 12 L 327 200 L 20 200 L 20 12 Z');
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', 'black');
+      path.setAttribute('stroke-width', '4');
+      path.setAttribute('stroke-dasharray', '1000');
+      path.setAttribute('stroke-dashoffset', '1000');
+      path.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('stroke-linejoin', 'round');
+      path.setAttribute('stroke-opacity', '0.75');
+      svg.appendChild(path);
+      main.appendChild(svg);
+    </script>
+  </body>
+
+</html>
