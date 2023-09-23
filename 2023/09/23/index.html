@@ -7,18 +7,107 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>hemogoblin</title>
     <style>
-      /* add styles here */
+      /* animate the path  */
+      path {
+        animation: dash 5s linear infinite;
+        /* animation: dash 5s linear; */
+      }
+
+      @keyframes dash {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      /* animate the svg rotation */
+      @keyframes rotate {
+        to {
+          transform: rotate(360deg);
+
+        }
+      }
+
+      /* make the entire svg pulsate a bit */
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.005);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+
+      svg {
+        animation: pulse 1s ease-in-out infinite;
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <!-- add main content here -->
+
     </main>
     <script>
-      // add js here
+      // create svg element that is 350 by 600 pixels and add to main
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", 350);
+      svg.setAttribute("height", 600);
+      document.querySelector("main").appendChild(svg);
+
+      // create an array of 100 circles that are randomly placed in a circle
+      const points = [];
+
+      const radius = 150;
+      const centerX = 175;
+      const centerY = 175;
+
+      const NUMBER_OF_EDGES = 720;
+      const HALF = NUMBER_OF_EDGES / 2;
+
+      for (let i = 0; i < NUMBER_OF_EDGES; i++) {
+        const angle = (i / NUMBER_OF_EDGES) * Math.PI * 2;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        points.push([x, y]);
+      }
+
+
+      // add paths between opposite points
+      for (let i = 0; i < points.length / 2; i++) {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        // add random bezier curve bend to center of the path
+        const bendX = Math.random() * 75 - 50;
+        const bendY = Math.random() * 75 - 50;
+
+        if (Math.random() > 0.5) {
+          path.setAttribute("d", `M ${points[i][0]} ${points[i][1]} Q ${centerX + bendX} ${centerY + bendY} ${points[i + HALF][0]} ${points[i + HALF][1]}`);
+        } else {
+          // draw from the other side
+          path.setAttribute("d", `M ${points[i + HALF][0]} ${points[i + HALF][1]} Q ${centerX + bendX} ${centerY + bendY} ${points[i][0]} ${points[i][1]}`);
+        }
+
+        const length = path.getTotalLength();
+        path.setAttribute("stroke-dasharray", `${length} ${length}`);
+        path.setAttribute("stroke-dashoffset", length);
+        path.setAttribute("stroke", Math.random() > 0.5 ? "indianred" : "steelblue");
+        path.setAttribute("stroke-width", Math.random() * 5 + 2);
+        path.setAttribute("fill", "rgba(0,0,0,0.5)");
+        path.setAttribute("stroke-linecap", "round");
+        path.style.animationDuration = `${Math.max(Math.random() * 8, 1)}s`;
+        path.style.animationDirection = Math.random() > 0.5 ? "alternate" : "alternate-reverse";
+        svg.appendChild(path);
+      }
+
+
+
     </script>
   </body>
 
