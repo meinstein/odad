@@ -7,12 +7,10 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>hemogoblin</title>
+    <title>throughput</title>
     <style>
-      /* animate the path  */
       path {
         animation: dash 5s linear infinite;
-        /* animation: dash 5s linear; */
       }
 
       @keyframes dash {
@@ -36,19 +34,18 @@
 
     </main>
     <script>
-      // create svg element that is 350 by 600 pixels and add to main
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svg.setAttribute("width", 350);
       svg.setAttribute("height", 600);
       document.querySelector("main").appendChild(svg);
 
-      // create an array of 100 circles that are randomly placed in a circle
       const points = [];
 
       const radius = 150;
       const centerX = 175;
       const centerY = 175;
 
+      // anything more than 270 edges will cause the browser degredation, especially on mobile
       const NUMBER_OF_EDGES = 270;
       const HALF = NUMBER_OF_EDGES / 2;
 
@@ -58,6 +55,7 @@
         const y = centerY + radius * Math.sin(angle);
         points.push([x, y]);
       }
+
 
 
       // add paths between opposite points
@@ -78,16 +76,13 @@
         path.setAttribute("stroke-dasharray", `${length} ${length}`);
         path.setAttribute("stroke-dashoffset", length);
         path.setAttribute("stroke", Math.random() > 0.5 ? "indianred" : "steelblue");
-        path.setAttribute("stroke-width", Math.random() * 5 + 2);
+        path.setAttribute("stroke-width", Math.random() * 5 + 2.5);
         path.setAttribute("fill", "rgba(0,0,0,0.5)");
         path.setAttribute("stroke-linecap", "round");
         path.style.animationDuration = `${Math.max(Math.random() * 8, 1)}s`;
         path.style.animationDirection = Math.random() > 0.5 ? "alternate" : "alternate-reverse";
         svg.appendChild(path);
       }
-
-
-
     </script>
   </body>
 
