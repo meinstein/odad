@@ -10,8 +10,29 @@
     <title>where's the bread?</title>
     <style>
       @keyframes dash {
-        to {
-          stroke-dashoffset: 1000;
+        0% {
+          stroke-dashoffset: 100%;
+          stroke-opacity: 0;
+        }
+
+        10% {
+          stroke-dashoffset: 90%;
+          stroke-opacity: 0.5;
+        }
+
+        50% {
+          stroke-dashoffset: 0%;
+          stroke-opacity: 0.5;
+        }
+
+        90% {
+          stroke-dashoffset: -90%;
+          stroke-opacity: 0.5;
+        }
+
+        100% {
+          stroke-dashoffset: -100%;
+          stroke-opacity: 0;
         }
       }
     </style>
@@ -64,17 +85,19 @@
 
       const addPath = ({ x1, y1, x2, y2 }) => {
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('stroke', 'black');
-        path.setAttribute('stroke-width', '5');
+        path.setAttribute('stroke', 'indianred');
+        path.setAttribute('stroke-width', '8');
         path.setAttribute('stroke-linecap', 'round');
         path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-opacity', '0')
         path.setAttribute('d', `M${x1},${y1} L${x2},${y2}`);
-        const length = path.getTotalLength();
-        path.setAttribute('stroke-dasharray', length);
-        path.setAttribute('stroke-dashoffset', length);
+        // const length = path.getTotalLength();
+        path.setAttribute('stroke-dasharray', '100%');
+        path.setAttribute('stroke-dashoffset', '100%');
         path.style.animationName = 'dash';
-        path.style.animationDuration = `${Math.max(length * 2, 1000)}ms`;
+        path.style.animationDuration = `${Math.min(Math.random() * 3000), 1500}ms`;
         path.style.animationTimingFunction = 'linear';
+        path.style.animationDelay = '200ms';
         addAnimationEnd(path);
         svg.appendChild(path);
       }
@@ -89,6 +112,16 @@
 
         // make sure the new point is not the same as the previous point
         while (x1 === x2 && y1 === y2) {
+          ({ x: x2, y: y2 } = getRandPoint());
+        }
+
+        // has to be on a different grid line
+        while (x1 === x2 || y1 === y2) {
+          ({ x: x2, y: y2 } = getRandPoint());
+        }
+
+        // cannot be further than 4 grid lines away
+        while (Math.abs(x1 - x2) > gridWidth * 4 || Math.abs(y1 - y2) > gridHeight * 4) {
           ({ x: x2, y: y2 } = getRandPoint());
         }
 
