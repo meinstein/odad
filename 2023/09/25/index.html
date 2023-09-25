@@ -31,13 +31,15 @@
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('width', '350');
       svg.setAttribute('height', '350');
+      // give svg canvas a light blue background color
+      svg.setAttribute('style', 'background-color: lightblue');
       main.appendChild(svg);
 
 
       // add 10 sin waves to svg
       const addWave = (x, y, width, height, fill) => {
         const wave = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        wave.setAttribute('d', `M${x},${y} Q${x + width / 4},${y + height / 2} ${x + width / 2},${y} T${x + width},${y}`);
+        wave.setAttribute('d', `M${x},${y} Q${x + width / 4},${Math.sin(y + height / 2)} ${x + width / 2},${y} T${x + width},${y}`);
         wave.setAttribute('fill', 'none');
         wave.setAttribute('stroke', fill);
         // random stroke width
@@ -47,18 +49,29 @@
         wave.setAttribute('stroke-dasharray', length);
         wave.setAttribute('stroke-dashoffset', length);
         wave.style.animationName = 'wave';
-        wave.style.animationDuration = `${Math.max(Math.random() * 10000, 2000)}ms`;
+        wave.style.animationDuration = `${Math.max(Math.random() * 10000, 3000)}ms`;
         // random timing function
         const timingFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'];
         wave.style.animationTimingFunction = timingFunctions[Math.floor(Math.random() * timingFunctions.length)];
         // infinite animation
         wave.style.animationIterationCount = 'infinite';
+        // alternative-reverse animation direction
+        wave.style.animationDirection = 'alternate-reverse';
+
         svg.appendChild(wave);
       }
 
       for (let i = 0; i < 100; i++) {
         addWave(0, i * 5, 350, 300, 'black');
       }
+
+      // add a white circle to the bottom left of the wave
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', 87);
+      circle.setAttribute('cy', 310);
+      circle.setAttribute('r', 25);
+      circle.setAttribute('fill', 'white');
+      svg.appendChild(circle);
 
 
     </script>
