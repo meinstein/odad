@@ -29,82 +29,67 @@
     <script>
       const WIDTH = 350;
       const HEIGHT = 350;
-
+      let POINTS = [];
+      const FILL = 'lawngreen'
       // create a square svg element
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svg.setAttribute('width', WIDTH);
-      svg.setAttribute('height', HEIGHT);
-      svg.setAttribute('viewBox', `0 0 ${WIDTH} ${HEIGHT}`);
-      svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      svg.setAttribute('version', '1.1');
-      svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-      document.querySelector('main').appendChild(svg);
 
-      // create a list of points in a grid layout across the entire svg element
-      const points = [];
-      const gridSize = 10;
-      const gridWidth = WIDTH / gridSize;
-      const gridHeight = HEIGHT / gridSize;
-
-      for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-          points.push({
-            x: i * gridWidth + 10,
-            y: j * gridHeight + 10
-          });
-        }
-      }
-
-      // add the points to the svg element
-      points.forEach(point => {
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', point.x);
-        circle.setAttribute('cy', point.y);
-        circle.setAttribute('r', '5');
-        circle.setAttribute('fill', 'none');
-        circle.setAttribute('stroke', 'black');
-        circle.setAttribute('stroke-width', '2')
-        svg.appendChild(circle);
-
-      });
 
       const addPath = ({ x1, y1, x2, y2 }) => {
         // find the existing circle at the x1 and x2 coordinates
         const existingCircle = svg.querySelector(`circle[cx="${x1}"][cy="${y1}"]`);
-        existingCircle.setAttribute('fill', 'lawngreen');
+        existingCircle.setAttribute('fill', FILL);
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('stroke', 'lawngreen');
+        path.setAttribute('stroke', FILL);
         path.setAttribute('stroke-width', '8');
-        path.setAttribute('stroke-linecap', 'round');
         path.setAttribute('fill', 'none');
-        // path.setAttribute('stroke-opacity', '0')
+        path.setAttribute('stroke-linecap', 'round');
         path.setAttribute('d', `M${x1},${y1} L${x2},${y2}`);
         const length = path.getTotalLength();
         path.setAttribute('stroke-dasharray', length);
         path.setAttribute('stroke-dashoffset', length);
         path.style.animationName = 'dash';
-        path.style.animationDuration = `${Math.min(Math.random() * 3000), 1500}ms`;
+        path.style.animationDuration = `${length * 1.5}ms`;
         path.style.animationTimingFunction = 'linear';
-        path.style.animationDelay = '200ms';
         addAnimationEnd(path);
         svg.appendChild(path);
       }
 
+
       const getRandPoint = () => {
-        return points[Math.floor(Math.random() * points.length)];
+        return POINTS[Math.floor(Math.random() * POINTS.length)];
       }
 
       const addAnimationEnd = (path) => {
-        let { x: x2, y: y2 } = getRandPoint();
-        const { x2: x1, y2: y1 } = getEndPoint(path);
+        // if every circle is green, reset the svg
+        const circles = svg.querySelectorAll('circle');
+        const allGreen = Array.from(circles).every(circle => circle.getAttribute('fill') === FILL);
 
-        while ((x1 === x2 || y1 === y2)) {
+        if (allGreen) {
+          // select all paths and remove them
+          const paths = svg.querySelectorAll('path');
+          paths.forEach(path => path.remove());
+          reset()
+          return
+        }
+
+
+        let { x: x2, y: y2 } = getRandPoint();
+
+        // get circle at rand point
+        let existingCircle = svg.querySelector(`circle[cx="${x2}"][cy="${y2}"]`);
+
+        // if the existing circle is green, get a new rand point
+        while (existingCircle.getAttribute('fill') === FILL) {
           ({ x: x2, y: y2 } = getRandPoint());
+          existingCircle = svg.querySelector(`circle[cx="${x2}"][cy="${y2}"]`);
         }
 
         path.addEventListener('animationend', (event) => {
+          const { x2: x1, y2: y1 } = getEndPoint(path);
           addPath({ x1, y1, x2, y2 });
+          // remove the path
           event.target.remove();
         });
       }
@@ -118,6 +103,39 @@
       }
 
       init = () => {
+        svg.setAttribute('width', WIDTH);
+        svg.setAttribute('height', HEIGHT);
+        svg.setAttribute('viewBox', `0 0 ${WIDTH} ${HEIGHT}`);
+        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        svg.setAttribute('version', '1.1');
+        svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        document.querySelector('main').appendChild(svg);
+
+        const gridSize = 10;
+        const gridWidth = WIDTH / gridSize;
+        const gridHeight = HEIGHT / gridSize;
+
+        for (let i = 0; i < gridSize; i++) {
+          for (let j = 0; j < gridSize; j++) {
+            POINTS.push({
+              x: i * gridWidth + 10,
+              y: j * gridHeight + 10
+            });
+          }
+        }
+
+        // add the points to the svg element
+        POINTS.forEach(point => {
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', point.x);
+          circle.setAttribute('cy', point.y);
+          circle.setAttribute('r', '5');
+          circle.setAttribute('fill', 'none');
+          circle.setAttribute('stroke', 'black');
+          circle.setAttribute('stroke-width', '2')
+          svg.appendChild(circle);
+        });
+
         const pointA = getRandPoint();
         const pointB = getRandPoint();
 
@@ -127,6 +145,22 @@
           x2: pointB.x,
           y2: pointB.y
         });
+
+        const pointC = getRandPoint();
+        const pointD = getRandPoint();
+
+        addPath({
+          x1: pointC.x,
+          y1: pointC.y,
+          x2: pointD.x,
+          y2: pointD.y
+        });
+      }
+
+      const reset = () => {
+        svg.innerHTML = '';
+        POINTS = [];
+        init();
       }
 
       init();
