@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>big wave surfing</title>
+    <style>
+      @keyframes wave {
+        0% {
+          stroke-dashoffset: 0;
+        }
+
+        100% {
+          stroke-dashoffset: -1000;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+    </main>
+    <script>
+      // select main
+      const main = document.querySelector('main');
+      // add 350x350 svg element to main
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '350');
+      svg.setAttribute('height', '350');
+      main.appendChild(svg);
+
+
+      // add 10 sin waves to svg
+      const addWave = (x, y, width, height, fill) => {
+        const wave = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        wave.setAttribute('d', `M${x},${y} Q${x + width / 4},${y + height / 2} ${x + width / 2},${y} T${x + width},${y}`);
+        wave.setAttribute('fill', 'none');
+        wave.setAttribute('stroke', fill);
+        // random stroke width
+        wave.setAttribute('stroke-width', `${Math.max(Math.random() * 2, 1)}`);
+        // add dash array animation to each wave with random duration
+        const length = wave.getTotalLength();
+        wave.setAttribute('stroke-dasharray', length);
+        wave.setAttribute('stroke-dashoffset', length);
+        wave.style.animationName = 'wave';
+        wave.style.animationDuration = `${Math.max(Math.random() * 10000, 2000)}ms`;
+        // random timing function
+        const timingFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'];
+        wave.style.animationTimingFunction = timingFunctions[Math.floor(Math.random() * timingFunctions.length)];
+        // infinite animation
+        wave.style.animationIterationCount = 'infinite';
+        svg.appendChild(wave);
+      }
+
+      for (let i = 0; i < 100; i++) {
+        addWave(0, i * 5, 350, 300, 'black');
+      }
+
+
+    </script>
+  </body>
+
+</html>
