@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>nothing left</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+
+      @keyframes ripple {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+
+        100% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // add 20 concentric div circles here and add them to main
+      // the concentric circles should get smaller by 10px
+      // the concentric circles should have a 1px solid black border
+      // the concentric circles should have a light blue background color
+      // the concentric circles should be centered
+      // the concentric circles should be 100px apart
+      // the concentric circles should have a box shadow
+
+
+      const main = document.querySelector('main');
+      const SPACING = 10;
+
+      for (let i = 0; i < 20; i++) {
+        const div = document.createElement('div');
+        div.style.width = `${350 - i * SPACING}px`;
+        div.style.height = `${350 - i * SPACING}px`;
+        div.style.border = '1px solid black';
+        div.style.position = 'absolute';
+        div.style.top = `${i * SPACING}px`;
+        div.style.left = `${i * SPACING}px`;
+        div.style.borderRadius = '50%';
+
+        // add a ripple animation to each circle in order of size and position
+        div.style.animation = `ripple 1s ease-in-out ${i * 0.1}s infinite alternate`;
+
+        main.appendChild(div);
+      }
+
+
+
+    </script>
+  </body>
+
+</html>
