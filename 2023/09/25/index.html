@@ -42,16 +42,19 @@
         wave.setAttribute('d', `M${x},${y} Q${x + width / 4},${Math.sin(y + height / 2)} ${x + width / 2},${y} T${x + width},${y}`);
         wave.setAttribute('fill', 'none');
         wave.setAttribute('stroke', fill);
-        // random stroke width
-        wave.setAttribute('stroke-width', `${Math.max(Math.random() * 2, 1)}`);
+        // round tip
+        wave.setAttribute('stroke-linecap', 'round');
+        // the stroke width goes from 5 to 1 as the wave goes from the top to the bottom
+        wave.setAttribute('stroke-width', `${Math.max(6 - y / 100, 1)}`);
         // add dash array animation to each wave with random duration
         const length = wave.getTotalLength();
         wave.setAttribute('stroke-dasharray', length);
         wave.setAttribute('stroke-dashoffset', length);
         wave.style.animationName = 'wave';
-        wave.style.animationDuration = `${Math.max(Math.random() * 10000, 3000)}ms`;
+        // The duration of the animation goes from fast to flow
+        wave.style.animationDuration = `${Math.max(10 - y / 100, 3)}s`;
         // random timing function
-        const timingFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'];
+        const timingFunctions = ['linear'];
         wave.style.animationTimingFunction = timingFunctions[Math.floor(Math.random() * timingFunctions.length)];
         // infinite animation
         wave.style.animationIterationCount = 'infinite';
