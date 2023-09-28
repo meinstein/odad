@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ant farm</title>
+    <style>
+      @keyframes dash {
+        to {
+          stroke-dashoffset: 50;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 500;
+      // draw an svg that is 350px wide and 500px tall and attach it to main
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", WIDTH);
+      svg.setAttribute("height", HEIGHT);
+      document.querySelector("main").appendChild(svg);
+
+      // create a list of grid points that fills the entire svg
+      const gridPoints = [];
+      for (let x = 0; x < WIDTH; x += 10) {
+        for (let y = 0; y < HEIGHT; y += 10) {
+          gridPoints.push([x, y]);
+        }
+      }
+
+      console.log(gridPoints)
+      // draw a grid using the gridPoints
+      // use a combination of lines and paths and squares to do this
+      gridPoints.forEach((point, idx) => {
+        // get point
+        const [x, y] = point;
+        // get the neighbor from the same col
+        const colN = gridPoints[idx + 1];
+        // get the neightbor from the same row
+        const rowN = gridPoints[idx + HEIGHT / 10];
+        // draw a path from the current point to the col neighbor (and avoid drawing the line back to the top)
+        if (colN && colN[1] === y + 10) {
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          // path.setAttribute("d", `M ${x} ${y} L ${colN[0]} ${colN[1]}`);
+          // draw a bezier curve from the current point to the col neighbor
+          // path.setAttribute("d", `M ${x} ${y} Q ${x + 5} ${y + 5} ${colN[0]} ${colN[1]}`);
+          // draw a bezier curve from the current point to the col neighbor using some randomness
+          path.setAttribute("d", `M ${x} ${y} Q ${x + 5 + Math.random() * 20} ${y - 5 + Math.random() * 2} ${colN[0]} ${colN[1]}`);
+          path.setAttribute("stroke", "steelblue");
+          // random stroke width
+          path.setAttribute("stroke-width", Math.max(Math.random() * 3, 1));
+          // rounded
+          path.setAttribute("stroke-linecap", "round");
+          // random opacity
+          path.setAttribute("opacity", Math.random() * 0.5 + 0.5);
+          // no fill
+          path.setAttribute("fill", "none");
+
+          // randomly add a dash animation
+          if (Math.random() > 0.5) {
+            path.setAttribute("stroke-dasharray", Math.random() * 10);
+            path.setAttribute("stroke-dashoffset", Math.random() * 10);
+            path.style.animation = "dash 1s linear infinite forwards";
+            // add random animation delay
+            path.style.animationDelay = Math.random() * 2 + "s";
+          }
+
+          // random z-index
+          path.setAttribute("z-index", Math.random() * 100);
+
+
+          svg.appendChild(path);
+        }
+
+        // draw a path from the current point to the row neighbor
+        if (rowN) {
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          // path.setAttribute("d", `M ${x} ${y} L ${rowN[0]} ${rowN[1]}`);
+          // draw a bezier curve from the current point to the row neighbor
+          // path.setAttribute("d", `M ${x} ${y} Q ${x + 5} ${y + 5} ${rowN[0]} ${rowN[1]}`);
+          // draw a bezier curve from the current point to the row neighbor using some randomness
+          path.setAttribute("d", `M ${x} ${y} Q ${x + 5 + Math.random() * 2} ${y - 5 + Math.random() * 20} ${rowN[0]} ${rowN[1]}`);
+          path.setAttribute("stroke", "indianred");
+          // random stroke width
+          path.setAttribute("stroke-width", Math.max(Math.random() * 3, 1));
+          // rounded
+          path.setAttribute("stroke-linecap", "round");
+          // random z-index
+          path.setAttribute("z-index", Math.random() * 100);
+          // no fill
+          path.setAttribute("fill", "none");
+          svg.appendChild(path);
+        }
+
+        // draw a square at the current point
+        const square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        square.setAttribute("x", x);
+        square.setAttribute("y", y);
+        square.setAttribute("width", 10);
+        square.setAttribute("height", 10);
+        square.setAttribute("fill", "none");
+        // random stroke width
+        square.setAttribute("stroke-width", Math.max(Math.random() * 5, 1));
+        // random opacity
+        square.setAttribute("opacity", Math.random() * 0.5);
+        // random z-index
+        square.setAttribute("z-index", Math.random() * 100);
+        square.setAttribute("stroke", "black");
+        svg.appendChild(square);
+
+
+      })
+    </script>
+  </body>
+
+</html>
