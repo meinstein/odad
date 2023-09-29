@@ -7,9 +7,26 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>heart of gourd</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      @keyframes scale {
+        from {
+          transform: scale(1);
+        }
+
+        to {
+          transform: scale(1.05);
+        }
+      }
+
+      main div {
+        animation: scale 1s ease-in-out infinite alternate;
+      }
     </style>
   </head>
 
@@ -18,7 +35,26 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const main = document.querySelector('main');
+
+      const steps = [];
+      for (let i = 0; i < 20; i++) {
+        steps.push(i * 0.1);
+      }
+
+      steps.forEach((step, idx) => {
+        const circle = document.createElement('div');
+        circle.style.width = `${260 - step * 85}px`;
+        circle.style.height = `${260 - step * 115}px`;
+        circle.style.borderRadius = '50%';
+        circle.style.position = 'absolute';
+        circle.style.top = `${2 - step + 0.2 * 175}px`;
+        circle.style.left = `${2 - step + 1 * 30}px`;
+        const borderStyles = ['dashed', 'solid', 'dotted', 'double'];
+        circle.style.border = `1px ${borderStyles[idx % borderStyles.length]} black`;
+        circle.style.backgroundColor = `hsl(60, 100%, ${70 - step * 17}%)`;
+        main.appendChild(circle);
+      });
     </script>
   </body>
 
