@@ -7,9 +7,106 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>in the fold</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      @keyframes move1 {
+        0% {
+          left: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+
+        50% {
+          left: 5%;
+          background: white;
+          transform: scale(1.2) translate(-50%, -50%);
+        }
+
+        100% {
+          left: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+      }
+
+
+      @keyframes move2 {
+        0% {
+          top: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+
+        50% {
+          top: 5%;
+          background: white;
+          transform: scale(1.2) translate(-50%, -50%);
+
+        }
+
+        100% {
+          top: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+      }
+
+      @keyframes move3 {
+        0% {
+          left: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+
+        50% {
+          left: 95%;
+          background: white;
+          transform: scale(1.2) translate(-50%, -50%);
+        }
+
+        100% {
+          left: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+      }
+
+
+      @keyframes move4 {
+        0% {
+          top: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+
+        50% {
+          top: 95%;
+          background: white;
+          transform: scale(1.2) translate(-50%, -50%);
+        }
+
+        100% {
+          top: 50%;
+          background: black;
+          transform: scale(1) translate(-50%, -50%);
+        }
+      }
+
+      /* add animation that makes white circle scale up and down */
+      @keyframes scale {
+        from {
+          transform: scale(1) translate(-50%, -50%);
+        }
+
+        to {
+          transform: scale(1.45) translate(-50%, -50%);
+        }
+      }
     </style>
   </head>
 
@@ -18,7 +115,56 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      // select main
+      const main = document.querySelector('main');
+      const container = document.createElement('div');
+      container.style.width = '350px';
+      container.style.height = '350px';
+      container.style.position = 'relative';
+      container.style.backgroundColor = 'black';
+      main.appendChild(container);
+
+      // add a white circle to center of the container that is 175px wide and 175px tall
+      const circle = document.createElement('div');
+      circle.style.width = '175px';
+      circle.style.height = '175px';
+      circle.style.borderRadius = '50%';
+      circle.style.backgroundColor = 'white';
+      circle.style.position = 'absolute';
+      circle.style.top = '50%';
+      circle.style.left = '50%';
+      circle.style.transform = 'translate(-50%, -50%)';
+      // animate the white circle to scale up and down
+      circle.style.animation = 'scale 1s ease-in-out infinite alternate';
+      // add delay
+      circle.style.animationDelay = '0.5s';
+      // center point of the transform is the center of the circle
+      circle.style.transformOrigin = '0 0';
+      container.appendChild(circle);
+
+      // add a tiny white circle to the center of the container that is 10px wide and 10px tall
+      const tinyCircle = document.createElement('div');
+      tinyCircle.style.width = '10px';
+      tinyCircle.style.height = '10px';
+      tinyCircle.style.borderRadius = '50%';
+      tinyCircle.style.backgroundColor = 'black';
+      // add white border
+      tinyCircle.style.position = 'absolute';
+      tinyCircle.style.top = '50%';
+      tinyCircle.style.left = '50%';
+      tinyCircle.style.transform = 'translate(-50%, -50%)';
+      // animate the tiny circle to move left to the edge of the container
+      tinyCircle.style.animation = 'move1 1s ease-in-out infinite';
+
+      container.appendChild(tinyCircle);
+
+      tinyCircle.addEventListener('animationiteration', () => {
+        const animations = ['move1', 'move2', 'move3', 'move4'];
+        // pick random animation
+        const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+        // apply random animation to tiny circle
+        tinyCircle.style.animation = `${randomAnimation} 1s ease-in-out infinite`;
+      })
     </script>
   </body>
 
