@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>egg on</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      /* create an animation for animating different hues of yellow of the path fill */
+      @keyframes hue {
+        0% {
+          fill: hsl(55, 100%, 50%);
+        }
+
+        100% {
+          fill: hsl(75, 100%, 50%);
+        }
+      }
+
+      /* add the animation to the path */
+      path {
+        animation: hue 10s infinite alternate;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // select main
+      const main = document.querySelector("main");
+      // create svg that is 350px wide and 350px high
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", 350);
+      svg.setAttribute("height", 350);
+      // add to main
+      main.appendChild(svg);
+
+      const data = [
+        "M 5 150",
+        "C 5 77.614 77.614 5 150 5",
+        "C 212.386 5 345 77.614 345 150",
+        "C 345 272.386 210 345 150 345",
+        "C 17.614 345 5 172.386 5 150 Z",
+      ]
+
+
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("fill", "gold");
+      path.setAttribute("stroke", "black");
+      path.setAttribute("stroke-width", 3);
+      svg.appendChild(path);
+
+      const onAnimationFrame = () => {
+        // give a 50% chance of stopping the animation
+        if (Math.random() < 0.5) {
+          requestAnimationFrame(onAnimationFrame);
+          return;
+        }
+
+        path.setAttribute("d", data.map((d, idx) => {
+          // if first or last, return as it. do this so that the start and end of the circle do not move and look seamlessly connected at all times
+          if (idx === 0 || idx === data.length - 1) {
+            return d;
+          }
+          const [command, ...points] = d.split(" ");
+          return `${command} ${points.map((point) => {
+            // if not a number, return as is
+            if (isNaN(parseFloat(point))) {
+              return point;
+            }
+            // random value between 2 and 8
+            const randomValue = Math.random() * 5;
+            // random plus or minus so that the animation goes both in and our from original point
+            const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+            return `${parseFloat(point) + Math.random() * randomValue * plusOrMinus}`;
+          }).join(" ")}`;
+        }).join(" "));
+
+        // request another animation frame
+        requestAnimationFrame(onAnimationFrame);
+      }
+
+      // start the animation
+      onAnimationFrame();
+
+    </script>
+  </body>
+
+</html>
