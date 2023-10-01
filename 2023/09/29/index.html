@@ -130,15 +130,14 @@
       circle.style.transform = 'translate(-50%, -50%)';
       // animate the white circle to scale up and down
       circle.style.animation = 'scale 1s ease-in-out infinite alternate';
-      // add delay
       // center point of the transform is the center of the circle
       circle.style.transformOrigin = '0 0';
       container.appendChild(circle);
 
       // add a tiny white circle to the center of the container that is 10px wide and 10px tall
       const tinyCircle = document.createElement('div');
-      tinyCircle.style.width = '10px';
-      tinyCircle.style.height = '10px';
+      tinyCircle.style.width = '16px';
+      tinyCircle.style.height = '16px';
       tinyCircle.style.borderRadius = '50%';
       tinyCircle.style.backgroundColor = 'black';
       // add white border
