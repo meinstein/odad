@@ -91,12 +91,14 @@
           top: 50%;
           left: 50%;
           transform: scale(1) translate(-50%, -50%);
+          transform-origin: 0 0;
         }
 
         to {
           top: 50%;
           left: 50%;
           transform: scale(1.45) translate(-50%, -50%);
+          transform-origin: 0 0;
         }
       }
     </style>
@@ -129,7 +131,6 @@
       // animate the white circle to scale up and down
       circle.style.animation = 'scale 1s ease-in-out infinite alternate';
       // add delay
-      circle.style.animationDelay = '0.5s';
       // center point of the transform is the center of the circle
       circle.style.transformOrigin = '0 0';
       container.appendChild(circle);
