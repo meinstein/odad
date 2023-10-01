@@ -7,9 +7,8 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>ready set sow</title>
     <style>
-      /* add styles here */
     </style>
   </head>
 
@@ -18,7 +17,119 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const main = document.querySelector('main');
+      // create an svg that is 350px wide and 350px high using javascript
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '350');
+      svg.setAttribute('height', '350');
+      svg.setAttribute('viewBox', '0 0 350 350');
+      // background balck
+      svg.setAttribute('style', 'background-color: black');
+      main.appendChild(svg);
+
+
+      const PATH_COUNT = 50;
+
+
+      const STARTING_POINT = 'M 175 175'
+      const POINTS = [];
+
+      for (let i = 0; i < PATH_COUNT; i++) {
+        POINTS.push([STARTING_POINT]);
+      }
+
+      // create 10 paths and add them to an array
+      const paths = [];
+      for (let i = 0; i < PATH_COUNT; i++) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.id = `path-${i}`;
+        // give each path a random stroke color of red only
+        path.setAttribute('stroke', 'red');
+        path.setAttribute('stroke-linecap', 'round');
+        // add random stroke width
+        path.setAttribute('stroke-width', Math.round(Math.random() * 3));
+        // random stroke opacity
+        path.setAttribute('stroke-opacity', Math.max(Math.random(), 0.25));
+        path.setAttribute('fill', 'none');
+        // add to svg
+        svg.appendChild(path);
+        paths.push(path);
+      }
+
+      const onAnimationFrame = (timestamp) => {
+        for (let i = 0; i < paths.length; i++) {
+
+          // get last point
+          const currentPathData = POINTS[i];
+          const lastPoint = currentPathData[currentPathData.length - 1];
+          // get x and y
+          const [L, x, y, Z] = lastPoint.split(' ');
+
+          // add increment to x and y with some randomness
+          // add one to newX if less than 350, or substract one if greater than 350
+          const prevX = parseInt(x);
+          const prevY = parseInt(y);
+
+          // if prevX goes outside the SVG width, reset the path
+
+
+          if (prevX < 0 || prevX > 350) {
+            currentPathData.push(STARTING_POINT)
+            POINTS[i] = currentPathData;
+            continue;
+          }
+
+          if (prevY < 0 || prevY > 350) {
+            currentPathData.push(STARTING_POINT)
+            POINTS[i] = currentPathData;
+            continue;
+          }
+
+          if (currentPathData.length > 100) {
+            currentPathData.shift();
+            // replace L with M of first point
+            currentPathData[0] = currentPathData[0].replace('L', 'M');
+            POINTS[i] = currentPathData;
+            continue;
+          }
+
+
+
+          const newX = prevX + Math.round(Math.sin(i) * Math.random() * 4);
+          const newY = prevY + Math.round(Math.cos(i) * Math.random() * 4);
+          // add a small circle to the svg at the new x and y
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', newX);
+          circle.setAttribute('cy', newY);
+          circle.setAttribute('r', '3');
+          circle.setAttribute('fill', 'red');
+          // random opacity
+          circle.setAttribute('fill-opacity', Math.max(Math.random(), 0.25));
+          // remove the circle at the last point
+          const lastCircle = svg.querySelector(`#circle-${i}`);
+          if (lastCircle) {
+            svg.removeChild(lastCircle);
+          }
+          circle.id = `circle-${i}`;
+          svg.appendChild(circle);
+          // add new point to points
+          currentPathData.push(`L ${newX} ${newY}`);
+          POINTS[i] = currentPathData;
+          // create new d
+          const d = currentPathData.join(' ');
+          paths[i].setAttribute('d', d);
+        }
+
+        animate();
+      }
+
+      const animate = () => {
+        // return
+        requestAnimationFrame(onAnimationFrame);
+      }
+
+      animate();
+
     </script>
   </body>
 
