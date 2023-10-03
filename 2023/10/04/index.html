@@ -7,9 +7,36 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>the rub</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 16px;
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      @keyframes dash {
+        0% {
+          stroke-dashoffset: 1000;
+        }
+
+        25% {
+          stroke-dashoffset: 1000;
+        }
+
+        50% {
+          stroke-dashoffset: 0;
+        }
+
+        100% {
+          stroke-dashoffset: 1000;
+        }
+      }
     </style>
   </head>
 
@@ -18,7 +45,66 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const activities = [
+        'meditate for 10 minutes',
+        'exercise for 30 minutes',
+        'read for 30 minutes',
+        'eat 3 healthy meals',
+        'drink plenty of water',
+        'get 8 hours of sleep',
+        'be kind to yourself',
+        'be kind to others',
+        'be present',
+        'be grateful',
+        'be happy'
+      ];
+
+      const main = document.querySelector('main');
+      const container = document.createElement('div');
+
+      // loop through activities
+      activities.forEach((activity, index) => {
+        const div = document.createElement('div');
+        div.style.height = '24px';
+        div.style.position = 'relative';
+        const p = document.createElement('div');
+        p.textContent = activity;
+        p.style.height = '24px';
+        p.style.display = 'flex';
+        p.style.position = 'fixed';
+        p.style.alignItems = 'center';
+        p.style.margin = 0;
+        div.appendChild(p);
+        container.appendChild(div);
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', activity.length * 7.5);
+        svg.setAttribute('height', '24');
+        svg.style.position = 'fixed';
+        svg.style.zIndex = 200;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+        const isLastActivity = index === activities.length - 1;
+
+        if (isLastActivity) {
+          // ... do nothing, this is the point.
+        } else {
+          path.setAttribute('d', `M 0 10 C 50 ${Math.random() * 20} 50 12 100 15 C 150 9 150 12 200 10 C 250 ${Math.random() * 20} 250 12 300 15 C 350 12 350 12 350 12`);
+          path.style.fill = 'none';
+          path.style.stroke = 'red';
+          path.style.strokeOpacity = '0.75';
+          path.style.strokeLinecap = 'round';
+          // random stroke width between 2 and 3
+          path.style.strokeWidth = `${Math.random() * 1 + 2}`;
+          path.style.strokeDasharray = '1000';
+          path.style.strokeDashoffset = '1000';
+          path.style.animation = `dash ${4}s ease-in-out infinite`;
+        }
+        svg.appendChild(path);
+        div.appendChild(svg);
+      });
+
+      main.appendChild(container);
     </script>
   </body>
 
