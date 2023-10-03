@@ -7,9 +7,26 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>three shade strife</title>
     <style>
-      /* add styles here */
+      /* animate the path fill */
+      path {
+        animation: fill 4s ease-in-out infinite alternate;
+      }
+
+      @keyframes fill {
+        0% {
+          fill-opacity: 0.5;
+        }
+
+        50% {
+          fill-opacity: 0.75;
+        }
+
+        100% {
+          fill-opacity: 0.5;
+        }
+      }
     </style>
   </head>
 
@@ -18,7 +35,170 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      // create an svg that is 350px wide and 350px high using javascript
+      const WIDTH = 350;
+      const HEIGHT = 350;
+
+      const initPaths = () => {
+        const main = document.querySelector('main');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', `${WIDTH}`);
+        svg.setAttribute('height', `${HEIGHT}`);
+        svg.setAttribute('viewBox', `0 0 ${WIDTH} ${HEIGHT}`);
+        svg.setAttribute('style', 'background-color: black');
+        main.appendChild(svg);
+
+        // Path one
+        const pathOne = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathOne.setAttribute('stroke', 'none');
+        pathOne.setAttribute('fill', 'red');
+        pathOne.setAttribute('fill-opacity', 0.25);
+        svg.appendChild(pathOne);
+
+        // Path two
+        const pathTwo = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathTwo.setAttribute('stroke', 'none');
+        pathTwo.setAttribute('stroke-linecap', 'round');
+        pathTwo.setAttribute('fill', 'red');
+        pathTwo.setAttribute('fill-opacity', 0.25);
+        svg.appendChild(pathTwo);
+
+        // Path two
+        const pathThree = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathThree.setAttribute('stroke', 'none');
+        pathThree.setAttribute('stroke-linecap', 'round');
+        pathThree.setAttribute('fill', 'red');
+        pathThree.setAttribute('fill-opacity', 0.25);
+        svg.appendChild(pathThree);
+
+        return [pathOne, pathTwo, pathThree];
+      }
+
+      // create a list of 1080 points that goes in a circle around the center of the svg
+      const POINT_COUNT = 1080;
+      const POINTS = [];
+      const RADIUS = 150;
+      const CENTER_X = WIDTH / 2;
+      const CENTER_Y = HEIGHT / 2;
+      for (let i = 0; i < POINT_COUNT; i++) {
+        const angle = (i / POINT_COUNT) * Math.PI * 2;
+        const x = CENTER_X + Math.cos(angle) * RADIUS;
+        const y = CENTER_Y + Math.sin(angle) * RADIUS;
+        POINTS.push({
+          usedAt: null,
+          point: [x, y],
+        });
+      }
+
+      const [pathOne, pathTwo, pathThree] = initPaths();
+
+      const isStart = () => {
+        return !POINTS[0].usedAt
+      }
+
+      const reset = () => {
+        POINTS.forEach((point) => {
+          point.usedAt = null;
+        });
+      }
+
+      const isEnd = () => {
+        return POINTS.every((point) => {
+          return point.usedAt;
+        });
+      }
+
+
+
+      const getNextPoint = (timestamp) => {
+
+        const index = Math.floor(Math.random() * POINTS.length);
+
+        // iterate through the points until you find one that has not been used
+        const point = POINTS.find((point) => {
+          return !point.usedAt;
+        });
+
+        point.usedAt = timestamp;
+        return point.point;
+      }
+
+      const drawPaths = () => {
+        // order by usedAt
+        const orderedPoints = POINTS.sort((a, b) => {
+          return a.usedAt - b.usedAt;
+        });
+
+        const usedPoints = orderedPoints.filter(
+          (point) => {
+            // only return the used path
+            return point.usedAt;
+          }
+        );
+
+        const usedPointsCount = usedPoints.length;
+
+        const dOne = usedPoints.reduce((acc, point) => {
+          return `${acc} L ${point.point[1]} ${point.point[1]}`
+        }, `M ${orderedPoints[0].point[0]} ${orderedPoints[0].point[1]}`);
+
+        pathOne.setAttribute('d', dOne);
+
+        // reverse list of usedPoints
+        const reversedUsedPoints = [...usedPoints].reverse();
+        const reverseOrderedPoints = [...orderedPoints].reverse();
+        const dThree = reversedUsedPoints.reduce((acc, point) => {
+          // intentionally use point[0] twice
+          return `${acc} L ${point.point[0]} ${point.point[0]}`
+        }, `M ${reverseOrderedPoints[0].point[1]} ${reverseOrderedPoints[0].point[0]}`);
+
+        pathThree.setAttribute('d', dThree);
+
+
+        const unusedPoints = orderedPoints.filter(
+          (point) => {
+            // only return the used path
+            return !point.usedAt;
+          }
+        );
+
+        const unusedPointsCount = unusedPoints.length;
+
+        const dTwo = unusedPoints.reduce((acc, point) => {
+          // intentionally use point[0] twice and point[1] twice
+          return `${acc} L ${point.point[1]} ${point.point[1]}`
+        }, `M ${orderedPoints[0].point[1]} ${orderedPoints[0].point[0]}`);
+
+        pathTwo.setAttribute('d', dTwo);
+      }
+
+      const onAnimationFrame = (timestamp) => {
+        if (isEnd()) {
+          reset();
+          animate();
+          return
+        }
+
+        if (isStart()) {
+          POINTS[0].usedAt = timestamp;
+          animate();
+          return
+        }
+
+        getNextPoint(timestamp);
+
+        drawPaths();
+
+        animate();
+      }
+
+
+      const animate = () => {
+        // return
+        requestAnimationFrame(onAnimationFrame);
+      }
+
+      animate();
     </script>
   </body>
 
