@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>mostly loose</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        padding: 8px;
+      }
+
+      /* centered rotation animation */
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const GRID_ITEM_SIZE = 50
+      const main = document.querySelector('main');
+      const grid = document.createElement('div');
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = `repeat(5, ${GRID_ITEM_SIZE}px)`;
+      grid.style.gap = '8px';
+      // grid.style.padding = '16px';
+
+      const gridItem = document.createElement('div');
+      gridItem.style.height = GRID_ITEM_SIZE + 'px';
+      gridItem.style.width = GRID_ITEM_SIZE + 'px';
+      // add screw_head.png to background of every gridItem
+      // create img tag and add grid item
+      const imgSrc = 'screw_head.png';
+      // add img as background to gridItem
+      gridItem.style.backgroundImage = `url(${imgSrc})`;
+      gridItem.style.backgroundSize = 'cover';
+      gridItem.style.backgroundRepeat = 'no-repeat';
+      gridItem.style.backgroundPosition = 'center';
+
+
+      // add to grid 12 times
+      for (let i = 0; i < 30; i++) {
+        // give a random background size between 100% and 200%
+        const backgroundSize = Math.floor(Math.random() * 100) + 100;
+        gridItem.style.backgroundSize = `${backgroundSize}%`;
+        const clonedNode = gridItem.cloneNode(true);
+        const randomNumber = Math.floor(Math.random() * 100) + 1;
+        // add animation to 66% of gridItems
+        if (randomNumber > 33) {
+          const duration = Math.floor(Math.random() * 5) + 3;
+          clonedNode.style.animation = `rotate ${duration}s linear infinite`;
+        } else {
+          // give the static one random rotate
+          const rotate = Math.floor(Math.random() * 360) + 1;
+          clonedNode.style.transform = `rotate(${rotate}deg)`;
+        }
+        grid.appendChild(clonedNode);
+      }
+
+
+      main.appendChild(grid);
+    </script>
+  </body>
+
+</html>
