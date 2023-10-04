@@ -22,18 +22,32 @@
 
       @keyframes dash {
         0% {
+          opacity: 1;
           stroke-dashoffset: 1000;
         }
 
         25% {
+          opacity: 1;
           stroke-dashoffset: 1000;
         }
 
         50% {
+          opacity: 1;
+          stroke-dashoffset: 0;
+        }
+
+        94% {
+          opacity: 1;
+          stroke-dashoffset: 0;
+        }
+
+        99% {
+          opacity: 0;
           stroke-dashoffset: 0;
         }
 
         100% {
+          opacity: 0;
           stroke-dashoffset: 1000;
         }
       }
@@ -98,7 +112,7 @@
           path.style.strokeWidth = `${Math.random() * 1 + 2}`;
           path.style.strokeDasharray = '1000';
           path.style.strokeDashoffset = '1000';
-          path.style.animation = `dash ${4}s ease-in-out infinite`;
+          path.style.animation = `dash ${5}s ease-in-out infinite`;
         }
         svg.appendChild(path);
         div.appendChild(svg);
