@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>flail-gellate</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+
+      main {
+        padding: 16px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      // create svg element
+      const WIDTH = 350;
+      const HEIGHT = 350;
+
+      // svg
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', WIDTH);
+      svg.setAttribute('height', HEIGHT);
+      svg.setAttribute('viewBox', `0 0 ${WIDTH} ${HEIGHT}`);
+      // make the svg black
+      // give the svg a black border
+      svg.setAttribute('style', 'border: 3px solid black');
+      main.appendChild(svg);
+
+
+      // points
+      const MAX_POINTS = 100;
+      const points = [{
+        x: WIDTH / 2,
+        y: HEIGHT / 2
+      }];
+
+
+      const animate = (timestamp) => {
+        // return
+        const lastPoint = points[points.length - 1];
+        const nextPoint = {
+          x: lastPoint.x,
+          y: lastPoint.y
+        };
+
+        // Pick random plus or minus
+        const plusOrMinus = Math.random() < 0.5 ? -7 : 7;
+
+        nextPoint.x = lastPoint.x + Math.random() * plusOrMinus;
+        nextPoint.y = lastPoint.y - Math.random() * plusOrMinus;
+
+
+        if (nextPoint.x > WIDTH) {
+          nextPoint.x = 0;
+          return draw(nextPoint);
+        }
+
+        if (nextPoint.x < 0) {
+          nextPoint.x = WIDTH;
+          return draw(nextPoint);
+        }
+
+        if (nextPoint.y > HEIGHT) {
+          nextPoint.y = 0;
+          return draw(nextPoint);
+        }
+
+        if (nextPoint.y < 0) {
+          nextPoint.y = HEIGHT;
+          return draw(nextPoint);
+        }
+
+        draw(nextPoint);
+      }
+
+      const draw = (nextPoint) => {
+        // prevent the array from ever-growing
+        if (points.length > MAX_POINTS) {
+          points.shift();
+        }
+
+        points.push(nextPoint);
+
+        // clear the svg
+        svg.innerHTML = '';
+
+        for (let i = 0; i < points.length; i++) {
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          svg.appendChild(circle);
+          circle.setAttribute('cx', points[i].x);
+          circle.setAttribute('cy', points[i].y);
+          circle.setAttribute('fill', 'indianred');
+          circle.setAttribute('r', i / points.length * 12);
+          circle.setAttribute('opacity', i / points.length);
+        }
+
+        requestAnimationFrame(animate)
+      }
+
+      requestAnimationFrame(animate)
+
+    </script>
+  </body>
+
+</html>
