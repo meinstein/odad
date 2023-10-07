@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>comma-separated pumpjacks</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 8px;
+      }
+
+      /* system font */
+      * {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+
+      const NUM_OF_ROWS = 27;
+      const COLS = ['id', 'name', 'email', 'phone']
+
+      const grid = document.createElement('div');
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = '50px 100px 100px 100px';
+      grid.style.gridTemplateRows = `repeat(${NUM_OF_ROWS}, 20px)`;
+      grid.style.border = '1px solid black';
+      grid.style.width = 350 + 'px';
+
+
+      for (let row = 0; row < NUM_OF_ROWS; row++) {
+        for (let col = 0; col < COLS.length; col++) {
+          const div = document.createElement('div');
+          div.style.display = 'flex';
+          div.style.padding = '2px';
+          div.style.justifyContent = 'flex-start';
+          div.style.alignItems = 'center';
+
+          if (row < NUM_OF_ROWS - 1) {
+            div.style.borderBottom = '1px solid black';
+          }
+
+          if (col < COLS.length - 1) {
+            div.style.borderRight = '1px solid black';
+          }
+
+
+          if (row === 0) {
+            div.style.fontWeight = '600';
+            div.textContent = COLS[col];
+          } else {
+            // create ball for each cell
+            const ball = document.createElement('div');
+            ball.style.width = '10px';
+            ball.style.height = '10px';
+            ball.style.borderRadius = '50%';
+            ball.style.backgroundColor = '#005F6A';
+            div.appendChild(ball);
+
+            // randomly make scale between 0.6 and 1
+            const scale = Math.random() * 0.5 + 0.6;
+
+
+
+            animation = [
+              {
+                transform: `translateX(0px) scale(${scale})`
+              },
+              {
+                transform: `translateX(${col === 0 ? 36 : 86}px) scale(${scale})`
+              }
+            ];
+
+            // randomly reverse animation
+            if (Math.random() > 0.5) {
+              animation.reverse();
+            }
+
+            // random duration between 0.5s and 1.5s
+            const duration = Math.random() * 1000 + 500;
+            // easing values
+            const easings = ['ease-in', 'ease-out', 'ease-in-out', 'linear'];
+            const easing = easings[Math.floor(Math.random() * easings.length)];
+
+            ball.animate(animation, {
+              duration,
+              easing,
+              iterations: Infinity,
+              direction: 'alternate',
+            });
+          }
+
+
+
+          grid.appendChild(div);
+        }
+      }
+
+      // append grid to main
+      main.appendChild(grid);
+    </script>
+  </body>
+
+</html>
