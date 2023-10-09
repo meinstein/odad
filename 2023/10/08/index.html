@@ -7,9 +7,12 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>stir-crazy</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 8px;
+      }
     </style>
   </head>
 
@@ -18,7 +21,96 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const WIDTH = 350;
+      const HEIGHT = 350;
+      const SPACING = 10;
+
+      const main = document.querySelector('main');
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', WIDTH);
+      svg.setAttribute('height', HEIGHT);
+      // add border
+      svg.setAttribute('style', 'border: 1px solid black');
+      main.appendChild(svg);
+
+      // create a list of x and y coordinates spaced 5px apart
+      const coordinates = [];
+
+      for (let x = SPACING / 2; x < WIDTH; x += SPACING) {
+        for (let y = SPACING / 2; y < HEIGHT; y += SPACING) {
+          coordinates.push([x, y]);
+        }
+      }
+
+
+      const activeCoordinates = [
+        [0, 0],
+      ];
+
+      const animate = () => {
+        // return
+        const [prevX, prevY] = activeCoordinates[activeCoordinates.length - 1];
+
+        const nextMoves = [
+          [prevX + SPACING, prevY],
+          [prevX - SPACING, prevY],
+          [prevX, prevY - SPACING],
+          [prevX, prevY + SPACING],
+          [prevX + SPACING, prevY - SPACING],
+          [prevX - SPACING, prevY - SPACING],
+          [prevX + SPACING, prevY + SPACING],
+          [prevX - SPACING, prevY + SPACING],
+        ]
+
+        const availableNextMoves = nextMoves.filter(([nextX, nextY]) => {
+          // check if the coordinate is already active
+          const isActive = activeCoordinates.some(([activeX, activeY]) => {
+            return activeX === nextX && activeY === nextY;
+          });
+
+          // check if the coordinate is within the bounds of the svg
+          const isWithinBounds = nextX >= 0 && nextX <= WIDTH && nextY >= 0 && nextY <= HEIGHT;
+
+          return !isActive && isWithinBounds;
+        });
+
+        if (activeCoordinates.length > 20) {
+          activeCoordinates.shift();
+          window.requestAnimationFrame(animate);
+          return
+        }
+
+        if (availableNextMoves.length === 0) {
+          // shift the activeCoordinates until can find a coordinate with availableNextMoves
+          activeCoordinates.shift();
+          window.requestAnimationFrame(animate);
+          return
+        }
+
+        // randomly pick a coordinate from the availableNextMoves
+        const nextMove = availableNextMoves[Math.floor(Math.random() * availableNextMoves.length)];
+        // add the nextMove to the activeCoordinates
+        activeCoordinates.push(nextMove);
+
+        // clear the svg
+        svg.innerHTML = '';
+
+        // draw a line between each active coordinate
+        activeCoordinates.forEach(([x, y]) => {
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', prevX);
+          line.setAttribute('y1', prevY);
+          line.setAttribute('x2', x);
+          line.setAttribute('y2', y);
+          line.setAttribute('stroke', 'black');
+          svg.appendChild(line);
+        });
+
+
+        window.requestAnimationFrame(animate);
+      }
+
+      animate();
     </script>
   </body>
 
