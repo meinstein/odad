@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>sisyphus</title>
+    <style>
+      /* add styles here */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 350;
+
+      const main = document.querySelector('main');
+      // create svg
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', WIDTH);
+      svg.setAttribute('height', HEIGHT);
+      svg.setAttribute('viewBox', `0 0 ${WIDTH} ${HEIGHT}`);
+      svg.setAttribute('style', 'background-color: black');
+
+      const centerPoint = {
+        x: WIDTH / 2,
+        y: HEIGHT / 2
+      };
+
+      const pastEndpoints = [];
+
+      let degrees = 0;
+
+      const animate = (timestamp) => {
+        if (degrees > 36000) {
+          degrees = 0;
+        } else {
+          degrees += 1;
+        }
+
+        if (pastEndpoints.length > 100) {
+          pastEndpoints.shift();
+        }
+
+        const nextEndpoint = {
+          x: centerPoint.x + Math.cos(degrees / 36) * Math.sin(degrees / 36) * 165,
+          y: centerPoint.y + Math.sin(degrees / 18) * Math.cos(degrees / 36) * 165
+        };
+
+        // reset the svg
+        svg.innerHTML = '';
+
+        // draw a circle at every past endpoint
+        pastEndpoints.forEach((endpoint, idx) => {
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', endpoint.x);
+          circle.setAttribute('cy', endpoint.y);
+          // radius based on the idx -- bigger as idx decreases
+          circle.setAttribute('r', 4 + idx / 10);
+          circle.setAttribute('fill', 'indianred');
+          // opacity -- lighter as idx decreases
+          circle.setAttribute('opacity', idx / pastEndpoints.length);
+          svg.appendChild(circle);
+        });
+
+        pastEndpoints.push(nextEndpoint);
+
+        requestAnimationFrame(animate);
+      }
+
+      main.appendChild(svg);
+
+      requestAnimationFrame(animate)
+    </script>
+  </body>
+
+</html>
