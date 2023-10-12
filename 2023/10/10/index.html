@@ -18,7 +18,62 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const main = document.querySelector('main');
+
+      const opiumdesvolkes = 'opiumdesvolkes'
+
+      const text = []
+
+      for (let i = 0; i < 7; i++) {
+        text.push(...opiumdesvolkes.split(''));
+      }
+
+      const likeAndSubscribe = 'likeandsubscribethanks'
+      text.push(...likeAndSubscribe.split(''))
+
+
+      // create a grid div with 10 rows and 10 columns
+      const grid = document.createElement('div');
+      grid.setAttribute('style', `
+        display: grid;
+        grid-template-columns: repeat(10, 35px);
+        grid-template-rows: repeat(12, 35px);
+      `);
+
+      for (let i = 0; i < text.length; i++) {
+        const div = document.createElement('div');
+        div.textContent = text[i];
+
+        div.setAttribute('style', `
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            color: black;
+            font-family: monospace;
+          `);
+
+
+        const scale = Math.random() * 0.2 + 1.2;
+
+        div.animate([
+          { transform: 'scale(1)' },
+          { transform: `scale(${scale})` },
+          { transform: 'scale(1)' }
+        ], {
+          duration: i + 1 * 200,
+          iterations: Infinity
+        });
+
+
+        if (i > text.length - likeAndSubscribe.length - 1) {
+          div.style.color = 'indianred';
+        }
+
+        grid.appendChild(div);
+      }
+
+      main.appendChild(grid);
     </script>
   </body>
 
