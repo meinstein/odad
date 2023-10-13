@@ -7,9 +7,12 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>beholden</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
     </style>
   </head>
 
@@ -18,7 +21,82 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const ASPECT_RATIO = 1200 / 850;
+      const WIDTH = 350;
+      const HEIGHT = WIDTH / ASPECT_RATIO;
+      const FACE_COVER_SIZE = 25;
+
+      const FACE_CENTER_COORDINATES = [
+        [18.83, 30.82],
+        [23.83, 41.18],
+        [28.85, 45.16],
+        [44.29, 47.18],
+        [38.57, 31.45],
+        [55.71, 42.74],
+        [62.57, 32.26],
+        [68.29, 32.67],
+      ]
+
+      const main = document.querySelector('main');
+      main.setAttribute('style', `
+        position: relative;
+        width: ${WIDTH}px;
+        height: ${HEIGHT}px;
+      `)
+      // create img element
+      const img = document.createElement('img');
+      // set src attribute
+      img.setAttribute('src', './beware_of_luxury.jpg');
+      // dims are 1200px x 850px
+      img.setAttribute('width', WIDTH);
+      img.setAttribute('height', HEIGHT);
+      img.setAttribute('alt', 'beware of luxury');
+
+      img.addEventListener('click', () => {
+        // get coordinates relative to image in percentage
+        const x = event.offsetX / img.width * 100;
+        const y = event.offsetY / img.height * 100;
+        console.log(x, y)
+      })
+
+      FACE_CENTER_COORDINATES.forEach(coorindate => {
+        const [x, y] = coorindate;
+        // create div element
+        const div = document.createElement('div');
+        // set style attribute
+        div.setAttribute('style', `
+          position: absolute;
+          left: ${x}%;
+          top: ${y}%;
+          width: ${FACE_COVER_SIZE}px;
+          height: ${FACE_COVER_SIZE}px;
+          font-size: ${FACE_COVER_SIZE}px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transform-origin: 0% 0%;
+
+        `);
+
+        div.innerText = '📱'
+
+        // animate scale
+        div.animate([
+          { transform: 'rotate(0) scale(1) translate(-50%, -50%)' },
+          { transform: 'rotate(180deg) scale(1.2) translate(-50%, -50%)' },
+          { transform: 'rotate(360deg) scale(1) translate(-50%, -50%)' }
+        ], {
+          // increase based on distance from center
+          duration: 1000 + Math.sqrt((x - 50) ** 2 + (y - 50) ** 2) * 10,
+          iterations: Infinity
+        })
+
+        // append div to main
+        main.appendChild(div);
+      })
+
+      // append img to main
+      main.appendChild(img);
     </script>
   </body>
 
