@@ -37,8 +37,6 @@
       img.style.position = 'absolute';
       img.style.top = 145 + 'px';
       img.style.mixBlendMode = 'screen';
-      // z-index
-      img.style.zIndex = 1;
 
       const canvas = document.querySelector('#canvas');
       canvas.style.height = 150 + 'px';
@@ -59,8 +57,6 @@
         circle.style.backgroundColor = 'red';
         circle.style.position = 'absolute';
         circle.className = 'particle';
-        // z index
-        circle.style.zIndex = -1;
         return circle;
       }
 
