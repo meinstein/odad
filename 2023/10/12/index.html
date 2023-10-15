@@ -41,27 +41,75 @@
       canvas.style.height = 150 + 'px';
       canvas.style.width = 350 + 'px';
 
-      const MIN_TOP = -25;
-      const MAX_TOP = 170;
+      const PARTICLE_ONE_MIN_TOP = -25;
+      const PARTICLE_ONE_MAX_TOP = 170;
 
+      const PARTICLE_TWO_MIN_TOP = -25;
+      const PARTICLE_TWO_MAX_TOP = 175;
 
-      let PREV_TOP = -5;
-      let PREV_LEFT = 70;
+      let PARTICLE_ONE_PREV_TOP = -5;
+      let PARTICLE_TWO_PREV_TOP = 180;
 
       const getParticle = () => {
         const circle = document.createElement('div');
-        circle.style.height = 10 + 'px';
-        circle.style.width = 10 + 'px';
+        // random size
+        const size = Math.random() * 5 + 5;
+        circle.style.height = size + 'px';
+        circle.style.width = size + 'px';
         circle.style.borderRadius = '50%';
-        circle.style.backgroundColor = 'red';
+        circle.style.backgroundColor = 'indianred';
         circle.style.position = 'absolute';
         circle.className = 'particle';
         return circle;
       }
 
-      const animate = () => {
-        const particle = getParticle();
+      const animateParticleOne = () => {
+        const particleOne = getParticle();
 
+        let NEXT_TOP = PARTICLE_ONE_PREV_TOP + Math.random() * 8;
+
+        if (NEXT_TOP > PARTICLE_ONE_MAX_TOP) {
+          NEXT_TOP = PARTICLE_ONE_MIN_TOP;
+        }
+
+        if (NEXT_TOP < PARTICLE_ONE_MIN_TOP) {
+          NEXT_TOP = PARTICLE_ONE_MAX_TOP;
+        }
+
+        particleOne.style.top = NEXT_TOP + 'px';
+        PARTICLE_ONE_PREV_TOP = NEXT_TOP;
+
+        const NEXT_LEFT = 70 + Math.random() * 5;
+        particleOne.style.left = NEXT_LEFT + 'px';
+
+
+        main.appendChild(particleOne);
+      }
+
+      const animateParticleTwo = () => {
+        const particleOne = getParticle();
+
+        let NEXT_TOP = PARTICLE_TWO_PREV_TOP - Math.random() * 5;
+
+        if (NEXT_TOP > PARTICLE_TWO_MAX_TOP) {
+          NEXT_TOP = PARTICLE_TWO_MIN_TOP;
+        }
+
+        if (NEXT_TOP < PARTICLE_TWO_MIN_TOP) {
+          NEXT_TOP = PARTICLE_TWO_MAX_TOP;
+        }
+
+        particleOne.style.top = NEXT_TOP + 'px';
+        PARTICLE_TWO_PREV_TOP = NEXT_TOP;
+
+        const NEXT_LEFT = 270 + Math.random() * 5;
+        particleOne.style.left = NEXT_LEFT + 'px';
+
+
+        main.appendChild(particleOne);
+      }
+
+      const animate = () => {
         // GET EXISTING PARTICLES
         const particles = document.querySelectorAll('.particle');
         // REMOVE EXISTING PARTICLES
@@ -69,25 +117,8 @@
           particle.remove();
         })
 
-
-        let NEXT_TOP = PREV_TOP + Math.random() * 5;
-
-        if (NEXT_TOP > MAX_TOP) {
-          NEXT_TOP = MIN_TOP;
-        }
-
-        if (NEXT_TOP < MIN_TOP) {
-          NEXT_TOP = MAX_TOP;
-        }
-
-        particle.style.top = NEXT_TOP + 'px';
-        PREV_TOP = NEXT_TOP;
-
-        const NEXT_LEFT = 70 + Math.random() * 5;
-        particle.style.left = NEXT_LEFT + 'px';
-
-
-        main.appendChild(particle);
+        animateParticleOne();
+        animateParticleTwo();
 
         requestAnimationFrame(animate);
       }
