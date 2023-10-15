@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>feed me</title>
+    <title>wasted potential</title>
     <style>
       body {
         margin: 0;
@@ -42,18 +42,17 @@
       canvas.style.width = 350 + 'px';
 
       const PARTICLE_ONE_MIN_TOP = -25;
-      const PARTICLE_ONE_MAX_TOP = 170;
+      const PARTICLE_ONE_MAX_TOP = 165;
 
       const PARTICLE_TWO_MIN_TOP = -25;
-      const PARTICLE_TWO_MAX_TOP = 175;
+      const PARTICLE_TWO_MAX_TOP = 170;
 
       let PARTICLE_ONE_PREV_TOP = -5;
       let PARTICLE_TWO_PREV_TOP = 180;
 
-      const getParticle = () => {
+      const getParticle = (size) => {
         const circle = document.createElement('div');
         // random size
-        const size = Math.random() * 5 + 5;
         circle.style.height = size + 'px';
         circle.style.width = size + 'px';
         circle.style.borderRadius = '50%';
@@ -64,9 +63,14 @@
       }
 
       const animateParticleOne = () => {
-        const particleOne = getParticle();
+        const particle = getParticle(20);
 
-        let NEXT_TOP = PARTICLE_ONE_PREV_TOP + Math.random() * 8;
+        let NEXT_TOP = PARTICLE_ONE_PREV_TOP + Math.random() * 10;
+
+        // adjust opacity as top gets bigger
+        if (NEXT_TOP > 100) {
+          particle.style.opacity = 1 - (NEXT_TOP - 50) / 100;
+        }
 
         if (NEXT_TOP > PARTICLE_ONE_MAX_TOP) {
           NEXT_TOP = PARTICLE_ONE_MIN_TOP;
@@ -76,18 +80,18 @@
           NEXT_TOP = PARTICLE_ONE_MAX_TOP;
         }
 
-        particleOne.style.top = NEXT_TOP + 'px';
+        particle.style.top = NEXT_TOP + 'px';
         PARTICLE_ONE_PREV_TOP = NEXT_TOP;
 
-        const NEXT_LEFT = 70 + Math.random() * 5;
-        particleOne.style.left = NEXT_LEFT + 'px';
+        const NEXT_LEFT = 65 + Math.random() * 5;
+        particle.style.left = NEXT_LEFT + 'px';
 
 
-        main.appendChild(particleOne);
+        main.appendChild(particle);
       }
 
       const animateParticleTwo = () => {
-        const particleOne = getParticle();
+        const particle = getParticle(10);
 
         let NEXT_TOP = PARTICLE_TWO_PREV_TOP - Math.random() * 5;
 
@@ -99,14 +103,14 @@
           NEXT_TOP = PARTICLE_TWO_MAX_TOP;
         }
 
-        particleOne.style.top = NEXT_TOP + 'px';
+        particle.style.top = NEXT_TOP + 'px';
         PARTICLE_TWO_PREV_TOP = NEXT_TOP;
 
         const NEXT_LEFT = 270 + Math.random() * 5;
-        particleOne.style.left = NEXT_LEFT + 'px';
+        particle.style.left = NEXT_LEFT + 'px';
 
 
-        main.appendChild(particleOne);
+        main.appendChild(particle);
       }
 
       const animate = () => {
