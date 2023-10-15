@@ -52,13 +52,6 @@
       img.setAttribute('height', HEIGHT);
       img.setAttribute('alt', 'beware of luxury');
 
-      img.addEventListener('click', () => {
-        // get coordinates relative to image in percentage
-        const x = event.offsetX / img.width * 100;
-        const y = event.offsetY / img.height * 100;
-        console.log(x, y)
-      })
-
       FACE_CENTER_COORDINATES.forEach(coorindate => {
         const [x, y] = coorindate;
         // create div element
