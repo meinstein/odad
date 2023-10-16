@@ -7,18 +7,76 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>(un)holy water under the bridge</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 16px;
+        padding: 0;
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const WIDTH = 350;
+      const HEIGHT = 350;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('div');
+      canvas.style.width = WIDTH + 'px';
+      canvas.style.height = HEIGHT + 'px';
+      // border
+      canvas.style.border = '1px solid black';
+
+      main.appendChild(canvas);
+      // river div
+      const river = document.createElement('div');
+      // make it one third of the width
+      river.style.width = WIDTH / 3 + 'px';
+      // absolute position
+      river.style.position = 'absolute';
+      // center it using transform
+      river.style.transform = 'translateX(100%)';
+      // center it it horizontally
+      // full height
+      river.style.height = HEIGHT + 'px';
+
+      river.style.backgroundImage = 'linear-gradient(0deg, indianred, steelblue 50%, indianred)'
+      river.style.backgroundSize = '200% 200%';
+      river.style.backgroundPosition = '0 0';
+      river.animate([
+        { backgroundPosition: '100% 0' },
+        { backgroundPosition: '0 100%' },
+        { backgroundPosition: '100% 0' },
+        { backgroundPosition: '0 100%' },
+        { backgroundPosition: '100% 0' },
+      ], {
+        duration: 10_000,
+        easing: 'ease',
+        iterations: Infinity
+      });
+      canvas.appendChild(river);
+
+      const bridge = document.createElement('div');
+      bridge.style.width = WIDTH / 3 + 'px';
+      bridge.style.position = 'absolute';
+      bridge.style.height = HEIGHT / 6 + 'px';
+      bridge.style.width = WIDTH + 'px';
+      bridge.style.backgroundColor = 'black';
+      // animate up and down the canvas
+      bridge.animate([
+        { transform: 'translateY(150%)' },
+        { transform: 'translateY(350%)' },
+        { transform: 'translateY(150%)' },
+      ], {
+        duration: 2000,
+        easing: 'ease-in-out',
+        iterations: Infinity
+      });
+      // add to canvas
+      canvas.appendChild(bridge);
     </script>
   </body>
 
