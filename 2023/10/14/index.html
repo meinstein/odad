@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>calming fission</title>
     <style>
       /* add styles here */
     </style>
@@ -18,7 +18,73 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const WIDTH = 350;
+      const HEIGHT = 350;
+      const RADIUS = 50;
+
+      const main = document.querySelector('main');
+      // set width and height
+      main.style.width = WIDTH + 'px';
+      main.style.height = HEIGHT + 'px';
+      // relative
+      main.style.position = 'relative';
+      // add border
+      // main.style.border = '1px solid black';
+      // background black
+      // main.style.background = 'black';
+
+      const getCircle = () => {
+        const circle = document.createElement('div');
+
+        circle.style.backgroundImage = `linear-gradient(${Math.round(Math.random() * 360)}deg, indianred, steelblue)`;
+        // circle.style.backgroundImage = `linear-gradient(to bottom right, indianred, steelblue, ${Math.round(Math.random() * 100)}%)`;
+        // circle.style.backgroundImage = 'linear-gradient(to bottom right, indianred, steelblue)';
+        circle.style.borderRadius = '50%';
+        circle.style.position = 'absolute';
+        circle.style.top = '50%';
+        circle.style.left = '50%';
+        // random opacity between 0.25 and 1
+        circle.style.opacity = 0.50 + Math.random() * 0.25;
+        // add border
+        // circle.style.border = `1px solid rgba(0,0,0,.1)`;
+        // add random black shadow
+        circle.style.boxShadow = `0 0 2px 2px rgba(255,255,255,0.05)`;
+        return circle;
+      }
+
+      // create a list of 100 items
+      const items = Array.from({ length: 200 }, () => {
+        const circle = getCircle();
+
+        circle.style.width = RADIUS + 'px';
+        circle.style.height = RADIUS + 'px';
+        const x = Math.round(Math.random() * 200 - 125);
+        // random y translate val
+        const y = Math.round(Math.random() * 200 - 125);
+        // random scale between 0.5 and 1.5
+        const scale = 0.5 + Math.random();
+
+        circle.animate([
+          {
+            transform: 'translate(-50%, -50%) scale(1)',
+          },
+          // randomly animate from the center point using percentages and having random positive or negative
+          {
+            transform: `translate(${x}px, ${y}px) scale(${scale})`,
+          },
+          {
+            transform: 'translate(-50%, -50%) scale(1)',
+          },
+
+        ], {
+          duration: 4_000,
+          iterations: Infinity,
+          easing: 'ease-in-out'
+        });
+
+        main.appendChild(circle);
+      });
+
     </script>
   </body>
 
