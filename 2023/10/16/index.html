@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      /* mono font */
+      body {
+        font-family: 'Courier New', Courier, monospace;
+        margin: 12px;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350
+      const HEIGHT = 350
+
+      const text = 'artificial thought '
+      const main = document.querySelector('main');
+
+      // create div
+      const canvas = document.createElement('div');
+      canvas.style.width = WIDTH + 'px';
+      canvas.style.height = HEIGHT + 'px';
+      canvas.style.display = 'flex';
+      canvas.style.flexWrap = 'wrap';
+      canvas.style.alignItems = 'center';
+      // canvas.style.justifyContent = 'center';
+      // canvas.style.border = '1px solid black';
+
+
+      // add text to canvas div
+      // split each letter in text into a span
+      const letters = text.split('').map(letter => {
+        const span = document.createElement('span');
+        span.style.flexBasis = '1%';
+        span.style.color = 'white';
+        span.innerText = letter;
+        return span;
+      });
+
+
+      let count = 0;
+      const data = []
+
+      // multiply letters by 10
+      for (let i = 0; i < 44; i++) {
+        letters.forEach(letter => {
+          const clone = letter.cloneNode(true);
+          data.push(clone);
+          canvas.appendChild(clone);
+        });
+      }
+
+      // create a list counting up to random
+      const list = random => {
+        const arr = [];
+        for (let i = 0; i < random; i++) {
+          arr.push(i);
+        }
+        return arr;
+      }
+
+      const animate = () => {
+        data[count].style.color = 'black';
+
+        if (count > 5) {
+          // random num b/t 0 and 4
+          const random = Math.floor(Math.random() * 5);
+          data[count - random].style.color = 'white';
+        }
+
+        if (count < data.length - 5) {
+          // random num b/t 1 and 4
+          const random = Math.floor(Math.random() * 5) + 1;
+
+          list(random).forEach(num => {
+            data[count + num].style.color = 'gray';
+          });
+
+          data[count + 1].style.color = 'black';
+          data[count + 2].style.color = 'black';
+
+        }
+
+        if (count === data.length - 1) {
+          count = 0;
+        } else {
+          count++;
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+
+      requestAnimationFrame(animate);
+
+      main.appendChild(canvas);
+
+    </script>
+  </body>
+
+</html>
