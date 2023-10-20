@@ -12,7 +12,8 @@
       /* mono font */
       body {
         font-family: 'Courier New', Courier, monospace;
-        margin: 12px;
+        margin-top: 75px;
+        margin-left: 12px;
         padding: 0;
       }
     </style>
@@ -26,7 +27,7 @@
       const WIDTH = 350
       const HEIGHT = 350
 
-      const text = 'artificial thought '
+      const text = 'navel gazing '
       const main = document.querySelector('main');
 
       // create div
@@ -55,7 +56,7 @@
       const data = []
 
       // multiply letters by 10
-      for (let i = 0; i < 44; i++) {
+      for (let i = 0; i < 15; i++) {
         letters.forEach(letter => {
           const clone = letter.cloneNode(true);
           data.push(clone);
@@ -72,27 +73,45 @@
         return arr;
       }
 
+
+      const random = 10
+
       const animate = () => {
+
         data[count].style.color = 'black';
 
-        if (count > 5) {
-          // random num b/t 0 and 4
-          const random = Math.floor(Math.random() * 5);
-          data[count - random].style.color = 'white';
-        }
 
-        if (count < data.length - 5) {
-          // random num b/t 1 and 4
-          const random = Math.floor(Math.random() * 5) + 1;
 
-          list(random).forEach(num => {
-            data[count + num].style.color = 'gray';
+        list(random).forEach(num => {
+          let idx = count + num;
+          if (idx > data.length - 1) {
+            idx = idx - data.length;
+            console.log({ idx1: idx })
+          }
+          const el = data[idx];
+          el.style.color = 'black';
+          el.animate([
+            {
+              transform: 'translateY(0px)',
+              opacity: 1
+            },
+            {
+              // random translate between -100px and 100px
+              transform: `translateY(${Math.random() * 300 - 150}px)`,
+              opacity: 0
+            }
+          ], {
+            // random duration between 300 and 400
+            duration: Math.random() * 2000 + 1000,
+            easing: 'linear',
+            iterations: 1,
+            // keep the last frame (ie opacity at 0)
+            fill: 'forwards'
           });
+        });
 
-          data[count + 1].style.color = 'black';
-          data[count + 2].style.color = 'black';
 
-        }
+
 
         if (count === data.length - 1) {
           count = 0;
