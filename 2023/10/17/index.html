@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>get up get down</title>
+    <style>
+      body {
+        box-sizing: border-box;
+        margin: 12;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 350;
+
+      const main = document.querySelector('main');
+      const grid = document.createElement('div');
+      // The border-bottom is to make sure the last line is visible when it folds over
+      grid.setAttribute('style', `
+        display: grid;
+        grid-template-columns: repeat(14, 24px);
+        grid-template-rows: repeat(14, 24px);
+        grid-gap: 1px;
+        width: ${WIDTH}px;
+        height: ${HEIGHT}px;
+        background-color: black;
+        border-bottom: 5px solid black;
+      `);
+
+      const boxes = [];
+      for (let i = 0; i < 196; i++) {
+        const box = document.createElement('div');
+        // box.style.borderLeft = '1px solid blue';
+        box.style.position = 'relative';
+
+        const line = document.createElement('div');
+        line.style.position = 'absolute';
+        line.style.top = '0';
+        line.style.left = '0';
+        line.style.height = '100%';
+        line.style.transformOrigin = 'bottom left';
+        // random width between 1 and 3 pixels
+        line.style.width = `${5}px`;
+        // indianred or steelblue depending on even or odd
+        line.style.backgroundColor = i % 2 === 0 ? 'indianred' : 'steelblue';
+        box.appendChild(line);
+
+        boxes.push(box);
+      }
+
+      boxes.forEach(box => grid.appendChild(box));
+
+
+      let count = 0;
+      let down = true;
+
+      const animate = () => {
+        const box = boxes[count];
+
+        const line = box.firstChild;
+
+        line.animate([
+          {
+            transform: 'rotate(0)'
+          },
+          {
+            transform: 'rotate(90deg)'
+          },
+        ], {
+          duration: Math.random() * 1800 + 600,
+          iterations: 1,
+          fill: 'forwards',
+          direction: down ? 'normal' : 'reverse',
+          easing: 'ease-in-out',
+        });
+
+
+        count++;
+
+        if (count === 196) {
+          down = !down;
+          count = 0;
+        }
+
+
+        requestAnimationFrame(animate);
+      };
+
+      requestAnimationFrame(animate);
+
+      main.appendChild(grid);
+    </script>
+  </body>
+
+</html>
