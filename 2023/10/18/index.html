@@ -37,14 +37,17 @@
     <script>
       const main = document.querySelector('main');
 
+
+      // of note, keeping the direction of rotation consistent is important for
+      // minimizing the amount of jitter/flickering in the animation.
       let prevFrontRotateX = 0;
       let nextFrontRotateX = -1;
 
       let prevBackRotateY = 180;
-      let nextBackRotateY = 181;
+      let nextBackRotateY = 179;
 
       let prevRightRotateY = 90;
-      let nextRightRotateY = 91;
+      let nextRightRotateY = 89;
 
       let prevLeftRotateY = -90;
       let nextLeftRotateY = -91;
@@ -53,7 +56,7 @@
       let nextTopRotateX = 89;
 
       let prevBottomRotateX = -90;
-      let nextBottomRotateX = -89;
+      let nextBottomRotateX = -91;
 
       const getNext = (prev, next) => {
         // check if prev to next is positive or negative
