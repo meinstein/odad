@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>stay tuned</title>
+    <style>
+      body {
+        box-sizing: border-box;
+        margin: 48px;
+        padding: 0;
+        background-color: black;
+      }
+
+      main {
+        width: 200px;
+        height: 200px;
+      }
+
+      span {
+        display: block;
+        position: absolute;
+        width: 140px;
+        height: 140px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+
+      let prevFrontRotateX = 0;
+      let nextFrontRotateX = -1;
+
+      let prevBackRotateY = 180;
+      let nextBackRotateY = 181;
+
+      let prevRightRotateY = 90;
+      let nextRightRotateY = 91;
+
+      let prevLeftRotateY = -90;
+      let nextLeftRotateY = -91;
+
+      let prevTopRotateX = 90;
+      let nextTopRotateX = 89;
+
+      let prevBottomRotateX = -90;
+      let nextBottomRotateX = -89;
+
+      const getNext = (prev, next) => {
+        // check if prev to next is positive or negative
+        const isPositive = prev < next;
+
+        // if less than -360, rest to 360
+        if (prev < -360) {
+          return 360
+        }
+
+        // if greater than 360, rest to -360
+        if (prev > 360) {
+          return -360
+        }
+
+        if (isPositive) {
+          return prev + Math.random() * 1.2 + 1;
+        } else {
+          return prev - Math.random() * 1.2 - 1;
+        }
+      }
+
+      const getCube = () => {
+        const cube = document.createElement('div');
+        cube.style.width = '200px';
+        cube.style.height = '200px';
+        cube.style.transformStyle = 'preserve-3d';
+        cube.style.perspective = '280px';
+        cube.style.backfaceVisibility = 'visible';
+
+        const front = document.createElement('span');
+        prevFrontRotateX = nextFrontRotateX;
+        nextFrontRotateX = getNext(prevFrontRotateX, nextFrontRotateX);
+        front.style.transform = `translateZ(0px) rotateX(${nextFrontRotateX}deg)`;
+        front.style.backgroundColor = 'seashell';
+        front.style.opacity = 0.45;
+        cube.appendChild(front);
+
+        const back = document.createElement('span');
+        prevBackRotateY = nextBackRotateY;
+        nextBackRotateY = getNext(prevBackRotateY, nextBackRotateY);
+        back.style.transform = `translateZ(0px) rotateY(${nextBackRotateY}deg)`;
+        back.style.backgroundColor = 'lightsteelblue';
+        back.style.opacity = 0.45;
+        cube.appendChild(back);
+
+        const right = document.createElement('span');
+        prevRightRotateY = nextRightRotateY;
+        nextRightRotateY = getNext(prevRightRotateY, nextRightRotateY);
+        right.style.transform = `translateZ(0px) rotateY(${nextRightRotateY}deg)`;
+        right.style.backgroundColor = 'indianred';
+        right.style.opacity = 0.45;
+        cube.appendChild(right);
+
+        const left = document.createElement('span');
+        prevLeftRotateY = nextLeftRotateY;
+        nextLeftRotateY = getNext(prevLeftRotateY, nextLeftRotateY);
+        left.style.transform = `translateZ(0px) rotateY(${nextLeftRotateY}deg)`;
+        left.style.backgroundColor = 'lightblue';
+        left.style.opacity = 0.45;
+        cube.appendChild(left);
+
+        const top = document.createElement('span');
+        prevTopRotateX = nextTopRotateX;
+        nextTopRotateX = getNext(prevTopRotateX, nextTopRotateX);
+        top.style.transform = `translateZ(0px) rotateX(${nextTopRotateX}deg)`;
+        top.style.backgroundColor = 'orangered';
+        top.style.opacity = 0.45;
+        cube.appendChild(top);
+
+        const bottom = document.createElement('span');
+        prevBottomRotateX = nextBottomRotateX;
+        nextBottomRotateX = getNext(prevBottomRotateX, nextBottomRotateX);
+        bottom.style.transform = `translateZ(0px) rotateX(${nextBottomRotateX}deg)`;
+        bottom.style.backgroundColor = 'steelblue';
+        bottom.style.opacity = 0.45;
+        cube.appendChild(bottom);
+
+        return cube;
+      }
+
+      const animate = () => {
+        main.innerHTML = '';
+        main.appendChild(getCube());
+        requestAnimationFrame(animate);
+      }
+
+      animate()
+
+    </script>
+  </body>
+
+</html>
