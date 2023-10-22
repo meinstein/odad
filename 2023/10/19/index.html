@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>$3.60 macro burger</title>
+    <style>
+      body {
+        margin: 4px;
+        padding: 0;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const grid = document.createElement('div');
+      // 18 col grid, 20 rows, each grid item is 25px by 25px
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = 'repeat(15, 25px)';
+      grid.style.gridTemplateRows = 'repeat(24, 25px)';
+
+      let counter = 0;
+      const data = [];
+
+      // add 0 - 360 to data array
+      for (let i = 0; i < 360; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.id = i;
+        gridItem.style.width = '25px';
+        gridItem.style.height = '25px';
+        gridItem.style.mixBlendMode = 'multiply';
+        gridItem.style.backgroundImage = 'url("./penny.png")';
+        gridItem.style.outline = 'none';
+        gridItem.style.backgroundRepeat = 'no-repeat';
+        gridItem.style.backgroundColor = 'white';
+        gridItem.style.backfaceVisibility = 'hidden';
+        gridItem.style.backgroundPosition = 'center';
+        // rotate background image by 1 degree
+        gridItem.style.transform = `rotate(${i}deg)`;
+        gridItem.style.backgroundSize = 'cover';
+
+        data.push({
+          el: gridItem,
+          rotation: i,
+        })
+
+        grid.appendChild(gridItem);
+      }
+
+      const animate = () => {
+        const { el, rotation } = data[counter]
+
+        const nextRotation = rotation + 270;
+
+        data[counter].rotation = nextRotation;
+
+
+        el.animate([
+          { transform: `rotate(${rotation}deg)` },
+          { transform: `rotate(${nextRotation}deg)` },
+        ], {
+          duration: Math.floor(Math.random() * 5000) + 2000,
+          iterations: 1,
+          fill: 'forwards',
+          easing: 'ease-in-out',
+        });
+
+        if (counter === 359) {
+          counter = 0;
+        } else {
+          counter++;
+        }
+
+        requestAnimationFrame(animate);
+      };
+
+
+      requestAnimationFrame(animate);
+
+      main.appendChild(grid);
+
+    </script>
+  </body>
+
+</html>
