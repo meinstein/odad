@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>noisey signal</title>
     <style>
       body {
         margin: 0;
@@ -25,7 +25,7 @@
       const WIDTH = 300;
       const HEIGHT = 300;
 
-      const PIXEL_SIZE = 20;
+      const PIXEL_SIZE = 10;
       const PIXELS_HORIZONTAL = WIDTH / PIXEL_SIZE;
       const PIXELS_VERTICAL = HEIGHT / PIXEL_SIZE;
 
@@ -39,24 +39,41 @@
       redGrid.style.display = 'grid';
       redGrid.style.gridTemplateColumns = `repeat(${PIXELS_HORIZONTAL}, ${PIXEL_SIZE}px)`;
       redGrid.style.gridTemplateRows = `repeat(${PIXELS_VERTICAL}, ${PIXEL_SIZE}px)`;
+      main.appendChild(redGrid);
 
       const blueGrid = document.createElement('div');
       blueGrid.style.position = 'absolute';
       blueGrid.style.display = 'grid';
       blueGrid.style.gridTemplateColumns = `repeat(${PIXELS_HORIZONTAL}, ${PIXEL_SIZE}px)`;
       blueGrid.style.gridTemplateRows = `repeat(${PIXELS_VERTICAL}, ${PIXEL_SIZE}px)`;
-
-      const greenGrid = document.createElement('div');
-      greenGrid.style.position = 'absolute';
-      greenGrid.style.display = 'grid';
-      greenGrid.style.gridTemplateColumns = `repeat(${PIXELS_HORIZONTAL}, ${PIXEL_SIZE}px)`;
-      greenGrid.style.gridTemplateRows = `repeat(${PIXELS_VERTICAL}, ${PIXEL_SIZE}px)`;
-
-
-      // add grids to main
-      main.appendChild(redGrid);
       main.appendChild(blueGrid);
-      main.appendChild(greenGrid);
+
+      // seed each grid with an empty grid item
+      for (let i = 0; i < PIXELS; i++) {
+        const red = document.createElement('div');
+        red.style.width = `${PIXEL_SIZE}px`;
+        red.style.height = `${PIXEL_SIZE}px`;
+        redGrid.appendChild(red);
+
+        const blue = document.createElement('div');
+        blue.style.width = `${PIXEL_SIZE}px`;
+        blue.style.height = `${PIXEL_SIZE}px`;
+        blueGrid.appendChild(blue);
+
+
+        if (
+          Math.random() > 0.97
+        ) {
+          blue.animate([
+            { transform: 'scale(0.25)' },
+            { transform: 'scale(1)' }
+          ], {
+            // random duration between 1 and 2 seconds
+            duration: Math.random() * 5000 + 1000,
+            iterations: Infinity
+          });
+        }
+      }
 
       const getRandomDecimal = () => {
         return Math.random().toFixed(1);
@@ -69,41 +86,37 @@
       const getFrame = () => {
         const redPixels = [];
         const bluePixels = [];
-        const greenPixels = [];
 
         for (let i = 0; i < PIXELS; i++) {
           const red = document.createElement('div');
-          red.style.backgroundColor = 'red';
+          red.style.backgroundColor = 'indianred';
+          red.style.width = `${PIXEL_SIZE}px`;
+          red.style.height = `${PIXEL_SIZE}px`;
           red.style.opacity = getRandomDecimal();
           red.style.zIndex = getRandomInt(0, 100)
           redPixels.push(red);
 
           const blue = document.createElement('div');
-          blue.style.backgroundColor = 'blue';
+          blue.style.backgroundColor = 'lightsteelblue';
+          blue.style.width = `${PIXEL_SIZE}px`;
+          blue.style.height = `${PIXEL_SIZE}px`;
           blue.style.opacity = getRandomDecimal();
           blue.style.zIndex = getRandomInt(0, 100)
           bluePixels.push(blue);
-
-          const green = document.createElement('div');
-          green.style.backgroundColor = 'green';
-          green.style.opacity = getRandomDecimal();
-          green.style.zIndex = getRandomInt(0, 100)
-          greenPixels.push(green);
         }
 
-        return [redPixels, bluePixels, greenPixels]
+        return [redPixels, bluePixels]
       }
 
-      const drawFrame = ([redPixels, bluePixels, greenPixels]) => {
-        // remove children from grids
-        redGrid.innerHTML = '';
-        blueGrid.innerHTML = '';
-        greenGrid.innerHTML = '';
-
+      const drawFrame = ([redPixels, bluePixels]) => {
         for (let i = 0; i < PIXELS; i++) {
-          redGrid.appendChild(redPixels[i]);
-          blueGrid.appendChild(bluePixels[i]);
-          greenGrid.appendChild(greenPixels[i]);
+          const redContainer = redGrid.children[i]
+          redContainer.innerHTML = '';
+          redContainer.appendChild(redPixels[i]);
+
+          const blueContainer = blueGrid.children[i]
+          blueContainer.innerHTML = '';
+          blueContainer.appendChild(bluePixels[i]);
         }
       }
 
