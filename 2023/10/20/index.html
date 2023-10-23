@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 300;
+      const HEIGHT = 300;
+
+      const PIXEL_SIZE = 20;
+      const PIXELS_HORIZONTAL = WIDTH / PIXEL_SIZE;
+      const PIXELS_VERTICAL = HEIGHT / PIXEL_SIZE;
+
+      const PIXELS = PIXELS_HORIZONTAL * PIXELS_VERTICAL;
+
+      const main = document.querySelector('main');
+      main.style.position = 'relative';
+
+      const redGrid = document.createElement('div');
+      redGrid.style.position = 'absolute';
+      redGrid.style.display = 'grid';
+      redGrid.style.gridTemplateColumns = `repeat(${PIXELS_HORIZONTAL}, ${PIXEL_SIZE}px)`;
+      redGrid.style.gridTemplateRows = `repeat(${PIXELS_VERTICAL}, ${PIXEL_SIZE}px)`;
+
+      const blueGrid = document.createElement('div');
+      blueGrid.style.position = 'absolute';
+      blueGrid.style.display = 'grid';
+      blueGrid.style.gridTemplateColumns = `repeat(${PIXELS_HORIZONTAL}, ${PIXEL_SIZE}px)`;
+      blueGrid.style.gridTemplateRows = `repeat(${PIXELS_VERTICAL}, ${PIXEL_SIZE}px)`;
+
+      const greenGrid = document.createElement('div');
+      greenGrid.style.position = 'absolute';
+      greenGrid.style.display = 'grid';
+      greenGrid.style.gridTemplateColumns = `repeat(${PIXELS_HORIZONTAL}, ${PIXEL_SIZE}px)`;
+      greenGrid.style.gridTemplateRows = `repeat(${PIXELS_VERTICAL}, ${PIXEL_SIZE}px)`;
+
+
+      // add grids to main
+      main.appendChild(redGrid);
+      main.appendChild(blueGrid);
+      main.appendChild(greenGrid);
+
+      const getRandomDecimal = () => {
+        return Math.random().toFixed(1);
+      }
+
+      const getRandomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const getFrame = () => {
+        const redPixels = [];
+        const bluePixels = [];
+        const greenPixels = [];
+
+        for (let i = 0; i < PIXELS; i++) {
+          const red = document.createElement('div');
+          red.style.backgroundColor = 'red';
+          red.style.opacity = getRandomDecimal();
+          red.style.zIndex = getRandomInt(0, 100)
+          redPixels.push(red);
+
+          const blue = document.createElement('div');
+          blue.style.backgroundColor = 'blue';
+          blue.style.opacity = getRandomDecimal();
+          blue.style.zIndex = getRandomInt(0, 100)
+          bluePixels.push(blue);
+
+          const green = document.createElement('div');
+          green.style.backgroundColor = 'green';
+          green.style.opacity = getRandomDecimal();
+          green.style.zIndex = getRandomInt(0, 100)
+          greenPixels.push(green);
+        }
+
+        return [redPixels, bluePixels, greenPixels]
+      }
+
+      const drawFrame = ([redPixels, bluePixels, greenPixels]) => {
+        // remove children from grids
+        redGrid.innerHTML = '';
+        blueGrid.innerHTML = '';
+        greenGrid.innerHTML = '';
+
+        for (let i = 0; i < PIXELS; i++) {
+          redGrid.appendChild(redPixels[i]);
+          blueGrid.appendChild(bluePixels[i]);
+          greenGrid.appendChild(greenPixels[i]);
+        }
+      }
+
+      const animate = () => {
+        const pixels = getFrame();
+        drawFrame(pixels);
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+
+    </script>
+  </body>
+
+</html>
