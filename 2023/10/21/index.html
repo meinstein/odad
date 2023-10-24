@@ -77,8 +77,32 @@
         circle.setAttribute('cy', landmark.position.y);
         circle.setAttribute('r', 2);
         circle.setAttribute('fill', 'red');
+
         svg.appendChild(circle);
       });
+
+      // draw a triangle between three random landmarks
+      const drawTriangle = () => {
+        const triangle = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        triangle.id = 'triangle';
+        const randomLandmarks = landmarks.sort(() => 0.5 - Math.random()).slice(0, 3);
+        const points = randomLandmarks.map(landmark => `${landmark.position.x},${landmark.position.y}`).join(' ');
+        triangle.setAttribute('points', points);
+        // no fill
+        triangle.setAttribute('fill', 'none');
+        triangle.setAttribute('stroke', 'red');
+        triangle.setAttribute('stroke-width', '2');
+        svg.appendChild(triangle);
+      }
+
+      setInterval(() => {
+        // clear prev triangle
+        const prevTriangle = document.querySelector('#triangle');
+        if (prevTriangle) {
+          svg.removeChild(prevTriangle);
+        }
+        drawTriangle();
+      }, 1000);
 
     </script>
   </body>
