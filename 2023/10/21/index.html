@@ -36,7 +36,8 @@
     </main>
     <script type="module">
       // Result from: https://cloud.google.com/vision/docs/detecting-faces
-      import data from './data.json';
+      import { data } from './data.js';
+
       const [faceAnnotation] = data.responses[0].faceAnnotations;
       console.log(faceAnnotation)
       const boundingPoly = faceAnnotation.boundingPoly;
