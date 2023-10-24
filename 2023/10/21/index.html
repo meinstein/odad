@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>detected</title>
+    <style>
+      main {
+        display: relative;
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <img width="350" height="350" src="./mugshot.jpg">
+      <!-- add an svg that overlays the img -->
+      <svg width="350px" height="350px" xmlns="http://www.w3.org/2000/svg">
+      </svg>
+    </main>
+    <script type="module">
+      // Result from: https://cloud.google.com/vision/docs/detecting-faces
+      import data from './data.json';
+      const [faceAnnotation] = data.responses[0].faceAnnotations;
+      console.log(faceAnnotation)
+      const boundingPoly = faceAnnotation.boundingPoly;
+      const fdBoundingPoly = faceAnnotation.fdBoundingPoly;
+      const landmarks = faceAnnotation.landmarks;
+
+
+      const svg = document.querySelector('svg');
+
+      // draw a rect around the bounding poly
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', boundingPoly.vertices[0].x);
+      rect.setAttribute('y', boundingPoly.vertices[0].y);
+      rect.setAttribute('width', boundingPoly.vertices[1].x - boundingPoly.vertices[0].x);
+      rect.setAttribute('height', boundingPoly.vertices[2].y - boundingPoly.vertices[1].y);
+      rect.setAttribute('fill', 'none');
+      rect.setAttribute('stroke', 'red');
+      rect.setAttribute('stroke-width', '2');
+      svg.appendChild(rect);
+
+
+      // draw a rect around the fd bounding poly
+      const fdRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      fdRect.setAttribute('x', fdBoundingPoly.vertices[0].x);
+      fdRect.setAttribute('y', fdBoundingPoly.vertices[0].y);
+      fdRect.setAttribute('width', fdBoundingPoly.vertices[1].x - fdBoundingPoly.vertices[0].x);
+      fdRect.setAttribute('height', fdBoundingPoly.vertices[2].y - fdBoundingPoly.vertices[1].y);
+      fdRect.setAttribute('fill', 'none');
+      fdRect.setAttribute('stroke', 'red');
+      fdRect.setAttribute('stroke-width', '2');
+      svg.appendChild(fdRect);
+
+      // draw a circle for every landmark
+      landmarks.forEach(landmark => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', landmark.position.x);
+        circle.setAttribute('cy', landmark.position.y);
+        circle.setAttribute('r', 2);
+        circle.setAttribute('fill', 'red');
+        svg.appendChild(circle);
+      });
+
+    </script>
+  </body>
+
+</html>
