@@ -23,7 +23,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        max-width: 417.5px;
+        max-width: 375px;
         opacity: 0.55;
       }
 
@@ -31,7 +31,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        max-width: 417.5px;
+        max-width: 375px;
       }
     </style>
   </head>
@@ -56,6 +56,22 @@
       const logoAnnotations = data.responses[0].logoAnnotations;
       const localizedObjectAnnotations = data.responses[0].localizedObjectAnnotations;
 
+      // draw a rect for each crop hint
+      cropHintsAnnotation.cropHints.forEach((cropHint, i) => {
+        const { boundingPoly } = cropHint;
+        const [x, y] = [boundingPoly.vertices[0].x, boundingPoly.vertices[0]?.y || 0];
+
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', x);
+        rect.setAttribute('y', y);
+        rect.setAttribute('width', boundingPoly.vertices[1].x - x);
+        rect.setAttribute('height', boundingPoly.vertices[2].y - y);
+        rect.setAttribute('fill', 'none');
+        rect.setAttribute('stroke', 'red');
+        rect.setAttribute('stroke-width', '5');
+        svg.appendChild(rect);
+      });
+
       textAnnotations.forEach((textAnnotation, i) => {
         if (i === 0) return;
         const { description, boundingPoly } = textAnnotation;
@@ -79,9 +95,11 @@
         text.setAttribute('text-anchor', 'start');
         text.setAttribute('dominant-baseline', 'hanging');
         text.textContent = description;
-        svg.appendChild(text);
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.appendChild(text);
+        svg.appendChild(g);
         // animate the text rotating infinitely, using origin point of the anchor point
-        text.animate([
+        g.animate([
           {
             transform: 'rotate(0deg)',
             transformOrigin: `${x}px ${y}px`
@@ -101,22 +119,6 @@
 
       });
 
-      // draw a rect for each crop hint
-      cropHintsAnnotation.cropHints.forEach((cropHint, i) => {
-        const { boundingPoly } = cropHint;
-        const [x, y] = [boundingPoly.vertices[0].x, boundingPoly.vertices[0]?.y || 0];
-
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', x);
-        rect.setAttribute('y', y);
-        rect.setAttribute('width', boundingPoly.vertices[1].x - x);
-        rect.setAttribute('height', boundingPoly.vertices[2].y - y);
-        rect.setAttribute('fill', 'none');
-        rect.setAttribute('stroke', 'purple');
-        rect.setAttribute('stroke-width', '5');
-        svg.appendChild(rect);
-      });
-
       // draw a polygon for each logo
       logoAnnotations.forEach((logoAnnotation, i) => {
         const { boundingPoly } = logoAnnotation;
@@ -125,7 +127,7 @@
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         poly.setAttribute('points', boundingPoly.vertices.map(vertex => `${vertex.x},${vertex.y}`).join(' '));
         poly.setAttribute('fill', 'none');
-        poly.setAttribute('stroke', 'blue');
+        poly.setAttribute('stroke', 'red');
         poly.setAttribute('stroke-width', '5');
         svg.appendChild(poly);
       });
@@ -138,7 +140,7 @@
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         poly.setAttribute('points', boundingPoly.normalizedVertices.map(vertex => `${vertex.x * 1670},${vertex.y * 2190}`).join(' '));
         poly.setAttribute('fill', 'none');
-        poly.setAttribute('stroke', 'green');
+        poly.setAttribute('stroke', 'red');
         poly.setAttribute('stroke-width', '5');
         svg.appendChild(poly);
       });
