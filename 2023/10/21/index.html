@@ -35,11 +35,9 @@
       </svg>
     </main>
     <script type="module">
-      // Result from: https://cloud.google.com/vision/docs/detecting-faces
       import { data } from './data.js';
 
       const [faceAnnotation] = data.responses[0].faceAnnotations;
-      console.log(faceAnnotation)
       const boundingPoly = faceAnnotation.boundingPoly;
       const fdBoundingPoly = faceAnnotation.fdBoundingPoly;
       const landmarks = faceAnnotation.landmarks;
@@ -102,7 +100,9 @@
           svg.removeChild(prevTriangle);
         }
         drawTriangle();
-      }, 1000);
+      }, 500);
+
+      drawTriangle();
 
     </script>
   </body>

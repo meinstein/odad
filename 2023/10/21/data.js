@@ -1,3 +1,4 @@
+// Result from: https://cloud.google.com/vision/docs/detecting-faces
 export const data = {
   "responses": [
     {
