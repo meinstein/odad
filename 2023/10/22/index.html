@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>thawed civilization</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+
+      main {
+        position: relative;
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        max-width: 417.5px;
+        opacity: 0.55;
+      }
+
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        max-width: 417.5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- 1670px x 2190px -->
+      <img src="./frozen_civilization.jpg" />
+      <!-- add an svg that overlays the img -->
+      <svg viewBox="0 0 1670 2190" xmlns="http://www.w3.org/2000/svg">
+      </svg>
+    </main>
+    <script type="module">
+      import { data } from './data.js';
+      const IMAGE_ORIGINAL_WIDTH = 1670;
+      const IMAGE_ORIGINAL_HEIGHT = 2190;
+      const ASPECT_RATIO = IMAGE_ORIGINAL_WIDTH / IMAGE_ORIGINAL_HEIGHT;
+
+      const svg = document.querySelector('svg');
+      const textAnnotations = data.responses[0].textAnnotations;
+      const cropHintsAnnotation = data.responses[0].cropHintsAnnotation;
+      const logoAnnotations = data.responses[0].logoAnnotations;
+      const localizedObjectAnnotations = data.responses[0].localizedObjectAnnotations;
+
+      textAnnotations.forEach((textAnnotation, i) => {
+        if (i === 0) return;
+        const { description, boundingPoly } = textAnnotation;
+        const [x, y] = [boundingPoly.vertices[0].x, boundingPoly.vertices[0].y];
+
+        // draw a poly around the text bounding poly
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute('points', boundingPoly.vertices.map(vertex => `${vertex.x},${vertex.y}`).join(' '));
+        poly.setAttribute('fill', 'rgba(0,255,0,0.5)');
+        poly.setAttribute('stroke', 'red');
+        poly.setAttribute('stroke-width', '5');
+        svg.appendChild(poly);
+
+        // add text for each text annotation and position it at the top left of the bounding poly
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', x);
+        text.setAttribute('y', y);
+        text.setAttribute('fill', 'black');
+        text.setAttribute('font-size', '50');
+        text.setAttribute('font-family', 'sans-serif');
+        text.setAttribute('text-anchor', 'start');
+        text.setAttribute('dominant-baseline', 'hanging');
+        text.textContent = description;
+        svg.appendChild(text);
+        // animate the text rotating infinitely, using origin point of the anchor point
+        text.animate([
+          {
+            transform: 'rotate(0deg)',
+            transformOrigin: `${x}px ${y}px`
+          },
+          {
+            transform: 'rotate(360deg)',
+            transformOrigin: `${x}px ${y}px`
+          }
+        ], {
+          // random duration between 1 and 2s
+          duration: Math.random() * 1000 + 1000,
+          iterations: Infinity,
+          // random direction
+          direction: Math.random() > 0.5 ? 'normal' : 'reverse'
+        });
+
+
+      });
+
+      // draw a rect for each crop hint
+      cropHintsAnnotation.cropHints.forEach((cropHint, i) => {
+        const { boundingPoly } = cropHint;
+        const [x, y] = [boundingPoly.vertices[0].x, boundingPoly.vertices[0]?.y || 0];
+
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', x);
+        rect.setAttribute('y', y);
+        rect.setAttribute('width', boundingPoly.vertices[1].x - x);
+        rect.setAttribute('height', boundingPoly.vertices[2].y - y);
+        rect.setAttribute('fill', 'none');
+        rect.setAttribute('stroke', 'purple');
+        rect.setAttribute('stroke-width', '5');
+        svg.appendChild(rect);
+      });
+
+      // draw a polygon for each logo
+      logoAnnotations.forEach((logoAnnotation, i) => {
+        const { boundingPoly } = logoAnnotation;
+        const [x, y] = [boundingPoly.vertices[0].x, boundingPoly.vertices[0].y];
+
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute('points', boundingPoly.vertices.map(vertex => `${vertex.x},${vertex.y}`).join(' '));
+        poly.setAttribute('fill', 'none');
+        poly.setAttribute('stroke', 'blue');
+        poly.setAttribute('stroke-width', '5');
+        svg.appendChild(poly);
+      });
+
+      // draw a polygon for each object
+      localizedObjectAnnotations.forEach((objectAnnotation, i) => {
+        const { boundingPoly } = objectAnnotation;
+        const [x, y] = [boundingPoly.normalizedVertices[0].x * 1670, boundingPoly.normalizedVertices[0].y * 2190];
+
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute('points', boundingPoly.normalizedVertices.map(vertex => `${vertex.x * 1670},${vertex.y * 2190}`).join(' '));
+        poly.setAttribute('fill', 'none');
+        poly.setAttribute('stroke', 'green');
+        poly.setAttribute('stroke-width', '5');
+        svg.appendChild(poly);
+      });
+    </script>
+  </body>
+
+</html>
