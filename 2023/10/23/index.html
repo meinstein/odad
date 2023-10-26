@@ -7,18 +7,111 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>politics</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        display: relative;
+      }
+
+      img,
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: rotate 20s linear infinite alternate;
+      }
+
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(-15deg);
+        }
+
+        50% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(15deg);
+        }
+      }
+
+      /* animate the lins */
+      line {
+        animation: draw 2s linear infinite alternate;
+      }
+
+      @keyframes draw {
+        from {
+          stroke-dashoffset: 1000;
+        }
+
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <!-- add main content here -->
+      <img width="400px" src="./senators.png">
+      <svg width="400px" height="371.18px" viewBox="0 0 1610 1494"
+        xmlns="http://www.w3.org/2000/svg">
+      </svg>
     </main>
-    <script>
-      // add js here
+    <script type="module">
+      import { data } from './data.js';
+      const main = document.querySelector('main');
+      const svg = main.querySelector('svg');
+
+      const { faceAnnotations } = data.responses[0]
+
+      // add a dot for each face
+      faceAnnotations.forEach(face => {
+        face.landmarks.forEach(landmark => {
+          // const { x, y, z } = landmark.position
+          // const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          // dot.setAttribute('cx', x);
+          // dot.setAttribute('cy', y);
+          // dot.setAttribute('r', 8);
+          // dot.setAttribute('fill', 'red');
+          // svg.appendChild(dot);
+
+          const randomFace = faceAnnotations[Math.floor(Math.random() * faceAnnotations.length)];
+          const randomLandmark = randomFace.landmarks[Math.floor(Math.random() * randomFace.landmarks.length)];
+          const randomFace2 = faceAnnotations[Math.floor(Math.random() * faceAnnotations.length)];
+          const randomLandmark2 = randomFace2.landmarks[Math.floor(Math.random() * randomFace2.landmarks.length)];
+
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', randomLandmark.position.x);
+          line.setAttribute('y1', randomLandmark.position.y);
+          line.setAttribute('x2', randomLandmark2.position.x);
+          line.setAttribute('y2', randomLandmark2.position.y);
+          line.setAttribute('stroke', 'red');
+          line.setAttribute('stroke-width', '2');
+          // animate the drawing of the line
+          line.setAttribute('stroke-dasharray', '1000');
+          line.setAttribute('stroke-dashoffset', '1000');
+          svg.appendChild(line);
+        });
+      });
+
+
+
+
+
+
     </script>
   </body>
 
