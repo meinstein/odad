@@ -7,9 +7,12 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>primordial gender reveal soup</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 12px;
+        padding: 0;
+      }
     </style>
   </head>
 
@@ -18,7 +21,71 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const SQUARE_SIZE = 5;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 350;
+      canvas.height = 350;
+      const ctx = canvas.getContext('2d');
+      document.body.appendChild(canvas);
+
+      // create a grid of 2px x 2px squares and add to a list
+      const squares = [];
+
+      for (let x = 0; x < canvas.width; x += SQUARE_SIZE) {
+        for (let y = 0; y < canvas.height; y += SQUARE_SIZE) {
+          const randomOpacity = Math.random();
+          squares.push({
+            x,
+            y,
+            width: SQUARE_SIZE,
+            height: SQUARE_SIZE,
+            color: `rgba(${x}, ${y}, ${x + y}, ${randomOpacity})`
+          });
+        }
+      }
+
+      // add the squares to the canvas
+      squares.forEach(square => {
+        ctx.fillStyle = square.color;
+        ctx.fillRect(square.x, square.y, square.width, square.height);
+      });
+
+      const animate = () => {
+        // clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        squares.forEach(square => {
+          // randomly change the scale of the square between 0.5 and 2
+          const randomScale = Math.random() * 1.5 + 0.5;
+          ctx.fillStyle = square.color;
+          ctx.fillRect(square.x, square.y, square.width * randomScale, square.height * randomScale);
+
+          // randomly change the color of the square
+          const randomOpacity = Math.random();
+          ctx.fillStyle = `rgba(${square.x}, ${square.y}, ${square.x + square.y}, ${randomOpacity})`;
+          ctx.fillRect(square.x, square.y, square.width * randomScale, square.height * randomScale);
+
+          // randomly change the position of the square
+          const randomX = Math.random() * canvas.width;
+          const randomY = Math.random() * canvas.height;
+          ctx.fillStyle = `rgba(${square.x}, ${square.y}, ${square.x + square.y}, ${randomOpacity})`;
+          ctx.fillRect(randomX, randomY, square.width * randomScale, square.height * randomScale);
+
+          // randomly change the rotation of the square
+          const randomRotation = Math.random() * 360;
+          ctx.fillStyle = `rgba(${square.x}, ${square.y}, ${square.x + square.y}, ${randomOpacity})`;
+          ctx.save();
+          ctx.translate(randomX, randomY);
+          ctx.rotate(randomRotation * Math.PI / 180);
+          ctx.fillRect(0, 0, square.width * randomScale, square.height * randomScale);
+          ctx.restore();
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
     </script>
   </body>
 
