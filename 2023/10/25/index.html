@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>💦</title>
+    <style>
+      body {
+        margin: 12px;
+        padding: 0;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+
+      const canvas = document.createElement('div');
+      canvas.style.width = '350px';
+      canvas.style.height = '350px';
+      canvas.style.border = '1px solid black';
+      canvas.style.position = 'relative';
+      canvas.style.display = 'flex';
+      canvas.style.flexDirection = 'column';
+      canvas.style.justifyContent = 'center';
+      canvas.style.alignItems = 'center';
+
+
+      [... new Array(8)].forEach((_, i) => {
+        const eggplant = document.createElement('div');
+        eggplant.style.fontSize = '48px';
+        eggplant.style.lineHeight = '24px';
+        eggplant.style.transformOrigin = 'center center';
+
+        const scale = i % 2 === 0 ? `scale(1,1)` : `scale(-1,1)`;
+
+        eggplant.animate([
+          {
+            transform: `rotateZ(0deg) ${scale}`
+          },
+          {
+            transform: `rotateZ(360deg) ${scale}`
+          }
+        ], {
+          duration: 10_000,
+          iterations: Infinity
+        });
+        eggplant.innerText = '🍆';
+        canvas.appendChild(eggplant);
+      })
+
+      const desc = document.createElement('div');
+      desc.style.width = '200px';
+      desc.style.height = '225px';
+      desc.style.marginTop = '12px';
+      desc.style.border = '1px solid black';
+      desc.style.padding = '12px';
+      // font family helvetica neue
+      desc.style.fontFamily = 'Helvetica Neue';
+      // font size 12px
+      desc.style.fontSize = '12px';
+      // line height 1.5
+      desc.style.lineHeight = '1.25';
+      // font weight light
+      desc.style.fontWeight = 'light';
+
+      // inner text
+      desc.innerText = 'Eight Stacked Emojis\nPixels, 2023\n\n The emojis in this sculpture are made of welded pixels. They have been configured in such a way that alternating emojis protrude in relation to the centre. The impossible balance thus created can only be maintained because the emojis have been welded together. In this stack, the empty space between the emojis is also emphasized. Meinstein\'s stack is a play on balance and gravity.';
+
+
+      main.appendChild(canvas);
+      main.appendChild(desc);
+    </script>
+  </body>
+
+</html>
