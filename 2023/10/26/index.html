@@ -18,7 +18,7 @@
 
   <body>
     <main>
-      <video id="video" autoplay loop>
+      <video id="video" autoplay loop muted>
         <source src="./obama.mp4" type="video/mp4" />
       </video>
       <canvas id="c1" width="256" height="144"></canvas>
@@ -27,7 +27,6 @@
     <script>
       const main = document.querySelector('main');
       main.style.position = 'relative';
-
       const video = document.getElementById('video');
 
       // create a canvas to draw each video frame to
@@ -107,7 +106,6 @@
       video.addEventListener('play', () => {
         draw()
       });
-
 
 
     </script>
