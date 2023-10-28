@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>60 frames per frame per second per crisis</title>
     <style>
       /* add styles here */
     </style>
@@ -15,10 +15,86 @@
 
   <body>
     <main>
-      <!-- add main content here -->
+      <video id="video" src="obama.mp4" controls="true" autoplay="true" loop="true"
+        crossorigin="anonymous"></video>
+      <canvas id="c1" width="256" height="144"></canvas>
+      <div id="grid"></div>
     </main>
     <script>
-      // add js here
+      const video = document.getElementById('video');
+      video.style.display = 'none';
+      const canvas = document.querySelector('canvas');
+      canvas.style.display = 'none';
+      const ctx = canvas.getContext('2d');
+
+      const grid = document.getElementById('grid');
+      // grid with 7 rows and 7 columns each 50px wide and high
+      const rows = 12;
+      const cols = 5;
+      const width = 64;
+      const height = 36;
+      grid.style.width = `${cols * width}px`;
+      grid.style.height = `${rows * height}px`;
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = `repeat(${cols}, ${width}px)`;
+      grid.style.gridTemplateRows = `repeat(${rows}, ${height}px)`;
+      grid.style.gridGap = '4px';
+
+      const contexts = []
+
+      // add a canvas to each grid cell
+      for (let i = 0; i < rows * cols; i++) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        contexts.push(canvas.getContext('2d'));
+        // add gray background to each canvas
+        contexts[i].fillStyle = 'lightgray';
+        contexts[i].fillRect(0, 0, width, height);
+        grid.appendChild(canvas);
+      }
+
+      canvas.width = 256 / 4;
+      canvas.height = 144 / 4;
+
+      const images = [];
+      let counter = 0;
+
+      const draw = () => {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        images.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+
+
+        if (images.length > rows * cols) {
+          images.shift();
+        }
+
+        // sequentially select a context to draw to
+        const context = contexts[counter];
+
+        const image = images[counter];
+
+
+        counter++;
+
+        if (counter >= contexts.length) {
+          counter = 0;
+        }
+
+        context.putImageData(image, 0, 0);
+
+        requestAnimationFrame(draw);
+      };
+
+      video.addEventListener('play', () => {
+        draw()
+      });
+
+
+
     </script>
   </body>
 
