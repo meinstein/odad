@@ -23,12 +23,15 @@
     <script>
       const video = document.getElementById('video');
       video.style.display = 'none';
+
+      // create a canvas to draw each video frame to
+      // will then push the image data to an array
+      // and use that array to draw to a grid of canvases
       const canvas = document.querySelector('canvas');
       canvas.style.display = 'none';
       const ctx = canvas.getContext('2d');
 
       const grid = document.getElementById('grid');
-      // grid with 7 rows and 7 columns each 50px wide and high
       const rows = 12;
       const cols = 5;
       const width = 64;
@@ -68,13 +71,12 @@
         images.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
 
 
+        // avoid memory leak
         if (images.length > rows * cols) {
           images.shift();
         }
 
-        // sequentially select a context to draw to
         const context = contexts[counter];
-
         const image = images[counter];
 
 
