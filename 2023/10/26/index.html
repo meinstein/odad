@@ -9,25 +9,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>60 frames per frame per second per crisis</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 2px;
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <video id="video" src="obama.mp4" controls="true" autoplay="true" loop="true"
-        crossorigin="anonymous"></video>
+      <video id="video" autoplay loop muted playsinline>
+        <source src="./obama.mp4" type="video/mp4" />
+      </video>
       <canvas id="c1" width="256" height="144"></canvas>
       <div id="grid"></div>
     </main>
     <script>
+      const main = document.querySelector('main');
+      main.style.position = 'relative';
+
       const video = document.getElementById('video');
-      video.style.display = 'none';
 
       // create a canvas to draw each video frame to
       // will then push the image data to an array
       // and use that array to draw to a grid of canvases
-      const canvas = document.querySelector('canvas');
+      const canvas = document.getElementById('c1');
       canvas.style.display = 'none';
       const ctx = canvas.getContext('2d');
 
@@ -36,12 +42,19 @@
       const cols = 5;
       const width = 64;
       const height = 36;
+      // The grid is positioned absolutely to the top left of the page
+      // intentionally to overlay the video element, which has to be
+      // present in the DOM for the video to play in Safari.
+      grid.style.position = 'absolute';
+      grid.style.top = '0';
+      grid.style.left = '0';
+      grid.style.backgroundColor = 'white';
       grid.style.width = `${cols * width}px`;
       grid.style.height = `${rows * height}px`;
       grid.style.display = 'grid';
       grid.style.gridTemplateColumns = `repeat(${cols}, ${width}px)`;
       grid.style.gridTemplateRows = `repeat(${rows}, ${height}px)`;
-      grid.style.gridGap = '4px';
+      grid.style.gridGap = '2px';
 
       const contexts = []
 
