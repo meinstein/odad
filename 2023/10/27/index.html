@@ -7,20 +7,112 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>this is free water</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <!-- add main content here -->
+
     </main>
     <script>
-      // add js here
+      const WIDTH = 350;
+      const HEIGHT = 500;
+      const NUM_OF_HOOKS = 18;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('div');
+      canvas.style.width = WIDTH + 'px';
+      canvas.style.height = HEIGHT + 'px';
+      // canvas.style.border = '1px solid black';
+      canvas.style.position = 'relative';
+      main.appendChild(canvas);
+
+      // add line and hook
+      [...new Array(NUM_OF_HOOKS)].forEach((_, idx) => {
+        const line = document.createElement('div');
+        line.style.position = 'absolute';
+        line.style.left = (idx + 1) * WIDTH / (NUM_OF_HOOKS + 1) + 'px';
+        const segment = Math.floor(Math.random() * (HEIGHT / 2)) + 25;
+        line.style.height = segment + 'px';
+        line.style.borderLeft = `2px dashed gray`;
+        line.style.display = 'flex';
+        line.style.flexDirection = 'column';
+
+        // random number between 50 and 75
+        const num = Math.floor(Math.random() * 25) + 50;
+
+        line.animate([
+          { height: segment + 'px' },
+          { height: segment + num + 'px' }
+        ], {
+          duration: Math.floor(Math.random() * 1500) + 1500,
+          iterations: Infinity,
+          direction: 'alternate',
+          easing: 'ease'
+        });
+
+        line.style.justifyContent = 'flex-end';
+        const hook = document.createElement('div');
+        // transform origin
+        hook.style.transformOrigin = 'top';
+        hook.animate([
+          { transform: 'translate(-69%, 90%) rotate(0)' },
+          { transform: 'translate(-69%, 100%) rotate(10deg)' },
+          { transform: 'translate(-69%, 90%) rotate(0)' }
+        ], {
+          duration: Math.floor(Math.random() * 1500) + 1500,
+          iterations: Infinity,
+          direction: 'alternate',
+          easing: 'ease'
+        });
+        hook.style.transform = 'translate(-69%, 90%)';
+        hook.innerHTML = '🪝';
+        hook.style.fontSize = '1.25rem';
+        hook.style.width = '1rem';
+        hook.style.height = '1rem';
+        // add to line
+        line.appendChild(hook);
+        // add to canvas
+        canvas.appendChild(line);
+      });
+
+
+      [...new Array(125)].forEach((_, idx) => {
+        const eyeball = document.createElement('div');
+        eyeball.innerHTML = '👁';
+        eyeball.style.position = 'absolute';
+        eyeball.style.left = Math.floor(Math.random() * WIDTH) + 'px';
+        // place in the bottom third of the canvas
+        eyeball.style.bottom = Math.floor(Math.random() * HEIGHT / 3) - 30 + 'px';
+        // random font size between 0.75rem and 1.5rem
+        eyeball.style.fontSize = Math.floor(Math.random() * 75) + 75 + '%';
+        eyeball.style.width = '1rem';
+        eyeball.style.height = '1rem';
+
+        // add swimming by animation to fish
+        eyeball.animate([
+          { transform: 'translate(0, 0)' },
+          { transform: 'translate(0, 10px)' },
+          { transform: 'translate(0, 0)' }
+        ], {
+          // random duration between 1500 and 3000
+          duration: Math.floor(Math.random() * 1500) + 1500,
+          iterations: Infinity,
+          direction: 'alternate',
+          easing: 'ease'
+        });
+
+        // add to canvas
+        canvas.appendChild(eyeball);
+      });
     </script>
   </body>
 
 </html>
-\
