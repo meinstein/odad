@@ -41,9 +41,10 @@
         line.style.left = (idx + 1) * WIDTH / (NUM_OF_HOOKS + 1) + 'px';
         const segment = Math.floor(Math.random() * (HEIGHT / 2)) + 25;
         line.style.height = segment + 'px';
-        line.style.borderLeft = `2px dashed gray`;
+        line.style.borderLeft = `2px dotted gray`;
         line.style.display = 'flex';
         line.style.flexDirection = 'column';
+        line.style.justifyContent = 'flex-end';
 
         // random number between 50 and 75
         const num = Math.floor(Math.random() * 25) + 50;
@@ -58,10 +59,10 @@
           easing: 'ease'
         });
 
-        line.style.justifyContent = 'flex-end';
+
+
         const hook = document.createElement('div');
         hook.style.transform = 'translate(-69%, 90%)';
-        // transform origin
         hook.style.transformOrigin = 'top';
         hook.innerHTML = '🪝';
         hook.style.fontSize = '1.25rem';
