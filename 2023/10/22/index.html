@@ -80,7 +80,8 @@
         // draw a poly around the text bounding poly
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         poly.setAttribute('points', boundingPoly.vertices.map(vertex => `${vertex.x},${vertex.y}`).join(' '));
-        poly.setAttribute('fill', 'rgba(0,255,0,0.5)');
+        // poly.setAttribute('fill', 'rgba(0,255,0,0.5)');
+        poly.setAttribute('fill', 'none');
         poly.setAttribute('stroke', 'red');
         poly.setAttribute('stroke-width', '5');
         svg.appendChild(poly);
