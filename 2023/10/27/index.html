@@ -60,11 +60,16 @@
 
         line.style.justifyContent = 'flex-end';
         const hook = document.createElement('div');
+        hook.style.transform = 'translate(-69%, 90%)';
         // transform origin
         hook.style.transformOrigin = 'top';
+        hook.innerHTML = '🪝';
+        hook.style.fontSize = '1.25rem';
+        hook.style.width = '1rem';
+        hook.style.height = '1rem';
         hook.animate([
           { transform: 'translate(-69%, 90%) rotate(0)' },
-          { transform: 'translate(-69%, 100%) rotate(10deg)' },
+          { transform: 'translate(-69%, 90%) rotate(10deg)' },
           { transform: 'translate(-69%, 90%) rotate(0)' }
         ], {
           duration: Math.floor(Math.random() * 1500) + 1500,
@@ -72,11 +77,6 @@
           direction: 'alternate',
           easing: 'ease'
         });
-        hook.style.transform = 'translate(-69%, 90%)';
-        hook.innerHTML = '🪝';
-        hook.style.fontSize = '1.25rem';
-        hook.style.width = '1rem';
-        hook.style.height = '1rem';
         // add to line
         line.appendChild(hook);
         // add to canvas
