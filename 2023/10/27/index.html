@@ -39,7 +39,7 @@
       [...new Array(NUM_OF_HOOKS)].forEach((_, idx) => {
         const line = document.createElement('div');
         line.style.position = 'absolute';
-        line.style.left = (idx + 1) * WIDTH / (NUM_OF_HOOKS + 1) + 'px';
+        line.style.left = (idx + 1) * WIDTH / (NUM_OF_HOOKS) + 'px';
         const segment = Math.floor(Math.random() * (HEIGHT / 2)) + 25;
         line.style.height = segment * 2 + 'px';
         // translate back up by half the height of the line
@@ -96,7 +96,7 @@
         eyeball.style.position = 'absolute';
         eyeball.style.left = Math.floor(Math.random() * WIDTH) + 'px';
         // place in the bottom third of the canvas
-        eyeball.style.bottom = Math.floor(Math.random() * HEIGHT / 3) - 30 + 'px';
+        eyeball.style.bottom = Math.floor(Math.random() * HEIGHT / 2.5) - 30 + 'px';
         // random font size between 0.75rem and 1.5rem
         eyeball.style.fontSize = Math.floor(Math.random() * 75) + 75 + '%';
         eyeball.style.width = '1rem';
