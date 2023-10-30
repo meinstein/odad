@@ -28,6 +28,7 @@
 
       const main = document.querySelector('main');
       const canvas = document.createElement('div');
+      canvas.style.opacity = 0;
       canvas.style.width = WIDTH + 'px';
       canvas.style.height = HEIGHT + 'px';
       // canvas.style.border = '1px solid black';
@@ -66,16 +67,16 @@
 
 
         const hook = document.createElement('div');
-        hook.style.transform = 'translate(-69%, 90%)';
+        hook.style.transform = 'translate(-70%, 90%)';
         hook.style.transformOrigin = 'top';
         hook.innerHTML = '🪝';
         hook.style.fontSize = '1.25rem';
         hook.style.width = '1rem';
         hook.style.height = '1rem';
         hook.animate([
-          { transform: 'translate(-69%, 90%) rotate(0)' },
-          { transform: 'translate(-69%, 90%) rotate(10deg)' },
-          { transform: 'translate(-69%, 90%) rotate(0)' }
+          { transform: 'translate(-70%, 90%) rotate(0)' },
+          { transform: 'translate(-70%, 90%) rotate(10deg)' },
+          { transform: 'translate(-70%, 90%) rotate(0)' }
         ], {
           duration: Math.floor(Math.random() * 1500) + 1500,
           iterations: Infinity,
@@ -116,6 +117,16 @@
 
         // add to canvas
         canvas.appendChild(eyeball);
+      });
+
+      // fade in canvas
+      canvas.animate([
+        { opacity: 0 },
+        { opacity: 1 }
+      ], {
+        delay: 350,
+        duration: 1000,
+        fill: 'forwards'
       });
     </script>
   </body>
