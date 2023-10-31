@@ -29,6 +29,8 @@
       <canvas id="canvas" width="256" height="144"></canvas>
       <div id="board"></div>
     </main>
+    <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
     <script>
       // video
       const video = document.getElementById('video');
@@ -46,7 +48,7 @@
       const images = [];
       let counter = 0;
 
-      const addImages = () => {
+      const populateBoardWithImages = () => {
         // clear board
         board.innerHTML = '';
 
@@ -101,13 +103,14 @@
         if (images.length > 60) {
           images.shift();
         }
+
         counter++;
 
         if (counter >= images.length) {
           counter = 0;
         }
 
-        addImages();
+        populateBoardWithImages();
 
         requestAnimationFrame(draw);
       };
