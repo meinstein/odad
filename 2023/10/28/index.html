@@ -56,13 +56,15 @@
         for (let i = 0; i < images.length; i++) {
           const img = document.createElement('img');
           const { data, teeth } = images[i];
+          const y = teeth?.y || 0;
+
           img.src = data;
           img.style.position = 'absolute';
           img.style.width = '64px';
           img.style.height = '36px';
           const rotate = Math.sin(i / 5) * 12;
-          img.style.webkitTransform = `rotate(${rotate}deg) translate3d(${i * 3}px, ${teeth.y + 1}px, 0)`;
-          img.style.transform = `rotate(${rotate}deg) translate3d(${i * 3}px, ${teeth.y + 1}px, 0)`;
+          img.style.webkitTransform = `rotate(${rotate}deg) translate3d(${i * 3}px, ${y + 1}px, 0)`;
+          img.style.transform = `rotate(${rotate}deg) translate3d(${i * 3}px, ${y + 1}px, 0)`;
           img.style.opacity = 1 * (i / images.length);
           img.style.borderRadius = '50%';
           board.appendChild(img);
