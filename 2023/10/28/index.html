@@ -112,11 +112,7 @@
           counter = 0;
         }
 
-        // do not start drawing until we have enough images
-        // prevents glitch on mobile
-        if (images.length > 30) {
-          populateBoardWithImages();
-        }
+        populateBoardWithImages();
 
 
         requestAnimationFrame(draw);
