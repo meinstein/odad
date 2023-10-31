@@ -58,9 +58,8 @@
           // img.style.top = teeth.y + 1 + 'px';
           // img.style.left = i * 3 + 'px';
           // later in array is less opaque
-          // slightly rotate in a sin and cos wave
           const rotate = Math.sin(i / 5) * 12;
-          img.style.transform = `rotate(${rotate}deg) translate(${i * 3}px, ${teeth.y + 1}px)`;
+          img.style.transform = `rotate(${rotate}deg) translate3d(${i * 3}px, ${teeth.y + 1}px, 0)`;
           img.style.opacity = 1 * (i / images.length);
           // img.style.opacity = 1 - (i / images.length);
           img.style.borderRadius = '50%';
