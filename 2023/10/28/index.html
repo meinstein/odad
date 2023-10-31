@@ -92,7 +92,10 @@
         // pick random index from teeth
         const randomIndex = Math.floor(Math.random() * teeth.length);
 
-        images.push({ data: canvas.toDataURL(), teeth: teeth[0] });
+        images.push({
+          data: canvas.toDataURL("image/jpeg", 0.1),
+          teeth: teeth[0]
+        });
 
         // avoid memory leak
         if (images.length > 60) {
