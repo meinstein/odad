@@ -36,7 +36,7 @@
       // canvas
       const canvas = document.getElementById('canvas');
       canvas.style.display = 'none';
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
       // board
       const board = document.getElementById('board');

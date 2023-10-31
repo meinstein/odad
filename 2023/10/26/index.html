@@ -43,7 +43,7 @@
       // and use that array to draw to a grid of canvases
       const canvas = document.getElementById('c1');
       canvas.style.display = 'none';
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
 
       // draw grid
