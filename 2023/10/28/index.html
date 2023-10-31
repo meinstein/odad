@@ -9,7 +9,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>snake see, ball do</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+      }
     </style>
   </head>
 
@@ -24,14 +32,15 @@
     <script>
       // video
       const video = document.getElementById('video');
+
       // canvas
       const canvas = document.getElementById('canvas');
       canvas.style.display = 'none';
       const ctx = canvas.getContext('2d');
+
       // board
       const board = document.getElementById('board');
       board.style.position = 'relative';
-      // margin top
       board.style.marginTop = '32px';
 
       const images = [];
@@ -47,17 +56,8 @@
           const { data, teeth } = images[i];
           img.src = data;
           img.style.position = 'absolute';
-          // random number between 0 and 20
-          // const width = Math.floor(Math.random() * 20);
-          // img.style.width = width + 'px';
           img.style.width = '64px';
-          // img.style.height = height + 'px';
           img.style.height = '36px';
-          // move slight to the right on each iteration
-          // img.style.left = teeth.x + 'px';
-          // img.style.top = teeth.y + 1 + 'px';
-          // img.style.left = i * 3 + 'px';
-          // later in array is less opaque
           const rotate = Math.sin(i / 5) * 12;
           img.style.webkitTransform = `rotate(${rotate}deg) translate3d(${i * 3}px, ${teeth.y + 1}px, 0)`;
           img.style.transform = `rotate(${rotate}deg) translate3d(${i * 3}px, ${teeth.y + 1}px, 0)`;
