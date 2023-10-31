@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>snake see, ball do</title>
+    <style>
+      /* add styles here */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <video id="video" loop controls playsinline width="256" height="144">
+        <source src="./bouncing.mp4" type="video/mp4" />
+      </video>
+      <canvas id="canvas" width="256" height="144"></canvas>
+      <div id="board"></div>
+    </main>
+    <script>
+      // video
+      const video = document.getElementById('video');
+      // canvas
+      const canvas = document.getElementById('canvas');
+      canvas.style.display = 'none';
+      const ctx = canvas.getContext('2d');
+      // board
+      const board = document.getElementById('board');
+      board.style.position = 'relative';
+      // margin top
+      board.style.marginTop = '12px';
+
+      const images = [];
+      let counter = 0;
+
+      const addImages = () => {
+        // clear board
+        board.innerHTML = '';
+
+        // add images to board
+        for (let i = 0; i < images.length; i++) {
+          const img = document.createElement('img');
+          const { data, teeth } = images[i];
+          img.src = data;
+          img.style.position = 'absolute';
+          // random number between 0 and 20
+          // const width = Math.floor(Math.random() * 20);
+          // img.style.width = width + 'px';
+          img.style.width = '64px';
+          // img.style.height = height + 'px';
+          img.style.height = '36px';
+          // move slight to the right on each iteration
+          // img.style.left = teeth.x + 'px';
+          img.style.top = teeth.y + 'px';
+          img.style.left = i * 3 + 'px';
+          // later in array is less opaque
+          // slightly rotate the back images, positive and negative
+          // rand between 1 - 5
+          const rand = 1;
+          const rotate = i % 2 === 0 ? i * -rand : i * rand;
+          img.style.transform = `rotate(${rotate}deg)`;
+          img.style.opacity = 1 * (i / images.length);
+          // img.style.opacity = 1 - (i / images.length);
+          // img.style.borderRadius = '50%';
+          board.appendChild(img);
+        }
+      }
+
+      const draw = () => {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        // find the teeth looking for white in the center of the image
+        const teeth = [];
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          const r = imageData.data[i];
+          const g = imageData.data[i + 1];
+          const b = imageData.data[i + 2];
+          const a = imageData.data[i + 3];
+
+          // find the first white pixel
+          if (r === 255 && g === 255 && b === 255 && a === 255) {
+            const x = (i / 4) % canvas.width;
+            const y = Math.floor((i / 4) / canvas.width);
+            teeth.push({ x, y });
+            continue;
+          }
+        }
+
+        // pick random index from teeth
+        const randomIndex = Math.floor(Math.random() * teeth.length);
+
+        images.push({ data: canvas.toDataURL(), teeth: teeth[0] });
+
+        // avoid memory leak
+        if (images.length > 60) {
+          images.shift();
+        }
+        counter++;
+
+        if (counter >= images.length) {
+          counter = 0;
+        }
+
+        addImages();
+
+        requestAnimationFrame(draw);
+      };
+
+      video.addEventListener('play', () => {
+        draw();
+      });
+    </script>
+  </body>
+
+</html>
