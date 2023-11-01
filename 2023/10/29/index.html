@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>infinite temporary lives</title>
+    <style>
+      /* add styles here */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 350;
+
+      const main = document.querySelector('main');
+      main.style.width = WIDTH + 'px';
+      main.style.height = HEIGHT + 'px';
+      main.style.border = '1px solid black';
+      main.style.backgroundColor = 'black';
+      main.style.position = 'relative';
+      main.style.overflow = 'hidden';
+
+      const MAX_AGE_MS = 5000;
+
+      const grid = [];
+
+      const createGrid = () => {
+        for (let i = 0; i < WIDTH; i++) {
+          grid[i] = [];
+          for (let j = 0; j < HEIGHT; j++) {
+            grid[i][j] = 0;
+          }
+        }
+      }
+
+      createGrid();
+
+      // get a grid cell that is not zero
+      const getCell = () => {
+        let x = Math.floor(Math.random() * WIDTH);
+        let y = Math.floor(Math.random() * HEIGHT);
+
+        while (grid[x][y]) {
+          x = Math.floor(Math.random() * WIDTH);
+          y = Math.floor(Math.random() * HEIGHT);
+        }
+
+        return [x, y];
+      }
+
+
+      const addCell = () => {
+        const [x, y] = getCell();
+        grid[x][y] = Date.now();
+      }
+
+
+      const removeStaleCells = () => {
+        const now = Date.now();
+        for (let i = 0; i < WIDTH; i++) {
+          for (let j = 0; j < HEIGHT; j++) {
+            if (grid[i][j] && now - grid[i][j] > MAX_AGE_MS) {
+              grid[i][j] = 0;
+            }
+          }
+        }
+      }
+
+      // add a square to the main element
+      const drawCells = () => {
+        const now = Date.now();
+        for (let i = 0; i < WIDTH; i++) {
+          for (let j = 0; j < HEIGHT; j++) {
+            if (grid[i][j]) {
+              // either find or create a div
+              const div = document.getElementById(`${i}-${j}`) || document.createElement('div');
+              div.id = `${i}-${j}`;
+              const age = now - grid[i][j];
+              const red = Math.floor(age / 4);
+              const size = (MAX_AGE_MS - age) / 100;
+              // opacity is inverse of age
+              const opacity = 1 - (age / MAX_AGE_MS);
+              div.style.width = size + 'px';
+              div.style.height = size + 'px';
+              div.style.position = 'absolute';
+              div.style.transform = `translate3d(${i}px, ${j}px, 0)`;
+              div.style.borderRadius = '50%';
+              div.style.border = `1px solid rgba(${255}, ${255}, ${255}, ${opacity})`;
+              div.style.backgroundColor = `rgba(${red}, ${155}, ${155}, ${opacity})`;
+
+              // append or update
+              if (!div.parentNode) {
+                main.appendChild(div);
+              }
+            }
+          }
+        }
+      }
+
+      const animate = () => {
+        removeStaleCells();
+        addCell();
+        drawCells();
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
