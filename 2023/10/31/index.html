@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="A play on FRAGMENT 1981 by Peter Baren">
+    <meta name=" keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FRAGMENT 2023 (Millenial Edition)</title>
+    <style>
+      /* add styles here */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector("main")
+      main.style.width = '350px'
+      // grid
+      main.style.display = 'flex'
+      main.style.flexDirection = 'column'
+
+      const words = ["ich", "gebe", "mir", "ein", "stück", "von", "dir"]
+
+      for (word of words) {
+        const row = document.createElement("div")
+        row.style.display = 'flex'
+
+        const wordBox = document.createElement("div")
+        wordBox.textContent = word
+        wordBox.style.textTransform = "uppercase"
+        wordBox.style.fontFamily = "monospace"
+        wordBox.style.fontSize = "2rem"
+        wordBox.style.backgroundColor = "indianred"
+        // width same as content
+        wordBox.style.width = "fit-content"
+        wordBox.style.padding = "8px"
+
+        const bar = document.createElement("div")
+        // calculate word length relative to longest word
+        bar.style.width = `${word.length / 7 * 100}%`
+        bar.style.backgroundColor = 'steelblue'
+
+        row.appendChild(wordBox)
+        row.appendChild(bar)
+        main.appendChild(row)
+      }
+
+    </script>
+  </body>
+
+</html>
