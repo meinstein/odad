@@ -7,9 +7,12 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>untitled</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 12px;
+        padding: 0;
+      }
     </style>
   </head>
 
@@ -18,7 +21,65 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const WIDTH = 350
+      const HEIGHT = 350
+
+      const main = document.querySelector("main")
+      const canvas = document.createElement("canvas")
+      const ctx = canvas.getContext("2d")
+
+      canvas.width = WIDTH
+      canvas.height = HEIGHT
+
+      ctx.fillStyle = "indianred"
+      ctx.fillRect(0, 0, WIDTH, HEIGHT)
+
+      const animate = (timestamp = 1) => {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT)
+        ctx.fillRect(0, 0, WIDTH, HEIGHT)
+        ctx.fillStyle = "black"
+
+
+        for (let i = 0; i < 50; i++) {
+          const y = i * 0.02 * HEIGHT
+          const x1 = 0
+          const y1 = y
+          const x2 = WIDTH
+          const y2 = y
+          // the control points are 25% and 75% across the canvas
+          // add a ripple effect by adding a small amount to the y value
+
+
+          const cp1x = WIDTH * 0.25
+          // const cp1y = y + 0.01 * HEIGHT
+          const cp1y = y + 0.01 * HEIGHT * Math.sin(timestamp * 0.01)
+          const cp2x = WIDTH * 0.75
+          // const cp2y = y - 0.01 * HEIGHT
+          const cp2y = y - 0.01 * HEIGHT * Math.sin(timestamp * 0.02)
+          // give the stroke a color
+          // ctx.strokeStyle = "black"
+          // fill
+          ctx.fillStyle = "indianred"
+
+          // opacity of the stroke alternates between 0.5 and 0.9 based on
+          // the the y value of the control point
+          const opacity = 0.5 + 0.4 * Math.abs(cp1y / HEIGHT)
+
+          ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`
+
+          ctx.beginPath()
+          ctx.moveTo(x1, y1)
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2)
+          ctx.stroke()
+        }
+
+        requestAnimationFrame(animate)
+      }
+
+      animate()
+
+
+      main.appendChild(canvas)
     </script>
   </body>
 
