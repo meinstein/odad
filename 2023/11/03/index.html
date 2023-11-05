@@ -78,19 +78,19 @@
           gridItem.style.gridRow = i + 1;
 
           // rotate random amount between -5 and 5 degrees
-          const rotate = Math.random() * 4 - 2;
+          // const rotate = Math.random() * 4 - 2;
           const scale = 1.05;
 
 
           gridItem.animate([
             {
-              transform: "scale(1) rotate(0)",
+              transform: "scale(1)",
             },
             {
-              transform: `scale(${scale}) rotate(${rotate}deg)`,
+              transform: `scale(${scale})`,
             },
             {
-              transform: "scale(1) rotate(0)",
+              transform: "scale(1)",
             },
           ], {
             duration: Math.random() * 1000 + 1000,
