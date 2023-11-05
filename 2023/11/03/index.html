@@ -3,11 +3,11 @@
 
   <head>
     <meta charset="UTF-8">
-    <meta name="description" content="...">
+    <meta name="description" content="A play on: 'CONTRA-COMPOSITIE V' by THEO VAN DOESBURG">
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>CONTRA-COMPOSITIE MMXXIII</title>
     <style>
       /* add styles here */
     </style>
@@ -18,7 +18,91 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const WIDTH = 360;
+      const HEIGHT = 360;
+      const WHITE = "#DFE0DC";
+      const W = WHITE
+      const RED = "#AD231A"
+      const R = RED
+      const YELLOW = "#D7B961"
+      const Y = YELLOW
+      const BLUE = "#1B206D"
+      const B = BLUE
+      const NOIR = "#161616"
+      const N = NOIR
+      const GRAY = "#A99FA0"
+      const G = GRAY
+
+      const main = document.querySelector("main");
+      main.style.width = `${WIDTH}px`;
+      main.style.height = `${HEIGHT}px`;
+      // overflow hidden
+      main.style.overflow = "hidden";
+
+      const canvas = document.createElement("div");
+      canvas.style.width = `${WIDTH}px`;
+      canvas.style.height = `${HEIGHT}px`;
+      canvas.style.position = "relative";
+      canvas.style.overflow = "hidden";
+      canvas.style.backgroundColor = WHITE
+      canvas.style.display = "grid";
+      // 10 x 10 grid layout, each cell is 36px x 36px (the gap is 1px)
+      canvas.style.gridTemplateColumns = "repeat(10, 35px)";
+      canvas.style.gridTemplateRows = "repeat(10, 35px)";
+      // rotate the canvas by 45 degrees
+      canvas.style.transform = "rotate(315deg) scale(1.4)";
+      canvas.style.gap = "1px";
+
+      // const model out the grid
+      const grid = [
+        [G, G, G, Y, Y, Y, W, W, W, W],
+        [G, G, G, Y, Y, Y, W, W, W, W],
+        [G, G, G, R, R, R, R, R, W, W],
+        [G, G, G, R, R, R, R, R, W, W],
+        [N, N, N, R, R, R, R, R, W, W],
+        [N, N, N, R, R, R, R, R, W, W],
+        [N, N, N, R, R, R, R, R, W, W],
+        [N, N, N, W, W, B, B, B, B, G],
+        [N, N, N, W, W, B, B, B, B, G],
+        [N, N, N, G, G, B, B, B, B, G],
+      ]
+
+      // convert the grid matrix into the grid items at the DOM
+      for (let i = 0; i < grid.length; i++) {
+        const row = grid[i];
+        for (let j = 0; j < row.length; j++) {
+          const cell = row[j];
+          const gridItem = document.createElement("div");
+          gridItem.style.backgroundColor = cell;
+          gridItem.style.gridColumn = j + 1;
+          gridItem.style.gridRow = i + 1;
+
+          // rotate random amount between -5 and 5 degrees
+          const rotate = Math.random() * 4 - 2;
+          const scale = 1.05;
+
+
+          gridItem.animate([
+            {
+              transform: "scale(1) rotate(0)",
+            },
+            {
+              transform: `scale(${scale}) rotate(${rotate}deg)`,
+            },
+            {
+              transform: "scale(1) rotate(0)",
+            },
+          ], {
+            duration: Math.random() * 1000 + 1000,
+            iterations: Infinity,
+            direction: "alternate",
+            easing: "ease-in-out",
+          });
+          canvas.appendChild(gridItem);
+        }
+      }
+
+      main.appendChild(canvas);
     </script>
   </body>
 
