@@ -3,11 +3,11 @@
 
   <head>
     <meta charset="UTF-8">
-    <meta name="description" content="...">
+    <meta name="description" content="Inspired by: 'GENERAL IDEA: PHARMA©OPIA'">
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>©OMING APART</title>
     <style>
       /* add styles here */
     </style>
@@ -18,8 +18,83 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const RED = '#FB351F'
+      const YELLOW = '#FBEF00'
+      const NUM_COLS = 12;
+
+      const main = document.querySelector("main");
+      main.style.display = "flex";
+
+      // create twelve divs
+      for (let i = 0; i < 12; i++) {
+        const IS_EVEN = i % 2 === 0;
+
+        const col = document.createElement("div");
+        col.style.width = "32px";
+        col.style.height = "500px";
+        col.style.display = "flex";
+        col.style.flexDirection = "column";
+        col.style.backgroundColor = IS_EVEN ? RED : YELLOW;
+
+        const IS_FIRST_COL = i === 0;
+        const IS_LAST_COL = i === NUM_COLS - 1;
+
+        for (let j = 0; j < 8; j++) {
+          const right = document.createElement("div");
+          right.style.transform = `translateY(${(j + 1) * 21}px)`;
+          right.animate([
+            { transform: `translateY(${(j + 1) * 21}px)` },
+            { transform: `translateY(${(j + 1.1) * 21}px)` }
+          ], {
+            duration: 1000 + Math.random() * 200,
+            iterations: Infinity,
+            direction: "alternate",
+            easing: "ease-in-out"
+          });
+          right.style.width = "21px";
+          right.style.height = "19px";
+          right.style.backgroundColor = IS_EVEN ? YELLOW : RED;
+          right.style.alignSelf = IS_EVEN ? "flex-end" : "flex-start";
+          right.style.borderRadius = IS_EVEN ? "50% 0 0 50%" : "0 50% 50% 0";
+          col.appendChild(right);
+
+
+          const left = document.createElement("div");
+          left.style.transform = `translateY(${(j + 1.5) * 21}px)`;
+          left.animate([
+            { transform: `translateY(${(j + 1.5) * 21}px)` },
+            { transform: `translateY(${(j + 1.4) * 21}px)` }
+          ], {
+            // random duration between 1000 and 1200
+            duration: 1000 + Math.random() * 200,
+            iterations: Infinity,
+            direction: "alternate",
+            easing: "ease-in-out"
+          });
+          left.style.width = "21px";
+          left.style.height = "19px";
+          if (IS_FIRST_COL) {
+            left.style.backgroundColor = RED
+          } else if (IS_LAST_COL) {
+            left.style.backgroundColor = YELLOW;
+          } else {
+            left.style.backgroundColor = IS_EVEN ? YELLOW : RED;
+          }
+
+
+          // if even, align start otherwise align end
+          left.style.alignSelf = IS_EVEN ? "flex-start" : "flex-end";
+          // if even, round the top right and bottom right corners otherwise round the top left and bottom left corners
+          left.style.borderRadius = IS_EVEN ? "0 50% 50% 0" : "50% 0 0 50%";
+          col.appendChild(left);
+        }
+
+        main.appendChild(col);
+      }
+
+
     </script>
   </body>
+
 
 </html>
