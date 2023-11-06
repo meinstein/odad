@@ -7,9 +7,12 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>CONTRA-COMPOSITIE MMXXIII</title>
+    <title>CONTRA-ROTATIE-COMPOSITIE</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 12px;
+      }
     </style>
   </head>
 
@@ -47,11 +50,15 @@
       canvas.style.backgroundColor = WHITE
       canvas.style.display = "grid";
       // 10 x 10 grid layout, each cell is 36px x 36px (the gap is 1px)
-      canvas.style.gridTemplateColumns = "repeat(10, 35px)";
-      canvas.style.gridTemplateRows = "repeat(10, 35px)";
+      canvas.style.gridTemplateColumns = "repeat(10, 36px)";
+      canvas.style.gridTemplateRows = "repeat(10, 36px)";
       // rotate the canvas by 45 degrees
       canvas.style.transform = "rotate(315deg) scale(1.4)";
-      canvas.style.gap = "1px";
+      canvas.style.gap = "0px";
+      // grid row gap
+      canvas.style.gridRowGap = "0px";
+      // grid gap
+      canvas.style.gridGap = "0px";
 
       // const model out the grid
       const grid = [
@@ -73,36 +80,60 @@
         for (let j = 0; j < row.length; j++) {
           const cell = row[j];
           const gridItem = document.createElement("div");
+          gridItem.id = `cell-${i}-${j}`;
           gridItem.style.backgroundColor = cell;
+          // Add a slight border to grid item so that we do not see the strange white line b/t grid items
+          gridItem.style.border = `0.5px solid ${cell}`;
           gridItem.style.gridColumn = j + 1;
           gridItem.style.gridRow = i + 1;
-
-          // rotate random amount between -5 and 5 degrees
-          // const rotate = Math.random() * 4 - 2;
-          const scale = 1.05;
-
-
-          gridItem.animate([
-            {
-              transform: "scale(1)",
-            },
-            {
-              transform: `scale(${scale})`,
-            },
-            {
-              transform: "scale(1)",
-            },
-          ], {
-            duration: Math.random() * 1000 + 1000,
-            iterations: Infinity,
-            direction: "alternate",
-            easing: "ease-in-out",
-          });
           canvas.appendChild(gridItem);
         }
       }
 
+      // mount the canvas to the DOM so that the rest of the code can access it
       main.appendChild(canvas);
+
+
+      const getRanomCell = () => {
+        const randomRow = Math.floor(Math.random() * grid.length);
+        const randomCol = Math.floor(Math.random() * grid[0].length);
+        const randomCell = document.querySelector(`#cell-${randomRow}-${randomCol}`);
+        // make sure random cell is not white, will not notice the rotation otherwise
+        if (grid[randomRow][randomCol] === WHITE) {
+          return getRanomCell()
+        }
+        // ensure that the row and col are not first or last, as those are not visible
+        if (randomRow === 0 || randomRow === grid.length - 1 || randomCol === 0 || randomCol === grid[0].length - 1) {
+          return getRanomCell()
+        }
+        return randomCell
+      }
+
+      let direction = 'clockwise'
+      let currentCell = getRanomCell()
+      let rotate = 0;
+
+      const animate = () => {
+        // rotate the cell
+        if (direction === 'clockwise') {
+          rotate += 2;
+        } else {
+          rotate -= 2;
+        }
+
+        currentCell.style.transform = `rotate(${rotate}deg)`;
+
+        if (Math.abs(rotate) === 90) {
+          rotate = 0
+          // change direction
+          direction = direction === 'clockwise' ? 'counter-clockwise' : 'clockwise'
+          currentCell = getRanomCell()
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
     </script>
   </body>
 
