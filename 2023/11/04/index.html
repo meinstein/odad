@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Image from 'Open Book' by Vito Accono">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Loud & Open</title>
+    <style>
+      img {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- parcel cannot handle loading img otherwise, so do this and then display none -->
+      <img src="./open_book.jpg">
+    </main>
+    <script>
+      const IMG = {
+        WIDTH: 674,
+        HEIGHT: 555,
+      }
+
+      const WIDTH = 360;
+      const HEIGHT = 500;
+
+      const getRelativeHeight = (width, height) => {
+        return (height / width) * WIDTH;
+      }
+
+      const img = document.querySelector('img');
+      const canvas = document.createElement('canvas');
+      canvas.style.borderRadius = '10px';
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+      const ctx = canvas.getContext('2d');
+      document.body.appendChild(canvas);
+
+      const getRandSpeed = () => {
+        // rand number between 2 and 5
+        return Math.random() * 2 + 1;
+      }
+
+      let counter = -350;
+      let speed = getRandSpeed();
+
+      const animate = () => {
+        ctx.drawImage(img, 0, counter, WIDTH, getRelativeHeight(IMG.WIDTH, IMG.HEIGHT));
+
+        const cos = Math.cos(counter / 10);
+        ctx.translate(cos * speed * 2, 0);
+
+        counter = counter + speed;
+
+        if (counter > 550) {
+          speed = getRandSpeed();
+          counter = -350;
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate()
+    </script>
+  </body>
+
+</html>
