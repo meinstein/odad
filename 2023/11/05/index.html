@@ -3,22 +3,57 @@
 
   <head>
     <meta charset="UTF-8">
-    <meta name="description" content="...">
+    <meta name="description" content="Untitled image from THEO BALLMER">
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>Chronic Lemon Twist</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 12px;
+        padding: 0;
+        background-color: black;
+      }
+
+      img {
+        display: none;
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <!-- add main content here -->
+      <!-- parcel cannot handle loading img otherwise, so do this and then display none -->
+      <img src="./theo_ballmer.jpg">
     </main>
     <script>
-      // add js here
+      const IMG_DIMS = {
+        WIDTH: 600,
+        HEIGHT: 417,
+      }
+
+      const WIDTH = 360;
+      const HEIGHT = 360;
+
+      const img = document.querySelector('img');
+      const canvas = document.createElement('canvas');
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+      const ctx = canvas.getContext('2d');
+      document.body.appendChild(canvas);
+
+
+      const animate = (timestamp) => {
+        const randDx = WIDTH / 2 + Math.sin(timestamp / 1_000) * WIDTH / 2;
+        const randDy = HEIGHT / 2 + Math.cos(timestamp / 1_000) * HEIGHT / 2;
+        ctx.translate(randDx, randDy);
+        ctx.rotate(timestamp / 60_000);
+        ctx.drawImage(img, -IMG_DIMS.WIDTH / 2, -IMG_DIMS.HEIGHT / 2, IMG_DIMS.WIDTH, IMG_DIMS.HEIGHT);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        requestAnimationFrame(animate);
+      }
+
+      animate(document.timeline.currentTime)
     </script>
   </body>
 
