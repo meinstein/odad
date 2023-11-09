@@ -7,18 +7,130 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>yesterday, today, tomorrow</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 12px;
+        padding: 0;
+      }
+
+      img {
+        display: none;
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <!-- add main content here -->
+      <!-- parcel cannot handle loading img otherwise, so do this and then display none -->
+      <img src="./front_page.jpg">
     </main>
     <script>
-      // add js here
+      const IMG_DIMS = {
+        WIDTH: 1139,
+        HEIGHT: 2048,
+      }
+
+      const WIDTH = 360;
+      const HEIGHT = 360;
+
+      const img = document.querySelector('img');
+      const canvas = document.createElement('canvas');
+      canvas.width = WIDTH * 0.7;
+      canvas.height = 30;
+      const ctx = canvas.getContext('2d');
+      const canvasContainer = document.createElement('div');
+      canvasContainer.style.width = `${WIDTH}px`;
+      canvasContainer.style.height = `${HEIGHT}px`;
+      canvasContainer.style.display = 'flex';
+      canvasContainer.style.justifyContent = 'center';
+      canvasContainer.style.alignItems = 'center';
+      canvasContainer.style.backgroundColor = '#000';
+      canvasContainer.style.borderRadius = '50%'
+
+
+
+      const getRandLoc = () => {
+        const randX = Math.random() * IMG_DIMS.WIDTH / 2;
+        const randY = Math.random() * IMG_DIMS.HEIGHT / 2;
+        return [randX, randY];
+      }
+
+      let lastTimestamp = 0;
+      const prev = getRandLoc();
+      const next = getRandLoc();
+
+      let prevX = prev[0];
+      let nextX = next[0];
+
+      let prevY = prev[1];
+      let nextY = next[1];
+
+      const getSteps = (prev, next) => {
+        const prevX = prev[0];
+        const nextX = next[0];
+
+        const prevY = prev[1];
+        const nextY = next[1];
+
+        const steps = [];
+
+        for (let i = 0; i < 100; i++) {
+          const x = prevX + (nextX - prevX) / 100 * i;
+          const y = prevY + (nextY - prevY) / 100 * i;
+          steps.push({ x, y });
+        }
+
+        return steps;
+      }
+
+      const steps = getSteps(prev, next);
+
+      const animate = (timestamp) => {
+        // clear canvas on each frame
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        // randomly translate the image every 2 seconds and then pause for 2 seconds
+        // use lastTimestamp to keep track of time
+
+        if (timestamp - lastTimestamp > 3_000) {
+          lastTimestamp = timestamp;
+          const next = getRandLoc();
+          prevX = nextX;
+          prevY = nextY;
+          nextX = next[0];
+          nextY = next[1];
+
+          steps.push(...getSteps([prevX, prevY], [nextX, nextY]));
+        }
+
+        // use step to translate, and shift it off the array
+        // keep the last step so that the image stays in place
+        const step = steps.length === 1 ? steps[0] : steps.shift()
+        // cast a shadow at the base of the container that is relative to the image's position based on the step
+        // canvasContainer.style.boxShadow = `0px ${step.x / 10}px ${step.y / 10}px rgba(0, 0, 0, 0.5)`
+        // the above is close, but make it more realistic looking, and add gradient
+        // canvasContainer.style.boxShadow = `0px ${step.x / 10}px ${step.y / 10}px rgba(0, 0, 0, 0.5), inset 0px ${step.x / 10}px ${step.y / 10}px rgba(0, 0, 0, 0.5)`
+        ctx.translate(step.x, step.y);
+
+
+        ctx.drawImage(img, -IMG_DIMS.WIDTH / 2, -IMG_DIMS.HEIGHT / 2, IMG_DIMS.WIDTH, IMG_DIMS.HEIGHT);
+        // draw the image in the center
+
+        // reset transform
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        // translate to center
+        // ctx.translate(WIDTH / 2, HEIGHT / 2);
+
+        requestAnimationFrame(animate);
+      }
+
+      animate(document.timeline.currentTime)
+
+      canvasContainer.appendChild(canvas);
+      document.body.appendChild(canvasContainer);
+
     </script>
   </body>
 
