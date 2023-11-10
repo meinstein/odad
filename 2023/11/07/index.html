@@ -7,9 +7,13 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>un-im-portent</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 12px;
+        padding: 0;
+        background: black;
+      }
     </style>
   </head>
 
@@ -18,7 +22,57 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const WIDTH = 350;
+      const HEIGHT = 350;
+      const ROWS = 100;
+      const COLS = 100;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+      main.appendChild(canvas);
+
+      const data = [];
+
+      for (let i = 0; i < ROWS; i++) {
+        const row = [];
+        for (let j = 0; j < COLS; j++) {
+          row.push(Math.floor(Math.random() * 100));
+        }
+        data.push(row);
+      }
+
+      const animate = () => {
+        data.forEach((row, i) => {
+          row.forEach((col, j) => {
+            ctx.fillStyle = `hsl(${col}, 100%, 50%)`;
+            ctx.fillRect(j * WIDTH / COLS, i * HEIGHT / ROWS, WIDTH / COLS, HEIGHT / ROWS);
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+            ctx.translate(WIDTH / COLS * j, i * HEIGHT / ROWS);
+            const rotate = Math.cos(col / 360 * Math.PI * 2) * 0.3;
+            ctx.rotate(rotate);
+          });
+        });
+
+        // update the data
+        data.forEach((row, i) => {
+          row.forEach((col, j) => {
+            data[i][j] = (data[i][j] + 1) % 360;
+          });
+        });
+
+        // request another frame
+        requestAnimationFrame(animate);
+      }
+
+      // start the animation
+      animate();
+
+
+
     </script>
   </body>
 
