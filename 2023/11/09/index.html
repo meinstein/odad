@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>po-po-pop</title>
+    <style>
+      body {
+        margin: 12px;
+        padding: 0;
+        background: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 350;
+      const ROWS = 25;
+      const COLS = 25;
+      const MAX_SPEED = 100;
+      const MIN_SPEED = 50;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+      main.appendChild(canvas);
+
+      const data = [];
+
+      for (let i = 0; i < ROWS; i++) {
+        const row = [];
+        for (let j = 0; j < COLS; j++) {
+          const speed = Math.floor(Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED)
+          const d = {
+            speed,
+            val: Math.floor(Math.random() * speed),
+            dir: Math.random() < 0.5 ? 'up' : 'down'
+          }
+
+          row.push(d);
+        }
+        data.push(row);
+      }
+
+      const animate = () => {
+        // reset the canvas
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        data.forEach((row, i) => {
+          row.forEach(({ val, dir, speed }, j) => {
+            const x = WIDTH / COLS * j;
+            const y = HEIGHT / ROWS * i;
+            const w = WIDTH / COLS;
+            const h = HEIGHT / ROWS;
+
+            // create a radial gradient
+            const gradient = ctx.createRadialGradient(
+              x + w / 2,
+              y + h / 2,
+              0,
+              x + w / 2,
+              y + h / 2,
+              w / 2
+            );
+
+            let percent = val / speed
+
+            if (percent < 0) percent = 0;
+
+            // select steelblue or indianred based on dir
+            const color = dir === 'up' ? 'steelblue' : 'indianred';
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(percent, 'black');
+            gradient.addColorStop(1, 'black');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x, y, w, h);
+            // ctx.globalAlpha = percent;
+          });
+        });
+
+        data.forEach((row, i) => {
+          row.forEach((col, j) => {
+            if (col.dir === 'up') {
+              const val = (col.val + 1) % col.speed;
+              const dir = val >= col.speed - 1 ? 'down' : 'up';
+              data[i][j] = {
+                val,
+                dir,
+                speed: col.speed
+              };
+            } else {
+              const val = (col.val - 1) % col.speed;
+              const dir = val <= 0 ? 'up' : 'down';
+              data[i][j] = {
+                val,
+                dir,
+                speed: col.speed
+              };
+            }
+          });
+        });
+
+        // request another frame
+        requestAnimationFrame(animate);
+      }
+
+      // start the animation
+      animate();
+
+
+
+    </script>
+  </body>
+
+</html>
