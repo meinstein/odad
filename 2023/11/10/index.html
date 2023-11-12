@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>axis-less</title>
+    <style>
+      body {
+        margin: 8px;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 350;
+      const PADDING = 25;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+
+      const data = []
+
+      for (let i = 0; i < 100; i++) {
+        // esure that cp1x and cp1y are in the top half of the canvas
+        const cp1x = Math.random() * WIDTH;
+        const cp1y = Math.random() * HEIGHT / 2;
+        // make sure that cp2x and cp2y are not too far away from cp1x and cp1y
+        const cp2x = cp1x + (Math.random() * 75 - 25);
+        const cp2y = cp1y + (Math.random() * 75 - 25);
+
+        data.push({
+          cp1x,
+          cp1y,
+          cp2x,
+          cp2y,
+          opacity: Math.floor(Math.random() * 100) / 100,
+          // random 0 or 1
+          opacityDirection: Math.round(Math.random()),
+        })
+      }
+
+
+      const animate = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        data.forEach((d) => {
+          ctx.beginPath();
+          // top middle
+          ctx.moveTo(WIDTH / 2, PADDING);
+          ctx.bezierCurveTo(d.cp1x, d.cp1y, d.cp2x, d.cp2y, WIDTH / 2, HEIGHT - PADDING);
+          // nothing goes completely to zero opacity
+          ctx.strokeStyle = `rgba(0, 0, 0, ${d.opacity})`;
+          ctx.lineWidth = d.opacity * 4 + 0.5;
+          ctx.stroke();
+
+          // adjust for padding when translating and rotating
+          ctx.translate(WIDTH / 2, HEIGHT / 2);
+          ctx.rotate(Math.PI / 180 * 90);
+          ctx.translate(-WIDTH / 2, -HEIGHT / 2);
+
+        })
+
+        data.forEach((d, i) => {
+          d.cp1x += d.opacityDirection === 1 ? 0.15 : -0.15;
+          d.cp1y += d.opacityDirection === 1 ? 0.15 : -0.15;
+          d.cp1x += d.opacityDirection === 1 ? 0.15 : -0.15;
+          d.cp1y += d.opacityDirection === 1 ? 0.15 : -0.15;
+
+          d.opacity += d.opacityDirection === 1 ? 0.01 : -0.01;
+          if (d.opacity >= 1) {
+            d.opacityDirection = 0;
+          } else if (d.opacity <= 0) {
+            d.opacityDirection = 1;
+          }
+        })
+
+        requestAnimationFrame(animate);
+      }
+
+
+      main.appendChild(canvas);
+
+      animate();
+    </script>
+  </body>
+
+</html>
