@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="In response to Hans Eijkelboom's 'Wat is Kunst?'">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dit is Kunst.</title>
+    <style>
+      body {
+        margin: 12px;
+        padding: 0;
+        /* Classic serif font family */
+        /* font-family: Georgia, 'Times New Roman', Times, serif; */
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        /* font size */
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // original is 12x15
+      const COLS = 7;
+      const ROWS = 9;
+      const GRID_ITEM_WITH = 50;
+      const GRID_ITEM_HEIGHT = 50;
+      const PHRASE = 'Dit is Kunst.';
+
+      const main = document.querySelector('main');
+      const grid = document.createElement('div');
+      // grid is 12 columns wide and 15 rows tall
+      // each column is 50px wide and each row is 50px tall
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = `repeat(${COLS}, ${GRID_ITEM_WITH}px)`;
+      grid.style.gridTemplateRows = `repeat(${ROWS}, ${GRID_ITEM_HEIGHT}px)`;
+      // grid gap
+      grid.style.gap = '1px';
+
+      // create 180 grid items
+      for (let i = 0; i < COLS * ROWS; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.id = i;
+        // every word in the phrase gets a div container
+        // every letter in the word gets a span container
+
+        PHRASE.split(' ').forEach((word, wordIdx) => {
+          const wordContainer = document.createElement('div');
+          // Give a bit of breathing room by diving the height by 3.x (extra .x for the line height)
+          wordContainer.style.lineHeight = `${GRID_ITEM_HEIGHT / 3}px`;
+
+          word.split('').forEach((letter, letterIdx) => {
+            const letterContainer = document.createElement('span');
+            letterContainer.id = `${i}-${wordIdx}-${letterIdx}`
+            letterContainer.style.display = 'inline-block';
+            letterContainer.textContent = letter;
+            wordContainer.appendChild(letterContainer);
+          });
+
+          gridItem.appendChild(wordContainer);
+        });
+
+        grid.appendChild(gridItem);
+      }
+
+      let currentGridItem = 0;
+      let currentWord = 0;
+      // start at -1 so that the first letter is 0
+      let currentLetter = -1;
+
+      const animate = () => {
+        const letterContainer = document.getElementById(`${currentGridItem}-${currentWord}-${currentLetter}`);
+
+        // select the same letterContainer from the prev grid item
+        // if the last container of the grid is select, select the first container
+        const prevLetterContainer = document.getElementById(`${currentGridItem === 0 ? COLS * ROWS - 1 : currentGridItem - 1}-${currentWord}-${currentLetter}`);
+
+        // add the underline effect
+        if (letterContainer) {
+          letterContainer.style.textDecoration = 'line-through';
+          letterContainer.style.textDecorationThickness = '3px';
+          letterContainer.style.textDecorationColor = 'indianred';
+        }
+
+        // remove the underline effect from the previous letter
+        if (prevLetterContainer) {
+          prevLetterContainer.style.textDecoration = 'none';
+        }
+
+        // iterate through all the letters in the current word of the phrase
+        // when complete, go to the next word in the grid item
+        // when all grid items are complete, go to the next grid item
+        // when all grid items are complete, start over
+        if (currentLetter < PHRASE.split(' ')[currentWord].length) {
+          currentLetter++;
+        } else if (currentWord < PHRASE.split(' ').length - 1) {
+          currentWord++;
+          currentLetter = 0;
+        } else if (currentGridItem < COLS * ROWS - 1) {
+          currentGridItem++;
+          currentWord = 0;
+          currentLetter = 0;
+        } else {
+          currentGridItem = 0;
+          currentWord = 0;
+          currentLetter = 0;
+        }
+
+        requestAnimationFrame(animate)
+      }
+
+      animate()
+
+      main.appendChild(grid);
+
+    </script>
+  </body>
+
+</html>
