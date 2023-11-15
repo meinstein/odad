@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>corrugation</title>
+    <style>
+      /* add styles here */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 350;
+      const WAVES = 10;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = WIDTH;
+      const HEIGHT_OFFSET = 50
+      canvas.height = HEIGHT + HEIGHT_OFFSET;
+
+      const MAX_WAVES = 25;
+      const MIN_WAVES = 5;
+      const MIN_HEIGHT = 5;
+      const MAX_HEIGHT = 10;
+      const SPEED = 0.1;
+
+      let dir = 'open';
+      let waves = MIN_WAVES;
+      let height = MIN_HEIGHT;
+
+      const animate = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, WIDTH, HEIGHT + HEIGHT_OFFSET);
+
+        ctx.beginPath();
+
+        for (let i = 0; i < WIDTH; i = i + 5) {
+          ctx.moveTo(WIDTH / 2 + i / 25, HEIGHT / 2 + HEIGHT_OFFSET / 2);
+
+          for (j = 0; j < HEIGHT; j++) {
+            // draw sine wave line, but no past the canvas
+            ctx.lineTo(i + 5, (HEIGHT / j + HEIGHT_OFFSET / 2) + Math.sin(i / waves) * (height));
+          }
+
+          ctx.closePath();
+          // inverse the line width and opacity
+          const globalAlpha = 1 - (waves / MAX_WAVES) + 0.25;
+          ctx.globalAlpha = globalAlpha
+          // use inverse of global alpha, cap at 1
+          ctx.lineWidth = Math.max(1 - globalAlpha, 0.5);
+        }
+
+        ctx.stroke();
+
+        if (dir === 'open') {
+          waves += SPEED;
+          height += SPEED;
+          if (waves > MAX_WAVES) {
+            dir = 'close';
+          }
+        } else {
+          waves -= SPEED;
+          height -= SPEED;
+          if (waves < MIN_WAVES) {
+            dir = 'open';
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate()
+
+
+
+      main.appendChild(canvas);
+    </script>
+  </body>
+
+</html>
