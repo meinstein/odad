@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>arachno-indifferent</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+
+    </main>
+    <script>
+      // allow the critter to go all over the screen
+      let WIDTH = window.innerWidth;
+      let HEIGHT = window.innerHeight;
+
+      const SIZE = 5;
+      const SPEED = 0.4;
+      const PADDING = 5;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+
+      main.appendChild(canvas);
+
+      const getRandomPoint = () => {
+        // return a random point within the canvas with a padding
+        return {
+          x: Math.random() * (WIDTH - PADDING * 2) + PADDING,
+          y: Math.random() * (HEIGHT - PADDING * 2) + PADDING
+        }
+      }
+
+      let prevPoint = getRandomPoint();
+      let nextPoint = getRandomPoint();
+
+      const getRandomPointsBetween = (point1, point2) => {
+        const points = [];
+        const xDiff = point2.x - point1.x;
+        const yDiff = point2.y - point1.y;
+        // numPoints should be based on the distance between the points so that the
+        // percieved speed of the line is constant as it moves across the screen
+        const numPoints = Math.floor(Math.sqrt(xDiff * xDiff + yDiff * yDiff) / SPEED);
+
+        for (let i = 0; i < numPoints; i++) {
+          points.push({
+            x: point1.x + (xDiff / numPoints) * i,
+            y: point1.y + (yDiff / numPoints) * i
+          });
+        }
+
+        return points;
+      }
+
+      let pointsBetween = getRandomPointsBetween(prevPoint, nextPoint);
+
+      const getNext = () => {
+        prevPoint = nextPoint;
+        nextPoint = getRandomPoint();
+        pointsBetween = getRandomPointsBetween(prevPoint, nextPoint);
+      }
+
+      // draw 5 points between prevPoint and nextPoint until reached nextPoint
+      // then set the prevPoint to nextPoint and get a new nextPoint
+      // and generate a new points between
+      const draw = () => {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        ctx.beginPath();
+
+        // get the first 5 points from pointsBetween
+        const pointsChunk = pointsBetween.slice(0, SIZE);
+        // remove the first 5 points from pointsBetween
+        pointsBetween.splice(0, SIZE);
+
+        pointsChunk.forEach(point => {
+          // ctx.moveTo(prevPoint.x, prevPoint.y);
+          ctx.lineTo(point.x, point.y);
+
+          const up = point.y > prevPoint.y ? 1 : -1;
+          const down = point.y < prevPoint.y ? 1 : -1;
+          const left = point.x < prevPoint.x ? 1 : -1;
+          const right = point.x > prevPoint.x ? 1 : -1;
+
+          // apply directionality to the points to create a more organic looking critter
+          if (Math.random() > 0.5) {
+            ctx.lineTo(point.x + Math.random() * 10 * up, point.y + Math.random() * 10 * left);
+          } else {
+            ctx.lineTo(point.x + Math.random() * 10 * down, point.y + Math.random() * 10 * right);
+          }
+        });
+
+        ctx.stroke();
+        ctx.closePath();
+
+        if (pointsBetween.length === 0) {
+          getNext();
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      draw();
+
+      // add event listener to resize the canvas when the window is resized
+      window.addEventListener('resize', () => {
+        WIDTH = window.innerWidth;
+        HEIGHT = window.innerHeight;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        getNext();
+      });
+    </script>
+  </body>
+
+</html>
