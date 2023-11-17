@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Uses photograph 'IPHONE' by ELSPETH DIEDERIX">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>it will never be how it never was</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <img src="./iphone.jpg" style="display: none;" />
+    </main>
+    <script>
+      const IMG_WIDTH = 297;
+      const IMG_HEIGHT = 450;
+      const IMG_SECTIONS = 10;
+      let CANVAS_WIDTH = window.innerWidth;
+      let CANVAS_HEIGHT = IMG_HEIGHT;
+      const main = document.querySelector('main');
+      const img = document.querySelector('img');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      // make canvas full viewport size
+      canvas.width = CANVAS_WIDTH;
+      canvas.height = CANVAS_HEIGHT;
+
+      // add event listener to resize canvas when window is resized
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        CANVAS_WIDTH = window.innerWidth;
+      });
+
+      // Data structure:
+      // const data = [
+      //   [
+      //     {
+      //       imgData: ImageData,
+      //       x: 0,
+      //       y: 0,
+      //     }
+      //   ]
+      // ]
+      const data = [];
+
+      // Convert the image to sections
+      // take a random section of the image and add it to the data array
+      const initData = () => {
+        // add the img to the canvas to it get take random sections
+        ctx.drawImage(img, 0, 0, IMG_WIDTH, IMG_HEIGHT);
+
+        for (let i = 0; i < IMG_HEIGHT; i++) {
+          const y = i;
+          const x = 0;
+          const imgData = ctx.getImageData(x, y, IMG_WIDTH, 1);
+          data.push({
+            imgData,
+            x,
+            y,
+          });
+        }
+
+      }
+
+      const getRandSpeed = () => {
+        return Math.floor(Math.random() * 5) + 2;
+      }
+
+      const getRandDistortion = () => {
+        // between 0.1 and 1
+        return Math.random() * 0.4 + 0.2;
+      }
+
+      const getRandWaveFn = () => {
+        const waveFns = [
+          (x) => Math.sin(x),
+          (x) => Math.cos(x),
+        ];
+
+        return waveFns[Math.floor(Math.random() * waveFns.length)];
+      }
+
+
+      let numSectionsOffScreen = 0;
+      let speed = getRandSpeed();
+      let distortion = getRandDistortion();
+      let waveFn = getRandWaveFn();
+
+      // draw the image sections to the canvas
+      const draw = () => {
+        // clear the canvas and draw the random sections
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        data.forEach((section, idx) => {
+          // generate a subtle wave effect
+          section.x = section.x + speed + Math.random()
+
+          // if the x position is greater than the canvas width (add some buffer)
+          if (section.x > CANVAS_WIDTH + IMG_WIDTH / 4) {
+            numSectionsOffScreen++;
+          }
+
+          // do not draw half of the sections
+          if (idx % 2 === 0) {
+            return;
+          }
+
+          ctx.putImageData(section.imgData, section.x, section.y);
+        });
+
+        // reset the x position of all the sections
+        if (numSectionsOffScreen > data.length) {
+          numSectionsOffScreen = 0;
+          // reset the x position of all the sections
+          data.forEach((section) => {
+            // offset the x position by the width of the image
+            section.x = -IMG_WIDTH
+          });
+
+          // get a new random speed
+          speed = getRandSpeed();
+          // get a new random distortion
+          distortion = getRandDistortion();
+          // get a new random wave function
+          waveFn = getRandWaveFn();
+        }
+
+        // mirror the image
+        ctx.scale(-1, 1);
+        // draw the image again
+        ctx.drawImage(canvas, -CANVAS_WIDTH, 0, CANVAS_WIDTH, CANVAS_HEIGHT / 1.01);
+        // reset the scale
+        ctx.scale(-1, 1);
+      }
+
+      // update the canvas
+      const update = () => {
+        // draw the image sections to the canvas
+        draw();
+        // request the next frame
+        requestAnimationFrame(update);
+      }
+
+
+      // init the data
+      initData();
+      // draw the image sections to the canvas
+      update();
+      // append the canvas to the main element
+      main.appendChild(canvas);
+
+    </script>
+  </body>
+
+</html>
