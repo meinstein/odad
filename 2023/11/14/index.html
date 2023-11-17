@@ -151,10 +151,14 @@
       }
 
 
-      // init the data
-      initData();
-      // draw the image sections to the canvas
-      update();
+
+      // add onload event listener to the image
+      // if we do not do this, the image will not be drawn to the canvas
+      img.addEventListener('load', (event) => {
+        initData();
+        update();
+      });
+
       // append the canvas to the main element
       main.appendChild(canvas);
 
