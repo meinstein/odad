@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>here and there</title>
+    <style>
+      /* add styles here */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const WIDTH = 350;
+      const HEIGHT = 350;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+
+      const data = {
+        bottom_left: {
+          transform: [1, 0, 0, 1, 0, 0],
+          rotate: 0,
+        },
+        bottom_right: {
+          transform: [1, 0, 0, 1, 0, 0],
+          rotate: 0,
+        },
+        top_left: {
+          transform: [1, 0, 0.5, 1, 0, 0],
+          rotate: 0,
+        },
+        top_right: {
+          transform: [1, 0, 0.1, 1, 0, 0],
+          rotate: 0,
+        },
+      }
+
+
+      const draw = () => {
+        // clear canvas before drawing
+        ctx.translate(0, 0);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        ctx.lineWidth = 2;
+
+        // Bottom right
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.translate(WIDTH / 2, HEIGHT / 2);
+        ctx.transform(...data.bottom_right.transform);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(100, 0);
+        ctx.lineTo(100, 100);
+        ctx.lineTo(0, 100);
+        ctx.closePath();
+        ctx.stroke();
+
+        // Top left
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.translate(WIDTH / 2, HEIGHT / 2);
+        // rotate
+        ctx.rotate(data.top_left.rotate);
+        ctx.transform(...data.top_left.transform);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-100, 0);
+        ctx.lineTo(-100, -100);
+        ctx.lineTo(0, -100);
+        ctx.closePath();
+        ctx.stroke();
+        // Chartreuse green
+        ctx.fillStyle = 'rgba(127, 255, 0, 0.5)';
+        ctx.fill();
+
+        // Bottom left
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.translate(WIDTH / 2, HEIGHT / 2);
+        ctx.transform(...data.bottom_left.transform);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(0, 100);
+        ctx.lineTo(-100, 100);
+        ctx.lineTo(-100, 0);
+        ctx.closePath();
+        ctx.stroke();
+        // indian red
+        ctx.fillStyle = 'rgba(205, 92, 92, 0.5)';
+        ctx.fill();
+
+        // top right
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.translate(WIDTH / 2, HEIGHT / 2);
+        ctx.transform(...data.top_right.transform);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(0, -100);
+        ctx.lineTo(100, -100);
+        ctx.lineTo(100, 0);
+        ctx.closePath();
+        ctx.stroke();
+        // steel blue
+        ctx.fillStyle = 'rgba(70, 130, 180, 0.5)';
+        ctx.fill();
+
+
+        data.top_right.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
+        data.top_right.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
+        // data.top_right.rotate += 0.01;
+
+        data.top_left.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
+        data.top_left.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
+        // rotate val is between 0 and 360
+        data.top_left.rotate = data.top_left.rotate > 360 ? 0 : data.top_left.rotate + 0.001;
+
+        data.bottom_left.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
+        data.bottom_left.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
+        // data.bottom_left.rotate += 0.01;
+
+        data.bottom_right.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
+        data.bottom_right.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
+        // data.bottom_right.rotate += 0.01;
+
+        requestAnimationFrame(draw);
+      }
+
+      draw();
+
+
+      main.appendChild(canvas);
+
+
+
+    </script>
+  </body>
+
+</html>
