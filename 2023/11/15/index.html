@@ -22,7 +22,7 @@
       const HEIGHT = 350;
 
       const main = document.querySelector('main');
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement('canvas', { alpha: false });
       const ctx = canvas.getContext('2d');
 
       canvas.width = WIDTH;
@@ -49,24 +49,12 @@
 
 
       const draw = () => {
-        // clear canvas before drawing
         ctx.translate(0, 0);
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         ctx.lineWidth = 2;
-
-        // Bottom right
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.translate(WIDTH / 2, HEIGHT / 2);
-        ctx.transform(...data.bottom_right.transform);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(100, 0);
-        ctx.lineTo(100, 100);
-        ctx.lineTo(0, 100);
-        ctx.closePath();
-        ctx.stroke();
 
         // Top left
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -83,6 +71,21 @@
         ctx.stroke();
         // Chartreuse green
         ctx.fillStyle = 'rgba(127, 255, 0, 0.5)';
+        ctx.fill();
+
+        // Bottom right
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.translate(WIDTH / 2, HEIGHT / 2);
+        ctx.transform(...data.bottom_right.transform);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(100, 0);
+        ctx.lineTo(100, 100);
+        ctx.lineTo(0, 100);
+        ctx.closePath();
+        ctx.stroke();
+        // fill solid white
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
         ctx.fill();
 
         // Bottom left
@@ -118,21 +121,21 @@
         ctx.fill();
 
 
-        data.top_right.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
-        data.top_right.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
+        data.top_right.transform[2] = Math.sin(Date.now() / 1500) * 0.30;
+        data.top_right.transform[1] = Math.sin(Date.now() / 1500) * 0.30;
         // data.top_right.rotate += 0.01;
 
-        data.top_left.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
-        data.top_left.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
+        data.top_left.transform[2] = Math.sin(Date.now() / 1500) * 0.25;
+        data.top_left.transform[1] = Math.sin(Date.now() / 1500) * 0.25;
         // rotate val is between 0 and 360
         data.top_left.rotate = data.top_left.rotate > 360 ? 0 : data.top_left.rotate + 0.001;
 
-        data.bottom_left.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
-        data.bottom_left.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
+        data.bottom_left.transform[1] = Math.sin(Date.now() / 1500) * 0.15;
+        data.bottom_left.transform[2] = Math.sin(Date.now() / 1500) * 0.15;
         // data.bottom_left.rotate += 0.01;
 
-        data.bottom_right.transform[1] = Math.sin(Date.now() / 2000) * 0.25;
-        data.bottom_right.transform[2] = Math.sin(Date.now() / 2000) * 0.25;
+        data.bottom_right.transform[1] = Math.sin(Date.now() / 1500) * 0.25;
+        data.bottom_right.transform[2] = Math.sin(Date.now() / 1500) * 0.25;
         // data.bottom_right.rotate += 0.01;
 
         requestAnimationFrame(draw);
