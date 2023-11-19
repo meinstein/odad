@@ -7,9 +7,12 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>untitled</title>
+    <title>sunlight on the wings of birds</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
     </style>
   </head>
 
@@ -20,6 +23,10 @@
     <script>
       const WIDTH = 360;
       const HEIGHT = 360;
+      const CIRCLE_RADIUS = 90;
+      const NUM_CIRCLES = 100;
+      const ROTATION_SPEED = 0.015;
+      const OPENING_SPEED = 0.01;
 
       const main = document.querySelector('main');
       const canvas = document.createElement('canvas');
@@ -30,11 +37,11 @@
       //
       const data = [];
 
-      let chipDir = 'up'
-      let chip = 0;
+      let openingDir = 'top'
+      let opening = 0;
 
       const initData = () => {
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < NUM_CIRCLES; i++) {
           data.push({
             rotate: i * 1,
           });
@@ -44,19 +51,19 @@
       const updateData = () => {
         data.forEach((item, index) => {
           // if more than 360, reset to 0
-          item.rotate = item.rotate >= 360 ? 0 : item.rotate + 0.015;
+          item.rotate = item.rotate >= 360 ? 0 : item.rotate + ROTATION_SPEED;
         });
-        // update chip, between 0 and 2
-        // use dir
-        if (chipDir === 'up') {
-          chip += 0.01;
-          if (chip >= 2) {
-            chipDir = 'down';
+
+        // update chip, between -2 and 2 (causes the opening and closing of the circles on top and bottom)
+        if (openingDir === 'top') {
+          opening += OPENING_SPEED;
+          if (opening >= 2) {
+            openingDir = 'bottom';
           }
         } else {
-          chip -= 0.01;
-          if (chip <= 0) {
-            chipDir = 'up';
+          opening -= OPENING_SPEED;
+          if (opening <= -2) {
+            openingDir = 'top';
           }
         }
       }
@@ -65,25 +72,21 @@
         ctx.clearRect(0, 0, WIDTH, HEIGHT);
         ctx.translate(WIDTH / 2, HEIGHT / 2);
 
-        // draw 100 circles, all stacked in the center,
-        // with the same radius and color.
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < NUM_CIRCLES; i++) {
           const d = data[i];
-
           ctx.beginPath();
-          const r = 100;
+          const r = CIRCLE_RADIUS;
           const theta = d.rotate;
           const x = r * Math.cos(theta)
           const y = r * Math.sin(theta)
-          const startAngle = Math.sin(d.rotate) * Math.PI * chip;
+          const startAngle = Math.sin(d.rotate) * Math.PI * opening;
           ctx.arc(x, y, 50, startAngle, Math.PI * 2);
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
           ctx.fill();
         }
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         updateData();
-
         requestAnimationFrame(draw);
       }
 
