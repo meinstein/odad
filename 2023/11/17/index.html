@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>hypolinks</title>
+    <style>
+      body {
+        margin: 12px;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const PADDING = 80;
+      const COLLISION_PADDING = PADDING;
+
+      const getDims = () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        return { width, height };
+      };
+
+      const main = document.querySelector('main');
+
+      const currentLocations = [];
+
+      const getRandomLocation = () => {
+        const { width, height } = getDims();
+        // get rand without collision
+        // use padding
+        const randX = Math.floor(Math.random() * (width - PADDING * 2)) + PADDING;
+        const randY = Math.floor(Math.random() * (height - PADDING * 2)) + PADDING;
+        if (currentLocations.filter(Boolean).some(location => {
+          const { x, y, elWidth, elHeight } = location;
+          const right = x + elWidth;
+          const randRight = randX + elWidth;
+          const bottom = y + elHeight;
+          const randBottom = randY + elHeight;
+          return randX < right &&
+            randRight > x &&
+            randY < bottom &&
+            randBottom > y;
+        })) {
+          return getRandomLocation();
+        }
+
+        return {
+          randX,
+          randY
+        };
+      };
+
+      const onClick = (i, element) => {
+        // get current location so we animate from there
+        const { left, top } = element.getBoundingClientRect();
+        // get new rand location
+        const { randX, randY } = getRandomLocation();
+        // save new current location
+        currentLocations[i] = {
+          x: randX,
+          y: randY,
+          elWidth: element.offsetWidth,
+          elHeight: element.offsetHeight
+        };
+
+        element.animate([
+          {
+            transform: `translate3d(${left}px, ${top}px, 0) rotate(0deg)`
+          },
+          {
+            transform: `translate3d(${randX}px, ${randY}px, 0) rotate(360deg)`
+          }
+        ], {
+          duration: 1500,
+          easing: 'linear',
+          fill: 'forwards'
+        });
+      };
+
+      const init = () => {
+        for (let i = 0; i < 12; i++) {
+          const text = document.createElement('div');
+          text.id = `text-${i}`;
+          text.innerText = 'hypolink';
+          // make look like an a tag
+          text.style.cursor = 'pointer';
+          text.style.textDecoration = 'underline';
+          text.style.position = 'absolute';
+          text.style.transformOrigin = 'center center';
+          text.style.color = 'rgb(0, 0, 238)';
+          // use i to move down each time
+          text.style.transform = `translate3d(0, ${i * 20}px, 0)`;
+          text.onclick = () => onClick(i, text);
+          main.appendChild(text);
+        }
+      };
+
+      // on an interval, pick random one that is not currently animating to animate
+      setInterval(() => {
+        // select random one
+        const randIndex = Math.floor(Math.random() * 12);
+        const element = document.querySelector(`#text-${randIndex}`);
+        // check if element has play state finished for all animations
+        // question: is this causing a memory leak?
+        const isFinished = element.getAnimations().every(animation => animation.playState === 'finished');
+        if (isFinished) {
+          onClick(randIndex, element);
+        }
+      }, 1500);
+
+      init();
+
+      // on resize, clear everything and reinit
+      window.onresize = () => {
+        // clear all elements
+        main.innerHTML = '';
+        // clear current locations
+        currentLocations.length = 0;
+        init();
+      };
+    </script>
+  </body>
+
+
+</html>
