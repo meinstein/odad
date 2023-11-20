@@ -32,7 +32,7 @@
 
       const main = document.querySelector('main');
 
-      const currentLocations = [];
+      let currentLocations = [];
 
       const getRandomLocation = () => {
         const { width, height } = getDims();
@@ -88,6 +88,8 @@
       };
 
       const init = () => {
+        currentLocations = [];
+
         for (let i = 0; i < 12; i++) {
           const text = document.createElement('div');
           text.id = `text-${i}`;
