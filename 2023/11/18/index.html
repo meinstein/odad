@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      let NUM_OF_ROWS = 15;
+      let NUM_OF_COLS = 15;
+      let LINE_WIDTH = 2;
+
+      const getDims = () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        return {
+          width,
+          height
+        };
+      };
+
+      const getTable = () => {
+        const dims = getDims();
+        const rowWidth = dims.width / NUM_OF_COLS;
+        // make the table square
+        const colHeight = rowWidth;
+        return {
+          rowWidth,
+          colHeight,
+        };
+      };
+
+      const initCanvas = () => {
+        const main = document.querySelector('main');
+        const canvas = document.createElement('canvas');
+        canvas.width = getDims().width;
+        canvas.height = getDims().height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'black';
+        main.appendChild(canvas);
+
+        return {
+          canvas,
+          ctx,
+        }
+      }
+
+      const { ctx, canvas } = initCanvas();
+
+      const drawTable = (timestamp) => {
+        const dims = getDims();
+        const table = getTable();
+        // ensure that the table is always square and fills the screen
+        NUM_OF_ROWS = Math.floor(dims.height / table.colHeight) + 1;
+
+        for (let i = 0.25; i < NUM_OF_ROWS; i++) {
+          for (let j = 0; j < NUM_OF_COLS; j++) {
+            const x = j * table.rowWidth;
+            const y = i * table.colHeight;
+            // overall index, left to right
+            const index = i * NUM_OF_COLS + j;
+            const w = table.rowWidth;
+            const h = LINE_WIDTH;
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(Math.sin(timestamp / (index + 1000)));
+            ctx.fillRect(0, 0, w, h);
+            // rounded edges
+            ctx.beginPath();
+            ctx.arc(0, LINE_WIDTH / 2, LINE_WIDTH * 1.2, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.translate(0, 0);
+            ctx.restore();
+          }
+        }
+      };
+
+      const animate = (timestamp) => {
+        // clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawTable(timestamp);
+        requestAnimationFrame(animate);
+      }
+
+      animate(document.timeline.currentTime);
+
+      // on window resize fix everything
+      window.addEventListener('resize', () => {
+        const dims = getDims();
+        canvas.width = dims.width;
+        canvas.height = dims.height;
+        initCanvas();
+      });
+    </script>
+  </body>
+
+</html>
