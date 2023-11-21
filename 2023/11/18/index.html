@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title></title>
+    <title>prikkel</title>
     <style>
       body {
         margin: 0;
@@ -78,7 +78,7 @@
             const h = LINE_WIDTH;
             ctx.save();
             ctx.translate(x, y);
-            ctx.rotate(Math.sin(timestamp / (index + 1000)));
+            ctx.rotate(Math.sin(timestamp / 1000) * ((i + 1) * (j + 1) + (index * 1.5)) * Math.PI / 180);
             ctx.fillRect(0, 0, w, h);
             // rounded edges
             ctx.beginPath();
