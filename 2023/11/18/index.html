@@ -50,8 +50,10 @@
         const canvas = document.createElement('canvas');
         canvas.width = getDims().width;
         canvas.height = getDims().height;
+        // black canvas fill
+        // canvas.style.backgroundColor = 'black';
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'black';
+        // ctx.fillStyle = 'black';
         main.appendChild(canvas);
 
         return {
@@ -68,21 +70,29 @@
         // ensure that the table is always square and fills the screen
         NUM_OF_ROWS = Math.floor(dims.height / table.colHeight) + 1;
 
-        for (let i = 0.25; i < NUM_OF_ROWS; i++) {
-          for (let j = 0; j < NUM_OF_COLS; j++) {
+        for (let i = 0; i < NUM_OF_ROWS + 2; i++) {
+          // Plus one to make sure the last line is drawn on the right screen edge
+          for (let j = 0; j < NUM_OF_COLS + 1; j++) {
             const x = j * table.rowWidth;
-            const y = i * table.colHeight;
+            // Substract the colHeight so that the first row of lines is outside the viewport (they don't move much anyways)
+            const y = i * table.colHeight - table.colHeight;
             // overall index, left to right
             const index = i * NUM_OF_COLS + j;
             const w = table.rowWidth;
             const h = LINE_WIDTH;
+            // alpha
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(Math.sin(timestamp / 1000) * ((i + 1) * (j + 1) + (index * 1.5)) * Math.PI / 180);
+            // ctx.globalAlpha = index / (NUM_OF_ROWS * NUM_OF_COLS) + .2;
+            // alpha is based on the index
+            // ctx.fillStyle = `rgba(255, 255, 255, ${index / (NUM_OF_ROWS * NUM_OF_COLS) + .5})`;
+            // line width based on index
+            // const h = LINE_WIDTH * (index / (NUM_OF_ROWS * NUM_OF_COLS));
             ctx.fillRect(0, 0, w, h);
             // rounded edges
             ctx.beginPath();
-            ctx.arc(0, LINE_WIDTH / 2, LINE_WIDTH * 1.2, 0, 2 * Math.PI);
+            ctx.arc(0, LINE_WIDTH / 2, h * 1.5, 0, 2 * Math.PI);
             ctx.fill();
             ctx.translate(0, 0);
             ctx.restore();
