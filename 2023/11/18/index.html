@@ -21,7 +21,6 @@
       <!-- add main content here -->
     </main>
     <script>
-      let NUM_OF_ROWS = 15;
       let NUM_OF_COLS = 15;
       let LINE_WIDTH = 2;
 
@@ -37,6 +36,11 @@
       const getTable = () => {
         const dims = getDims();
         const rowWidth = dims.width / NUM_OF_COLS;
+        // if row width is more than 50, keep it at 50
+        if (rowWidth > 50) {
+          NUM_OF_COLS = Math.floor(dims.width / 50);
+        }
+
         // make the table square
         const colHeight = rowWidth;
         return {
@@ -68,7 +72,8 @@
         const dims = getDims();
         const table = getTable();
         // ensure that the table is always square and fills the screen
-        NUM_OF_ROWS = Math.floor(dims.height / table.colHeight) + 1;
+        const NUM_OF_ROWS = Math.floor(dims.height / table.colHeight) + 1;
+        const SPEED = 175;
 
         for (let i = 0; i < NUM_OF_ROWS + 2; i++) {
           // Plus one to make sure the last line is drawn on the right screen edge
@@ -83,7 +88,7 @@
             // alpha
             ctx.save();
             ctx.translate(x, y);
-            ctx.rotate(Math.sin(timestamp / 1000) * ((i + 1) * (j + 1) + (index * 1.5)) * Math.PI / 180);
+            ctx.rotate(Math.sin(timestamp / 1000) * ((i + 1) * (j + 1) + SPEED) * Math.PI / 180);
             // ctx.globalAlpha = index / (NUM_OF_ROWS * NUM_OF_COLS) + .2;
             // alpha is based on the index
             // ctx.fillStyle = `rgba(255, 255, 255, ${index / (NUM_OF_ROWS * NUM_OF_COLS) + .5})`;
@@ -114,7 +119,7 @@
         const dims = getDims();
         canvas.width = dims.width;
         canvas.height = dims.height;
-        initCanvas();
+        animate(document.timeline.currentTime);
       });
     </script>
   </body>
