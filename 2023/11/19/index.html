@@ -7,9 +7,13 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>protostome</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
     </style>
   </head>
 
@@ -24,75 +28,99 @@
         return { width, height };
       };
 
-      const { width, height } = getDims();
+      const init = () => {
+        const { width, height } = getDims();
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = width;
+        canvas.height = height;
+        document.body.appendChild(canvas);
+        return { canvas, ctx };
+      };
 
-      const main = document.querySelector('main');
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = width;
-      canvas.height = height;
-      main.appendChild(canvas);
+      const { canvas, ctx } = init();
 
-      // draw a rectangle dead center
-      ctx.fillStyle = 'indianred';
-      ctx.fillRect(width / 2 - 5, height / 2 - 50, 10, 100);
+      // on resize, update the canvas dims so it re-centers
+      window.addEventListener('resize', () => {
+        const { width, height } = getDims();
+        canvas.width = width;
+        canvas.height = height;
+      });
 
       let rotation = 0;
-
-      let dots = [
-        []
-      ];
-      let activeSubArray = 0;
+      let dots = [[]];
+      let PATH_LENGTH = 360;
       let isActive = true;
-      let PATH_LENGTH = 180;
-      let DIR = 1;
 
       const animate = () => {
+        const { width, height } = getDims();
+        // make radius between 1 and 2% of the screen width
+        const radius = Math.random() * (width * 0.02 - width * 0.01) + width * 0.01
+
         ctx.clearRect(0, 0, width, height);
         ctx.save();
         ctx.translate(width / 2, height / 2);
         ctx.rotate(rotation);
 
-        // push the distance based on the prev rotation from the last dot in the active sub array
         if (isActive) {
-          const lastDot = dots[dots[activeSubArray].length - 1];
-          dots[activeSubArray].push({
+          const lastDot = dots[dots[0].length - 1];
+          dots[0].push({
             rotation,
-            distance: lastDot ? lastDot.distance + Math.random() * 5 : 0
+            // make distance based on the radius
+            distance: lastDot ? radius * 1.5 : 0,
+            radius,
+            // round opacity to 1 decimal place
+            opacity: Math.round(Math.random() * 10) / 10
           });
         }
 
-        ctx.fillStyle = 'indianred';
-        ctx.fillRect(-5, -50, 10, 100);
-        // emit a circle dot from the top of the rectangle on either side
-        // ctx.beginPath();
-        // ctx.arc(0, -50, 5, 0, Math.PI * 2);
-        // ctx.fill();
-        // ctx.beginPath();
-        // ctx.arc(0, 50, 5, 0, Math.PI * 2);
-        // ctx.fill();
-
         // draw the dots
-        ctx.fillStyle = 'black';
+        // ctx.fillStyle = 'black';
         for (let i = 0; i < dots.length; i++) {
-          dots[i].forEach(dot => {
+          dots[i].forEach((dot, j) => {
+            const isEven = j % 2 === 0;
             ctx.beginPath();
+            // const oneOrNegOne = Math.random() > 0.5 ? 1 : -1;
+            const oneOrNegOne = isEven ? 1 : -1;
             ctx.arc(
               // line up the arc with the rectangle end points
-              Math.cos(dot.rotation) * dot.distance * 0.5 * DIR,
-              Math.sin(dot.rotation) * dot.distance,
-              2,
+              isEven ?
+                Math.cos(dot.rotation) * dot.distance * oneOrNegOne :
+                Math.sin(dot.rotation) * dot.distance * oneOrNegOne,
+              isEven ?
+                Math.sin(dot.rotation) * dot.distance * oneOrNegOne :
+                Math.cos(dot.rotation) * dot.distance * oneOrNegOne,
+              dot.radius,
               0,
               Math.PI * 2
             );
-            // fade the further away the dot is
-            ctx.globalAlpha = 1 - dot.distance / 1000;
-            ctx.fill();
+            // no fill, only outline
+            ctx.strokeStyle = `rgba(0, 0, 0, ${dot.opacity})`;
+            ctx.stroke();
+            ctx.closePath();
+            // DO MIRRORING
+            ctx.beginPath();
+            ctx.arc(
+              // line up the arc with the rectangle end points
+              !isEven ?
+                Math.cos(dot.rotation) * dot.distance * oneOrNegOne :
+                Math.sin(dot.rotation) * dot.distance * oneOrNegOne,
+              !isEven ?
+                Math.sin(dot.rotation) * dot.distance * oneOrNegOne :
+                Math.cos(dot.rotation) * dot.distance * oneOrNegOne,
+              dot.radius,
+              0,
+              Math.PI * 2
+            );
+            // no fill, only outline
+            ctx.strokeStyle = `rgba(0, 0, 0, ${dot.opacity})`;
+            ctx.stroke();
+            ctx.closePath();
           });
         }
 
         ctx.restore();
-        rotation += 0.01;
+        rotation += radius * 0.0001 + 0.02;
 
         if (rotation > Math.PI * 2) {
           rotation = 0;
@@ -100,37 +128,29 @@
 
         // update the distance of the active sub array
         for (let i = 0; i < dots.length; i++) {
-          dots[i].forEach(dot => {
-            dot.distance += Math.random();
+          dots[i].forEach((dot, j) => {
+            dot.distance += radius * 0.15 + 0.5;
           });
         }
 
-        const lastDotPath = dots[dots.length - 1];
+        const lastDotPath = dots[0];
         if (lastDotPath.length > PATH_LENGTH) {
-          // Push new array for new path
-          dots.push([]);
-          activeSubArray++;
+          // add new sub array to start
+          dots.unshift([]);
           isActive = false;
           setTimeout(() => {
             isActive = true;
-            PATH_LENGTH = Math.random() * 180;
-            // DIR = Math.random() > 0.5 ? 1 : -1;
-          }, 1000);
+            // WHOLE NUMBER BT 90 AND 360
+            PATH_LENGTH = Math.floor(Math.random() * 270 + 90);
+          }, Math.random() * 1000 + 200);
         }
 
         // Look for distances past threshold in the sub arrays
-        dots.forEach(dotPath => {
-          let isPastThreshold = false
-          dotPath.forEach((dot, i) => {
-            if (dot.distance > 10_000) {
-              isPastThreshold = true;
-            }
-          });
-          if (isPastThreshold) {
-            // Remove the sub array
-            dots = dots.filter(path => path !== dotPath);
-          }
-        });
+        const THRESHOLD = 3
+        if (dots.length > THRESHOLD) {
+          // remove the last sub array
+          dots.pop();
+        }
 
         requestAnimationFrame(animate);
       };
