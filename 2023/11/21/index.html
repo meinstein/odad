@@ -51,12 +51,14 @@
             lines.push({
               x: i * (section / ITEMS) + sectionPadding,
               y: j * (height / ITEMS),
-              r1: Math.random() * height * 0.05,
-              r2: Math.random() * height * 0.05,
-              // random between 0.001 and 0.0001
-              speed: Math.random() * 0.001 + 0.0001,
-              lineWidth: Math.random() + 2,
-              alpha: Math.random() * 0.5 + 0.5
+              // sin based on j
+              r1: Math.sin(j * 0.1) * 50,
+              r2: Math.cos(j * 0.1) * 50,
+              // random between 0.001 and 0.0001 - nearest 4 decimal places
+              speed: Math.floor(Math.random() * 10000 + 1) / 1000000,
+              // random between 1 and 3 - nearest whole number
+              lineWidth: Math.floor(Math.random() * height / 50) + 5,
+              alpha: 0.5
             })
           }
         }
