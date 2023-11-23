@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const ITEMS = 50;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      main.appendChild(canvas);
+
+      const getDims = () => {
+        return {
+          width: window.innerWidth,
+          height: window.innerHeight
+        }
+      }
+
+      let lines = [];
+      const MAX_SECTION_WIDTH = 350;
+
+      const initData = () => {
+        lines = [];
+        const { width, height } = getDims();
+        const section = Math.min(width * 0.3333, MAX_SECTION_WIDTH);
+        const sectionPadding = (width - section) / 2;
+        for (i = 0; i <= ITEMS; i++) {
+          for (j = 0; j <= ITEMS; j++) {
+            const alpha = Math.random() * 0.5 + 0.5;
+
+            lines.push({
+              x: i * (section / ITEMS) + sectionPadding,
+              y: j * (height / ITEMS),
+              r1: Math.random() * height * 0.05,
+              r2: Math.random() * height * 0.05,
+              // random between 0.001 and 0.0001
+              speed: Math.random() * 0.001 + 0.0001,
+              lineWidth: Math.random() * 0.05 * alpha + 0.1,
+              // random between 0.5 and 1
+              alpha
+            })
+          }
+        }
+      }
+
+      const draw = () => {
+        lines.forEach(line => {
+          ctx.beginPath();
+          ctx.moveTo(line.x, line.y);
+          ctx.quadraticCurveTo(
+            line.x + Math.cos(Date.now() * line.speed) * line.r1,
+            line.y + Math.sin(Date.now() * line.speed) * line.r2,
+            line.x,
+            line.y,
+          );
+          // global alpha
+          ctx.globalAlpha = line.alpha;
+          // stroke width is 1% of the distance between the points
+          ctx.lineWidth = window.innerHeight / ITEMS * line.lineWidth;
+          // ctx.globalAlpha = 0.05;
+          ctx.stroke();
+        })
+      };
+
+
+      const animate = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      initData();
+      animate();
+
+      window.addEventListener('resize', () => {
+        initData();
+      })
+    </script>
+  </body>
+
+</html>
