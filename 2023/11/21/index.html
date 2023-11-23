@@ -48,8 +48,6 @@
         const sectionPadding = (width - section) / 2;
         for (i = 0; i <= ITEMS; i++) {
           for (j = 0; j <= ITEMS; j++) {
-            const alpha = Math.random() * 0.5 + 0.5;
-
             lines.push({
               x: i * (section / ITEMS) + sectionPadding,
               y: j * (height / ITEMS),
@@ -57,9 +55,8 @@
               r2: Math.random() * height * 0.05,
               // random between 0.001 and 0.0001
               speed: Math.random() * 0.001 + 0.0001,
-              lineWidth: Math.random() * 0.05 * alpha + 0.1,
-              // random between 0.5 and 1
-              alpha
+              lineWidth: Math.random() + 2,
+              alpha: Math.random() * 0.5 + 0.5
             })
           }
         }
@@ -75,11 +72,8 @@
             line.x,
             line.y,
           );
-          // global alpha
           ctx.globalAlpha = line.alpha;
-          // stroke width is 1% of the distance between the points
-          ctx.lineWidth = window.innerHeight / ITEMS * line.lineWidth;
-          // ctx.globalAlpha = 0.05;
+          ctx.lineWidth = line.lineWidth;
           ctx.stroke();
         })
       };
