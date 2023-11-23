@@ -74,7 +74,8 @@
             line.x,
             line.y,
           );
-          ctx.globalAlpha = line.alpha;
+          ctx.lineCap = "round";
+          ctx.strokeStyle = `rgba(0, 0, 0, ${line.alpha})`;
           ctx.lineWidth = line.lineWidth;
           ctx.stroke();
         })
