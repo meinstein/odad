@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>untitled</title>
+    <title>scratching post</title>
     <style>
       body {
         margin: 0;
@@ -39,7 +39,7 @@
       }
 
       let lines = [];
-      const MAX_SECTION_WIDTH = 350;
+      const MAX_SECTION_WIDTH = 150;
 
       const initData = () => {
         lines = [];
@@ -67,7 +67,6 @@
       const draw = () => {
         lines.forEach(line => {
           ctx.beginPath();
-          ctx.moveTo(line.x, line.y);
           ctx.quadraticCurveTo(
             line.x + Math.cos(Date.now() * line.speed) * line.r1,
             line.y + Math.sin(Date.now() * line.speed) * line.r2,
