@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const dims = () => ({
+        w: window.innerWidth,
+        h: window.innerHeight
+      });
+
+      const initCanvas = () => {
+        const main = document.querySelector('main');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const { w, h } = dims();
+        canvas.width = w;
+        canvas.height = h;
+        main.appendChild(canvas);
+        return { canvas, ctx };
+      };
+
+      const initData = () => {
+        const getNoise = () => Math.random() * 4;
+        const PADDING = 8;
+        const SEGMENTS = 100;
+        let { w, h } = dims();
+
+        w = Math.min(w, h);
+
+        const data = [];
+
+        for (let i = 0; i < SEGMENTS; i++) {
+          const polygon = [];
+
+          // padding increases with each iteration
+          const p = i * PADDING;
+
+          let noise = getNoise();
+
+          for (let j = 4; j < 25; j++) {
+            // TOP LEFT to TOP RIGHT
+            const x = ((w - p * 2) / 25) * j + p;
+            polygon.push({
+              x,
+              y: p + noise,
+            });
+          }
+
+          for (let j = 4; j < 25; j++) {
+            // TOP LEFT to BOTTOM RIGHT
+            const y = ((h - p * 2) / 25) * j + p;
+            polygon.push({
+              x: w - p - getNoise(),
+              y,
+            });
+          }
+
+          noise = getNoise();
+
+          for (let j = 4; j < 25; j++) {
+            // BOTTOM RIGHT to BOTTOM LEFT
+            const x = w - ((w - p * 2) / 25) * j - p;
+            polygon.push({
+              x,
+              y: h - p - noise,
+            });
+          }
+
+          for (let j = 4; j < 25; j++) {
+            // BOTTOM LEFT to TOP LEFT
+            const y = h - ((h - p * 2) / 25) * j - p;
+            polygon.push({
+              x: p + getNoise(),
+              y,
+            });
+          }
+
+
+          data.push(polygon);
+        }
+
+        return data;
+      };
+
+      const data = initData();
+      const { canvas, ctx } = initCanvas();
+
+      const draw = () => {
+        data.filter(polygon => {
+          // skip polygon if x or y begins to invert (plus padding)
+          return polygon[0].x < polygon[1].x - 2 || polygon[0].y < polygon[1].y - 2
+        }).forEach((polygon, i) => {
+
+          ctx.beginPath();
+          ctx.moveTo(polygon[0].x, polygon[0].y);
+
+          polygon.forEach((point, j) => {
+            if (j > 0) {
+              ctx.lineTo(point.x, point.y);
+            }
+          });
+
+          ctx.closePath();
+          ctx.stroke();
+          // every other line!
+          ctx.lineWidth = i % 2 === 0 ? 2 : 4;
+
+
+        });
+      };
+
+      // const loop = () => {
+      //   const { w, h } = dims();
+      //   ctx.clearRect(0, 0, w, h);
+      //   draw();
+      //   requestAnimationFrame(loop);
+      // };
+
+      // loop();
+
+      draw();
+
+    </script>
+  </body>
+
+</html>
