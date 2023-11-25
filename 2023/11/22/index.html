@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>wobbly orifice</title>
     <style>
       body {
         margin: 0;
@@ -40,6 +40,7 @@
 
       const initData = () => {
         const getNoise = () => Math.random() * 4;
+        const getRand = () => Math.random() * 0.1 + 0.05;
         const PADDING = 8;
         const SEGMENTS = 100;
         let { w, h } = dims();
@@ -59,18 +60,27 @@
           for (let j = 4; j < 25; j++) {
             // TOP LEFT to TOP RIGHT
             const x = ((w - p * 2) / 25) * j + p;
+            const y = p + noise;
             polygon.push({
               x,
-              y: p + noise,
+              y,
+              y2: y,
+              d: 1,
+              a: getRand(),
             });
           }
 
           for (let j = 4; j < 25; j++) {
             // TOP LEFT to BOTTOM RIGHT
             const y = ((h - p * 2) / 25) * j + p;
+            const _noise = getNoise();
+            const x = w - p - _noise;
             polygon.push({
-              x: w - p - getNoise(),
+              x,
+              x2: x,
               y,
+              d: -1,
+              a: getRand(),
             });
           }
 
@@ -79,18 +89,27 @@
           for (let j = 4; j < 25; j++) {
             // BOTTOM RIGHT to BOTTOM LEFT
             const x = w - ((w - p * 2) / 25) * j - p;
+            const y = h - p - noise;
             polygon.push({
               x,
-              y: h - p - noise,
+              y,
+              y2: y,
+              d: -1,
+              a: getRand(),
             });
           }
 
           for (let j = 4; j < 25; j++) {
             // BOTTOM LEFT to TOP LEFT
             const y = h - ((h - p * 2) / 25) * j - p;
+            const _noise = getNoise();
+            const x = p + _noise;
             polygon.push({
-              x: p + getNoise(),
+              x,
+              x2: x,
               y,
+              d: 1,
+              a: getRand(),
             });
           }
 
@@ -104,40 +123,91 @@
       const data = initData();
       const { canvas, ctx } = initCanvas();
 
+
+
       const draw = () => {
-        data.filter(polygon => {
-          // skip polygon if x or y begins to invert (plus padding)
-          return polygon[0].x < polygon[1].x - 2 || polygon[0].y < polygon[1].y - 2
-        }).forEach((polygon, i) => {
+        data
+          // remove the first 2 polygons (so not against the edge of the screen / canvas)
+          .slice(2).filter(polygon => {
+            // filter the outer most polygons
+            // skip polygon if x or y begins to invert (plus padding)
+            return polygon[0].x < polygon[1].x - 2 || polygon[0].y < polygon[1].y - 2
+          }).forEach((polygon, i) => {
 
-          ctx.beginPath();
-          ctx.moveTo(polygon[0].x, polygon[0].y);
+            ctx.beginPath();
+            ctx.moveTo(polygon[0].x, polygon[0].y);
 
-          polygon.forEach((point, j) => {
-            if (j > 0) {
-              ctx.lineTo(point.x, point.y);
-            }
+            polygon.forEach((point, j) => {
+              if (j > 0) {
+                ctx.lineTo(point.x, point.y);
+              }
+            });
+
+            ctx.closePath();
+            ctx.stroke();
+            // every other line!
+            ctx.lineWidth = i % 2 === 0 ? 2 : 4;
+
+            const MAX_DELTA = 1.2;
+
+            // move each point
+            polygon.forEach(p => {
+              // has x2 prop? move x
+              if (p.x2) {
+                // check direction
+                if (p.d === -1) {
+                  p.x = p.x + p.a
+
+                  if (p.x > p.x2 + MAX_DELTA) {
+                    p.d = 1;
+                  }
+                }
+
+                if (p.d === 1) {
+                  p.x = p.x - p.a
+
+                  if (p.x < p.x2 - MAX_DELTA) {
+                    p.d = -1;
+                  }
+                }
+
+
+              }
+
+              // has y2 prop? move y
+              if (p.y2) {
+                // check direction
+                if (p.d === -1) {
+                  p.y = p.y + p.a
+
+                  if (p.y > p.y2 + MAX_DELTA) {
+                    p.d = 1;
+                  }
+                }
+
+                if (p.d === 1) {
+                  p.y = p.y - p.a
+
+                  if (p.y < p.y2 - MAX_DELTA) {
+                    p.d = -1;
+                  }
+                }
+
+              }
+            });
           });
-
-          ctx.closePath();
-          ctx.stroke();
-          // every other line!
-          ctx.lineWidth = i % 2 === 0 ? 2 : 4;
-
-
-        });
       };
 
-      // const loop = () => {
-      //   const { w, h } = dims();
-      //   ctx.clearRect(0, 0, w, h);
-      //   draw();
-      //   requestAnimationFrame(loop);
-      // };
+      const loop = () => {
+        const { w, h } = dims();
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      };
 
-      // loop();
+      loop();
 
-      draw();
+      // draw();
 
     </script>
   </body>
