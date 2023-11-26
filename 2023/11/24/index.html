@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>corridors of impairment</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const dims = () => ({
+        w: window.innerWidth,
+        h: window.innerHeight
+      });
+
+      const initCanvas = () => {
+        const main = document.querySelector('main');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const { w, h } = dims();
+        canvas.width = w;
+        canvas.height = h;
+        main.appendChild(canvas);
+        return { canvas, ctx };
+      };
+
+      const initData = () => {
+        const getNoise = () => Math.random() * 2;
+        const getRand = () => Math.random() * 0.25;
+        const PADDING = 6;
+        let { w, h } = dims();
+        w = Math.min(w, h);
+        // derive segments based on width -- remove 1 for padding on each side
+        const SEGMENTS = Math.floor(w / (PADDING * 2));
+
+        const data = [];
+
+        for (let i = 0; i < SEGMENTS; i++) {
+          const polygon = [];
+
+          // padding increases with each iteration
+          const p = i * PADDING;
+          // inverse of segments -- so the first polygon has the most points
+          const PARTS = SEGMENTS - i + 2;
+
+          const noise = getNoise();
+
+          for (let j = 1; j < PARTS; j++) {
+            // TOP LEFT to TOP RIGHT
+            const x = ((w - p * 2) / PARTS) * j + p;
+            const y = p + noise;
+            polygon.push({
+              x,
+              x2: x,
+              xd: 1,
+              y,
+              y2: y,
+              yd: -1,
+              a: getRand(),
+            });
+          }
+
+          for (let j = 1; j < PARTS; j++) {
+            // BOTTOM RIGHT to BOTTOM LEFT
+            const x = w - ((w - p * 2) / PARTS) * j - p;
+            const y = h - p - noise;
+            polygon.push({
+              x,
+              x2: x,
+              xd: -1,
+              y,
+              y2: y,
+              yd: 1,
+              a: getRand(),
+            });
+          }
+
+
+          data.push(polygon);
+        }
+
+        return data;
+      };
+
+      const data = initData();
+      const { canvas, ctx } = initCanvas();
+
+
+
+      const draw = () => {
+        data
+          // remove the first 1 polygons (so not against the edge of the screen / canvas)
+          .slice(1)
+          .forEach((polygon, i) => {
+
+            ctx.beginPath();
+            ctx.moveTo(polygon[0].x, polygon[0].y);
+
+            polygon.forEach((point, j) => {
+              if (i > 0) {
+                ctx.lineTo(point.x, point.y);
+              }
+            });
+
+            ctx.closePath();
+            ctx.stroke();
+
+            // opacity and line width decreases with each iteration
+            ctx.lineWidth = 1 - i / data.length;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${1 - i / data.length})`;
+
+            const MAX_DELTA = 2;
+
+            // move each point
+            polygon.forEach(p => {
+              // has x2 prop? move x
+              if (p.x2) {
+                // check direction
+                if (p.xd === -1) {
+                  p.x = p.x + p.a
+
+                  if (p.x > p.x2 + MAX_DELTA) {
+                    p.xd = 1;
+                  }
+                }
+
+                if (p.xd === 1) {
+                  p.x = p.x - p.a
+
+                  if (p.x < p.x2 - MAX_DELTA) {
+                    p.xd = -1;
+                  }
+                }
+              }
+
+              // has y2 prop? move y
+              if (p.y2) {
+                // check direction
+                if (p.yd === -1) {
+                  p.y = p.y + p.a
+
+                  if (p.y > p.y2 + MAX_DELTA) {
+                    p.yd = 1;
+                  }
+                }
+
+                if (p.yd === 1) {
+                  p.y = p.y - p.a
+
+                  if (p.y < p.y2 - MAX_DELTA) {
+                    p.yd = -1;
+                  }
+                }
+
+              }
+            });
+          });
+      };
+
+      const loop = () => {
+        const { w, h } = dims();
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+
+    </script>
+  </body>
+
+</html>
