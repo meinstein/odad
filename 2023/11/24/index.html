@@ -40,8 +40,8 @@
       };
 
       const initData = () => {
-        const getNoise = () => Math.random() * 2;
-        const getRand = () => Math.random() * 0.25;
+        const getNoise = () => Math.random() * 1.5;
+        const getRand = () => Math.random() * 0.15;
         const PADDING = 6;
         let { w, h } = dims();
         w = Math.min(w, h);
@@ -114,6 +114,8 @@
             polygon.forEach((point, j) => {
               if (i > 0) {
                 ctx.lineTo(point.x, point.y);
+                // draw small circle at each point
+                ctx.arc(point.x, point.y, 1 - i / data.length, 0, 2 * Math.PI);
               }
             });
 
@@ -124,7 +126,8 @@
             ctx.lineWidth = 1 - i / data.length;
             ctx.strokeStyle = `rgba(255, 255, 255, ${1 - i / data.length})`;
 
-            const MAX_DELTA = 2;
+            // effectively serves as speed -- the higher the number, the slower the movement
+            const MAX_DELTA = 1.5;
 
             // move each point
             polygon.forEach(p => {
