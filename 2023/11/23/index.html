@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>the long tail wagging the graph</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const dims = () => ({
+        w: window.innerWidth,
+        h: window.innerHeight
+      });
+
+      const getCanvasDim = () => {
+        const { w, h } = dims();
+        const minDim = Math.min(w, h);
+        return minDim;
+      };
+
+      const initCanvas = () => {
+        const main = document.querySelector('main');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const dim = getCanvasDim();
+        canvas.width = dim;
+        canvas.height = dim;
+        main.appendChild(canvas);
+        return { canvas, ctx };
+      };
+
+      const initData = () => {
+        const dim = getCanvasDim();
+        const ARC_COUNT = 360;
+        // realistically, will always be 6
+        const INCREMENT_BY = Math.max(6, dim / ARC_COUNT);
+
+        const data = [];
+
+        for (let i = 1; i <= ARC_COUNT; i += INCREMENT_BY) {
+          // make the end of each arc a random point on the circle
+          const e = Math.PI * 2 * (i / ARC_COUNT);
+          // make start angle (e) always be random b/t 180 and 215 degrees behind end angle (e)
+          const s = e - (Math.PI * 2 * (Math.random() * 0.35 + 0.5));
+          const arc = {
+            x: dim / 2,
+            y: dim / 2,
+            r: (dim / ARC_COUNT / 2) * i,
+            s,
+            e,
+            // opacity - use i to create number b/t 0 and 1
+            o: i / ARC_COUNT
+          };
+
+          data.push(arc);
+        }
+
+        return data;
+      }
+
+      const draw = ({ ctx, data }) => {
+        const dim = getCanvasDim();
+        data.forEach(({ x, y, r, s, e, o }) => {
+          ctx.lineWidth = o * dim / 200;
+          ctx.strokeStyle = `rgba(0, 0, 0, ${o * 0.5})`;
+          ctx.beginPath();
+          ctx.arc(x, y, r, s, e);
+          ctx.stroke();
+          // draw a line from the center of the circle to the end of the arc
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + Math.cos(e) * r, y + Math.sin(e) * r);
+          ctx.stroke();
+        });
+      };
+
+      const loop = ({ canvas, ctx, data }) => {
+        // clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // draw
+        draw({ ctx, data });
+        // update data
+        data.forEach((arc) => {
+          arc.e = arc.e % (Math.PI * 2) + 0.075;
+          arc.s = arc.s % (Math.PI * 2) + 0.075;
+        });
+
+        requestAnimationFrame(() => loop({ canvas, ctx, data }));
+      };
+
+      const main = () => {
+        const data = initData();
+        const { canvas, ctx } = initCanvas();
+        loop({ canvas, ctx, data });
+      };
+
+      main();
+    </script>
+  </body>
+
+</html>
