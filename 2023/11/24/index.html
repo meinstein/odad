@@ -115,6 +115,7 @@
               if (i > 0) {
                 ctx.lineTo(point.x, point.y);
                 // draw small circle at each point
+                // this is to cover up the artifacts from the lineTo method, which leaves a small dot at each point
                 ctx.arc(point.x, point.y, 1 - i / data.length, 0, 2 * Math.PI);
               }
             });
