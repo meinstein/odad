@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>myocodium</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const dims = () => ({
+        w: window.innerWidth,
+        h: window.innerHeight
+      });
+
+      const initCanvas = () => {
+        const main = document.querySelector('main');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const { w, h } = dims();
+        canvas.width = w;
+        canvas.height = h;
+        main.appendChild(canvas);
+        return { canvas, ctx };
+      };
+
+      const initData = () => {
+        const PADDING = 0;
+        const data = [];
+        let { w, h } = dims();
+        const SEGMENTS = 100;
+
+        for (let i = 0; i < SEGMENTS; i++) {
+          data.push({
+            dir: {
+              current: 'LEFT',
+              updatedAt: Date.now()
+            },
+            cp1: {
+              x: w / 2,
+              y: h / 2
+            },
+            cp2: {
+              x: w / 2 + (Math.random() * 2 - 1) * w / 2,
+              y: h / 2 + (Math.random() * 2 - 1) * h / 2
+            },
+            start: {
+              x: w / 2,
+              y: PADDING
+            },
+            end: {
+              x: w / 2,
+              y: h - PADDING
+            }
+          });
+        }
+
+        return data;
+      };
+
+      const data = initData();
+      const { canvas, ctx } = initCanvas();
+
+
+
+      const updateData = (w, h) => {
+        const DENOMINATOR = 2;
+        const SPEED = 10;
+        const DURATION = 250;
+
+        data.forEach(({ cp1, dir }, i) => {
+          if (dir.current === 'LEFT') {
+            data[i].cp1.x = data[i].cp1.x + Math.sin(data[i].dir.updatedAt / DURATION);
+            data[i].cp1.y = data[i].cp1.y + Math.sin(data[i].dir.updatedAt / DURATION);
+            // add some curve by subtracting from cp2.x (and adding below in RIGHT)
+            data[i].cp2.x = data[i].cp2.x - Math.sin(data[i].dir.updatedAt / DURATION);
+          }
+
+          if (dir.current === 'RIGHT') {
+            data[i].cp1.x = data[i].cp1.x - Math.sin(data[i].dir.updatedAt / DURATION);
+            data[i].cp1.y = data[i].cp1.y - Math.sin(data[i].dir.updatedAt / DURATION);
+
+            data[i].cp2.x = data[i].cp2.x + Math.sin(data[i].dir.updatedAt / DURATION);
+          }
+
+          // change direction after a certain amount of time
+          if (Date.now() - dir.updatedAt > DURATION) {
+            data[i].dir.updatedAt = Date.now();
+            data[i].dir.current = data[i].dir.current === 'LEFT' ? 'RIGHT' : 'LEFT';
+          }
+        });
+      }
+
+      const draw = () => {
+        data
+          .forEach(({ start, end, cp1, cp2 }, i) => {
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+            ctx.stroke();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${1 - i / data.length})`;
+            ctx.lineWidth = cp1.x / window.innerWidth * 5
+          });
+      }
+
+      const loop = () => {
+        const { w, h } = dims();
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        updateData(w, h);
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+
+    </script>
+  </body>
+
+</html>
