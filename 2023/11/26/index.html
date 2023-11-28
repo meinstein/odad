@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>a box without a cat will get shipped</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const dims = () => ({
+        w: window.innerWidth,
+        h: window.innerHeight
+      });
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const { w, h } = dims();
+      const minDim = Math.min(w, h);
+      const faceSize = minDim * .2;
+      canvas.width = minDim;
+      canvas.height = minDim;
+      const centerX = minDim / 2;
+      const centerY = minDim / 2;
+
+      main.appendChild(canvas);
+
+      class Animate {
+        constructor(min, max, dir, val, speed) {
+          this._min = min;
+          this._max = max;
+          this._dir = dir;
+          this._val = val;
+          this._speed = speed;
+        }
+
+        update() {
+          if (this._dir === 'open') {
+            this._increment();
+
+            if (this._val > this._max) {
+              this._dir = 'close';
+            }
+          } else {
+            this._decrement();
+
+            if (this._val < this._min) {
+              this._dir = 'open';
+            }
+          }
+        }
+
+        _increment() {
+          this._val = this._val + this._speed;
+        }
+
+        _decrement() {
+          this._val = this._val - this._speed;
+        }
+
+        get val() {
+          return this._val;
+        }
+      }
+
+      const lid = new Animate(0, 0.5, 'open', 0.25, 0.01);
+      const lid2 = new Animate(-0.25, 0.25, 'open', -0.25, 0.005);
+      const lid3 = new Animate(-0.25, 0, 'open', -0.25, 0.01);
+      const lid4 = new Animate(0, faceSize, 'open', 0, 2.5);
+      const lid5 = new Animate(-faceSize, 0, 'open', -faceSize, 2.5);
+
+      const draw = () => {
+        ctx.fillStyle = `rgba(255,255,255, ${.6})`;
+        // stroke color
+        // stroke line width
+        // rect line stroke color
+        // ctx.strokeRect(0, 0, minDim, minDim);
+
+        // top - back
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.scale(1, .5);
+        ctx.rotate(45 * Math.PI / 180);
+        ctx.fillRect(lid5.val, -faceSize, -faceSize, faceSize);
+        ctx.strokeRect(lid5.val, -faceSize, -faceSize, faceSize);
+        ctx.strokeWeight = 1;
+        ctx.restore();
+
+        // top - back
+        // ctx.save();
+        // ctx.translate(centerX, centerY);
+        // ctx.scale(1, .5);
+        // ctx.rotate(315 * Math.PI / 180);
+        // ctx.globalAlpha = lid4.val / 100;
+        // ctx.fillRect(lid4.val, -faceSize, faceSize, faceSize);
+        // ctx.restore();
+
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.scale(1, .5);
+        ctx.rotate(135 * Math.PI / 180);
+        ctx.fillRect(-faceSize, faceSize, -faceSize, faceSize);
+        ctx.restore();
+
+        // top - back
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.scale(1, .5);
+        ctx.rotate(315 * Math.PI / 180);
+        // stroke
+        ctx.strokeRect(faceSize, -faceSize, faceSize, faceSize);
+        ctx.fillRect(faceSize, -faceSize, faceSize, faceSize);
+        ctx.restore();
+
+        // LID 3
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.transform(1, 0.5, lid3.val, 1, 0, 0);
+        ctx.fillRect(-faceSize, 0, faceSize, faceSize);
+
+        ctx.beginPath();
+        // stroke black
+        ctx.strokeStyle = 'black';
+        // fill balck
+        ctx.lineWidth = 1;
+        ctx.arc(-faceSize, faceSize, faceSize / 2, 0, 2 * Math.PI);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+
+
+        // LID 2
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.transform(-1, 0.5, lid2.val, -1, 0, 0);
+        ctx.fillRect(-faceSize, 0, faceSize, faceSize);
+
+        ctx.restore();
+
+        // LID 3
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.transform(
+          -1,
+          .5,
+          lid.val,
+          1,
+          0,
+          0
+        );
+        // stroke
+        ctx.strokeRect(-faceSize, 0, faceSize, faceSize);
+        ctx.fillRect(-faceSize, 0, faceSize, faceSize);
+
+        ctx.beginPath();
+        // stroke black
+        ctx.strokeStyle = 'black';
+        // fill balck
+        ctx.lineWidth = 1;
+        ctx.arc(-faceSize, faceSize, faceSize / 2, 0, 2 * Math.PI);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+        ctx.stroke();
+
+
+        ctx.restore();
+
+        lid.update();
+        lid2.update();
+        lid3.update();
+        lid4.update();
+        lid5.update();
+
+
+      }
+
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+
+    </script>
+  </body>
+
+</html>
