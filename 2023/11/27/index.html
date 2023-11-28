@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const minDim = Math.min(w, h);
+      canvas.width = minDim
+      canvas.height = minDim
+      main.appendChild(canvas);
+      const padding = Math.max(16, minDim * 0.05);
+      const centerX = minDim / 2;
+      const centerY = minDim / 2;
+      const len = centerX - padding;
+      const angle = 90;
+
+      let val = 1
+      let dir = 1
+      const max = 1.5
+      const min = 0.5
+      const speed = 0.005
+
+
+      const draw = () => {
+        for (let i = 0; i < 60; i++) {
+          ctx.beginPath();
+          ctx.moveTo(centerX - len, centerY);
+          ctx.bezierCurveTo(centerX - len, centerY, centerX, centerY * val, centerX + len, centerY);
+          ctx.stroke();
+          // stroke width, related to index
+          ctx.lineWidth = 2;
+          // stroke color
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+
+          // circle size is 1% of the canvas width
+          const circleSize = Math.min(w * 0.005, 3);
+          // draw a circle at the start
+          ctx.beginPath();
+          ctx.arc(centerX - len, centerY, circleSize, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // draw a circle at the end
+          ctx.beginPath();
+          ctx.arc(centerX + len, centerY, circleSize, 0, 2 * Math.PI);
+          ctx.fill();
+          // fill opacity .5
+          ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+          // black dot in th emiddle
+          // rotate canvas using trnaslate
+          ctx.translate(centerX, centerY);
+          ctx.rotate(2 * Math.PI / 180);
+          ctx.translate(-centerX, -centerY);
+        }
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+
+      const animate = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+
+        if (val > max) {
+          dir = 0
+        } else if (val < min) {
+          dir = 1
+        }
+
+        if (dir === 1) {
+          val = val + speed
+        } else {
+          val = val - speed
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
