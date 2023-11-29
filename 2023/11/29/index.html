@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>untitled</title>
     <style>
       * {
         margin: 0;
@@ -39,29 +39,29 @@
 
       main.appendChild(canvas);
 
-      const space = 10;
+      const space = 12;
       // One horizontal line every 5px
       const numOfHorizontalLines = Math.floor(h / space)
       const numOfSegmentsPerLine = Math.floor(w / space)
 
 
       let dir = 1;
-      let speed = 0.05;
-      let val = 1;
-      const MAX = 4;
-      const MIN = -4;
+      let speed = 0.12;
+      let val = 0;
+      const MAX = 100;
+      const MIN = 0;
 
       const randNumbers = {};
 
       // populate randNumbers with 10% of numHorizontalLines * numSegmentsPerLine
       // in the following format: `{i}-{j}: {randomNumber}`
       const populateRandNumbers = () => {
-        const numOfRandNumbers = Math.floor(numOfHorizontalLines * numOfSegmentsPerLine * 0.75);
+        const numOfRandNumbers = Math.floor(numOfHorizontalLines * numOfSegmentsPerLine * 0.5);
         for (let i = 0; i < numOfRandNumbers; i++) {
           const randI = Math.floor(Math.random() * numOfHorizontalLines);
           const randJ = Math.floor(Math.random() * numOfSegmentsPerLine);
-          // rand number between 0.025 and 0.6
-          const randNum = Math.random() * (0.6 - 0.025);
+          // rand number between 0.025 and 0.06
+          const randNum = Math.random() * (0.06 - 0.025);
           const posOrNeg = Math.random() > 0.5 ? 1 : -1;
           randNumbers[`${randI}-${randJ}`] = randNum * posOrNeg;
         }
@@ -87,11 +87,11 @@
             const posOrNeg = j % 2 === 0 ? 1 : -1;
 
             if (randNum) {
-              y1 = y + space / 2 * Math.abs((i - numOfHorizontalLines / 2)) * randNum * 0.1;
+              y1 = y + space / 2 * Math.abs((i - numOfHorizontalLines / 2)) * randNum;
             } else {
               // add some wave-like motion to the line
               const waveVal = Math.sin(val + i * j);
-              y1 = y + space / 2 * waveVal * Math.abs((i - numOfHorizontalLines / 2)) * 0.05 * posOrNeg;
+              y1 = y + space / 2 * waveVal * posOrNeg;
             }
 
             // const y1 = y + space / 2;
@@ -101,7 +101,7 @@
             ctx.bezierCurveTo(x1, y1, x1, y1, x2, y2);
             ctx.stroke();
             // line width is based on distance from center i and distance from center j
-            ctx.lineWidth = Math.abs((i - numOfHorizontalLines / 2)) * 0.05 + 3;
+            ctx.lineWidth = Math.abs((i - numOfHorizontalLines / 2)) * 0.17 + 4;
             // line cap round so that the adjacent lines connect smoothly
             ctx.lineCap = 'round';
             ctx.closePath();
