@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // CEREMONY
+      const borderWidth = 10;
+      const h = Math.min(window.innerHeight, 850) - borderWidth * 2;
+      const w = Math.min(window.innerWidth, 450) - borderWidth * 2;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      // 3px black border
+      canvas.style.border = `${borderWidth}px solid black`;
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = w;
+      canvas.height = h;
+
+      main.appendChild(canvas);
+
+      const space = 10;
+      // One horizontal line every 5px
+      const numOfHorizontalLines = Math.floor(h / space)
+      const numOfSegmentsPerLine = Math.floor(w / space)
+
+
+      let dir = 1;
+      let speed = 0.05;
+      let val = 1;
+      const MAX = 4;
+      const MIN = -4;
+
+      const randNumbers = {};
+
+      // populate randNumbers with 10% of numHorizontalLines * numSegmentsPerLine
+      // in the following format: `{i}-{j}: {randomNumber}`
+      const populateRandNumbers = () => {
+        const numOfRandNumbers = Math.floor(numOfHorizontalLines * numOfSegmentsPerLine * 0.75);
+        for (let i = 0; i < numOfRandNumbers; i++) {
+          const randI = Math.floor(Math.random() * numOfHorizontalLines);
+          const randJ = Math.floor(Math.random() * numOfSegmentsPerLine);
+          // rand number between 0.025 and 0.6
+          const randNum = Math.random() * (0.6 - 0.025);
+          const posOrNeg = Math.random() > 0.5 ? 1 : -1;
+          randNumbers[`${randI}-${randJ}`] = randNum * posOrNeg;
+        }
+      }
+
+      populateRandNumbers();
+
+      // DRAW
+      const draw = () => {
+        for (let i = 0; i <= numOfHorizontalLines; i++) {
+          // draw bezier
+          for (let j = 0; j <= numOfSegmentsPerLine; j++) {
+            ctx.beginPath();
+            const x = j * space;
+            const y = i * space;
+            const x1 = x + space / 2;
+            let y1 = undefined
+
+            // having a ran number will effectively freeze the line at that point
+            const randNum = randNumbers[`${i}-${j}`];
+
+            // this ensures that the animation goes in opposite directions for each adjoint line
+            const posOrNeg = j % 2 === 0 ? 1 : -1;
+
+            if (randNum) {
+              y1 = y + space / 2 * Math.abs((i - numOfHorizontalLines / 2)) * randNum * 0.1;
+            } else {
+              // add some wave-like motion to the line
+              const waveVal = Math.sin(val + i * j);
+              y1 = y + space / 2 * waveVal * Math.abs((i - numOfHorizontalLines / 2)) * 0.05 * posOrNeg;
+            }
+
+            // const y1 = y + space / 2;
+            const x2 = x + space;
+            const y2 = y;
+            ctx.moveTo(x, y);
+            ctx.bezierCurveTo(x1, y1, x1, y1, x2, y2);
+            ctx.stroke();
+            // line width is based on distance from center i and distance from center j
+            ctx.lineWidth = Math.abs((i - numOfHorizontalLines / 2)) * 0.05 + 3;
+            // line cap round so that the adjacent lines connect smoothly
+            ctx.lineCap = 'round';
+            ctx.closePath();
+          }
+        }
+
+        // alternate direction
+        if (dir === 1) {
+          val += speed;
+          if (val >= MAX) {
+            dir = -1;
+          }
+        } else {
+          val -= speed;
+          if (val <= MIN) {
+            dir = 1;
+          }
+        }
+      }
+
+      // ANIMATE
+      const animate = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
