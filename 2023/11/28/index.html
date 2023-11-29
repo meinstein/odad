@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // CEREMONY
+      // const h = Math.min(window.innerHeight, 850);
+      const h = window.innerHeight;
+      // const w = Math.min(window.innerWidth, 450);
+      const w = window.innerWidth;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = w;
+      canvas.height = h;
+
+      main.appendChild(canvas);
+
+      const space = 20;
+      // One horizontal line every 5px
+      const numOfHorizontalLines = Math.floor(h / space)
+      const numOfSegmentsPerLine = Math.floor(w / space)
+
+
+      let dir = 1;
+      let speedDir = 1;
+      let speed = 0.1;
+      let val = 0.5;
+      const MAX = 1;
+      const MAX_SPEED = 0.35;
+      const MIN = -1;
+      const MIN_SPEED = 0.1;
+
+      // DRAW
+      const draw = () => {
+        for (let i = 0; i <= numOfHorizontalLines; i++) {
+          // draw bezier
+          for (let j = 0; j <= numOfSegmentsPerLine; j = j + 2) {
+            ctx.beginPath();
+            const _val = j % 2 === 0 ? val : 0;
+            const x = j * space;
+            const y = i * space;
+            const x1 = x + space / 2;
+            let y1 = y + space / 2 * _val * Math.abs((i - numOfHorizontalLines / 2)) * 0.09;
+            // const y1 = y + space / 2;
+            const x2 = x + space;
+            const y2 = y;
+            ctx.moveTo(x, y);
+            ctx.bezierCurveTo(x1, y1, x1, y1, x2, y2);
+            ctx.stroke();
+            ctx.strokeStyle = `rgba(0, 0, 0, ${1})`;
+            ctx.closePath();
+          }
+        }
+        // ctx.closePath( );
+
+        if (dir === 1) {
+          val += speed;
+          if (val >= MAX) {
+            dir = -1;
+          }
+        } else {
+          val -= speed;
+          if (val <= MIN) {
+            dir = 1;
+          }
+        }
+
+        if (speedDir === 1) {
+          speed += 0.01;
+          if (speed >= MAX_SPEED) {
+            speedDir = -1;
+          }
+        } else {
+          speed -= 0.01;
+          if (speed <= MIN_SPEED) {
+            speedDir = 1;
+          }
+        }
+      }
+
+      // draw();
+
+      // ANIMATE
+      const animate = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
