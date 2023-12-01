@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.antiAlias = true;
+
+      canvas.width = w;
+      canvas.height = h;
+
+      main.appendChild(canvas);
+
+
+
+      const cells = [];
+      let RADIUS = Math.max(w, h) * .05;
+      // const PADDING = RADIUS;
+      const PADDING = 0;
+      const WIGGLE_ROOM = 2;
+      const SPEED = 0.01;
+      const STEP = Math.PI * SPEED;
+
+      // derive a radius that will make the cells fit the screen horizontally and vertically
+      while (w % (RADIUS * 2 + PADDING) > WIGGLE_ROOM || h % (RADIUS * 2 + PADDING) > WIGGLE_ROOM) {
+        RADIUS = RADIUS - 0.01;
+      }
+
+      const CELL_WIDTH = RADIUS * 2 + PADDING;
+      const horizontalCells = Math.floor(w / CELL_WIDTH);
+      const verticalCells = Math.floor(h / CELL_WIDTH);
+
+      const createCells = () => {
+        for (let i = 0; i < verticalCells; i++) {
+          cells[i] = [];
+          for (let j = 0; j < horizontalCells; j++) {
+            const startAngle = 0;
+            const endAngle = startAngle + Math.PI * .01;
+            cells[i][j] = {
+              // Add wiggle room back so that left and top aren't right on the edge of the canvas
+              x: j * CELL_WIDTH + RADIUS,
+              y: i * CELL_WIDTH + RADIUS,
+              counterclockwise: Math.random() < 0.5,
+              dir: 'open',
+              startAngle,
+              endAngle
+            };
+          }
+        }
+      };
+
+      const draw = () => {
+        // draw a circle for each cell
+        cells.forEach(row => {
+          row.forEach(cell => {
+            ctx.beginPath();
+            ctx.arc(cell.x, cell.y, RADIUS, cell.startAngle, cell.endAngle, cell.counterclockwise);
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineCap = 'round';
+            ctx.lineWidth = Math.max(RADIUS * 0.4, 3);
+            ctx.stroke();
+            ctx.closePath();
+          });
+        });
+      };
+
+      const updateData = () => {
+        // use modulo to update endAngle
+        cells.forEach((row, foo) => {
+          row.forEach((cell, i) => {
+            if (cell.dir === 'open') {
+              cell.endAngle = cell.endAngle + STEP;
+            }
+
+            if (cell.dir === 'close') {
+              cell.endAngle = cell.endAngle - STEP;
+            }
+
+            if (cell.endAngle >= 2 * Math.PI - STEP * 2) {
+              cell.dir = 'close';
+            }
+
+            // Need to add a little room otherwise the circle flashes in full
+            if (cell.endAngle <= 0 + STEP * 2) {
+              cell.dir = 'open';
+            }
+          });
+        });
+      }
+
+      const update = () => {
+        ctx.clearRect(0, 0, w, h);
+        updateData();
+        draw();
+        requestAnimationFrame(update);
+      };
+
+
+      const init = () => {
+        // clear the canvas
+        createCells();
+        update();
+      };
+
+      init();
+    </script>
+  </body>
+
+</html>
