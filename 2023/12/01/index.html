@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // Initialization ceremony
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      // based on the width of the screen, we want to draw a certain number of lines
+      const NUM_OF_LINES = Math.min(Math.floor(w / 20), 50);
+
+      const getRandSpeed = () => {
+        // Rand num b/t 0.01 and 0.03
+        return Math.random() * (0.02 - 0.01) + 0.01;
+      }
+
+      const points = {};
+
+      const initData = () => {
+        for (let i = 1; i < NUM_OF_LINES; i++) {
+          // t is 0 bc we want the start of the curve
+          points[i] = {
+            t: Math.random(),
+            // Rand num b/t 0.01 and 0.05
+            speed: getRandSpeed(),
+            r: Math.random() * 5 + 5
+          }
+
+        }
+      }
+
+      let moveToX = 0;
+      let moveToXDir = 'left';
+
+      const draw = () => {
+        for (let i = 1; i < NUM_OF_LINES; i++) {
+          ctx.beginPath();
+          ctx.moveTo(moveToX, 0);
+          const cpx = w / 2;
+          const cpy = h / 2;
+          const x = w / NUM_OF_LINES * i;
+          const y = h;
+          ctx.quadraticCurveTo(cpx, cpy, x, y);
+          ctx.lineCap = 'round';
+          ctx.lineWidth = 2;
+          // stroke opacity
+          ctx.strokeStyle = `rgba(0, 0, 0, 0.75)`;
+          ctx.stroke();
+
+          // Draw the point for the current
+          const { t, r: _r, speed } = points[i];
+
+
+          // the formula for a quadratic Bézier curve
+          const x1 = Math.pow(1 - t, 2) * moveToX + 2 * (1 - t) * t * cpx + Math.pow(t, 2) * x;
+          const y1 = Math.pow(1 - t, 2) * 0 + 2 * (1 - t) * t * cpy + Math.pow(t, 2) * y;
+          ctx.beginPath();
+
+          // As the point moves along the curve, it gets bigger (when is has more influence on the curve)
+          // Also based on the width of the screen
+          const r = t * _r;
+          ctx.arc(x1, y1, r, 0, Math.PI * 2);
+          // stroke
+          ctx.strokeStyle = `rgba(0, 0, 0, ${t})`;
+          // stroke width
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          // Fade in the point -- indianred
+          ctx.fillStyle = `rgba(205, 92, 92, ${t})`;
+          ctx.fill();
+
+
+          // update the t value using the point's speed
+          if (t < 1) {
+            points[i].t += speed;
+          } else {
+            points[i].t = 0;
+            points[i].speed = getRandSpeed();
+          }
+        }
+
+        // update the moveToX value
+        if (moveToXDir === 'left') {
+          moveToX += 1;
+        } else {
+          moveToX -= 1;
+        }
+
+        if (moveToX > w) {
+          moveToXDir = 'right';
+        } else if (moveToX < 0) {
+          moveToXDir = 'left';
+        }
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      initData();
+      loop();
+    </script>
+  </body>
+
+</html>
