@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description"
+      content="Insired by: Poster Celebrating 10th Anniversary of 'Tategumi Yokogumi' Magazine' by Koichi Sato">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // inspo: https://www.moma.org/collection/works/5951?classifications=any&direction=fwd&include_uncataloged_works=1&page=403&q=&utf8=%E2%9C%93
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      // black canvas
+      canvas.style.backgroundColor = '#000';
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const colors = [
+        '#FB5067',
+        '#FB626C',
+        '#FB6969',
+        '#FB7769',
+        '#fb846f',
+        '#fb8d6f',
+        '#fb9877',
+        '#fba579',
+        '#fcb27e',
+        '#fbbb7c',
+        '#fbc883',
+        '#f5d183',
+        '#f4da86',
+        '#ece58b',
+        '#ece58b',
+        '#efe88d',
+        '#ece88d',
+        '#e3e68f',
+        '#d7e38d',
+        '#c6da8b',
+        '#aed18d',
+        '#97c890',
+        '#7fbe93',
+        '#75b994',
+        '#68b798',
+        '#5eb49b',
+        '#50af9b',
+        '#3dac9f',
+        '#26a89e',
+        '#20a3a2',
+        '#219da9',
+        '#2295ae',
+        '#248ab4',
+        '#2481b5',
+        '#2376b4',
+        '#236eb3',
+        '#2263ae',
+        '#2059a7',
+        '#1d529e',
+        '#1c4698',
+        '#1b3e95',
+        '#243e95',
+        '#313792',
+        '#3f3491',
+        '#503590',
+        '#633793',
+        '#723793',
+        '#793993',
+      ];
+
+      const data = [];
+
+      colors.forEach((c, i) => {
+        // a random index of same length as colors array
+        // check if the random index is the same as the current index
+        // check if the random index is the same as a previous rightIdx
+        // if either of these are true, keep generating a new random index
+        let rightIdx = Math.floor(Math.random() * colors.length);
+        while (rightIdx === i || data.some(d => d.rightIdx === rightIdx)) {
+          rightIdx = Math.floor(Math.random() * colors.length);
+        }
+
+        data.push({
+          color: c,
+          leftIdx: i,
+          rightIdx,
+          nextRightIdx: rightIdx,
+        })
+      })
+
+      const draw = () => {
+        const rectHeight = h / data.length;
+        const rectWidth = w * .05;
+        ctx.globalCompositeOperation = "multiply";
+
+        for (let i = 0; i < data.length; i++) {
+          // draw line
+          ctx.beginPath();
+          ctx.moveTo(0, rectHeight * i + rectHeight / 2);
+          ctx.lineTo(rectWidth, rectHeight * i + rectHeight / 2);
+          // draw to random y location on right side of screen, subtracting half of the rectHeight to center the line
+          const rightY = data[i].rightIdx * rectHeight + rectHeight / 2;
+          ctx.lineTo(w - rectWidth, rightY);
+          ctx.lineTo(w, rightY);
+          ctx.strokeStyle = data[i].color;
+          ctx.lineWidth = rectHeight;
+          ctx.shadowColor = 'white';
+          ctx.shadowBlur = h * .005;
+          ctx.stroke();
+        }
+      }
+
+      const animate = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, w, h);
+        // check if some data has a nextRightIdx that is different from the current rightIdx
+        const hasDisconnect = data.some(d => d.nextRightIdx !== d.rightIdx);
+        if (hasDisconnect) {
+          data.forEach(d => {
+            // if the nextRightIdx is different from the current rightIdx, move the current rightIdx closer to the nextRightIdx
+            if (d.nextRightIdx !== d.rightIdx) {
+              if (d.nextRightIdx > d.rightIdx) {
+                d.rightIdx += 0.25;
+              } else {
+                d.rightIdx -= 0.25;
+              }
+            }
+          })
+        } else {
+          // find two random indexes that are different from each other and swap them
+          let idx1 = Math.floor(Math.random() * data.length);
+          let idx2 = Math.floor(Math.random() * data.length);
+          while (idx1 === idx2) {
+            idx2 = Math.floor(Math.random() * data.length);
+          }
+          const temp = data[idx1].rightIdx;
+          data[idx1].rightIdx = data[idx2].rightIdx;
+          data[idx2].rightIdx = temp;
+        }
+
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      draw();
+      animate();
+    </script>
+  </body>
+
+</html>
