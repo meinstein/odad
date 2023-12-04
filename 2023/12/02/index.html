@@ -8,7 +8,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>untitled</title>
+    <title>chromatic energy</title>
     <style>
       body {
         margin: 0;
@@ -24,8 +24,10 @@
     </main>
     <script>
       // inspo: https://www.moma.org/collection/works/5951?classifications=any&direction=fwd&include_uncataloged_works=1&page=403&q=&utf8=%E2%9C%93
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+
+      // There are serious perf issues with this on large screens
+      const w = Math.min(window.innerWidth, 800)
+      const h = Math.min(window.innerHeight, 1000);
       const main = document.querySelector('main');
       const canvas = document.createElement('canvas');
       // black canvas
@@ -109,11 +111,8 @@
 
       // ctx.globalCompositeOperation = "xor";
       // serious performance issues with this on large screens - maybe use a different blend mode?
-      if (w < 1000) {
-        ctx.globalCompositeOperation = "multiply";
-      }
       ctx.globalCompositeOperation = "multiply";
-      // alpha
+
       ctx.globalAlpha = 0.75;
 
       const draw = () => {

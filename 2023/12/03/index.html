@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>untitled</title>
+    <title>gut served</title>
     <style>
       body {
         margin: 0;
@@ -31,10 +31,6 @@
       canvas.height = h;
       main.appendChild(canvas);
 
-
-
-      ctx.globalAlpha = 0.25;
-
       const drawCircle = (x, y, r, color) => {
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -47,13 +43,15 @@
 
       let activeIdx = 0;
       const SPEED = 0.075;
+      const color = 'indianred';
+
+      // There are perf issues with this on large screens
       const num = Math.min(Math.floor(h * 0.75), 600);
       const r = Math.min(h * 0.05, 45);
-      const color = 'indianred';
       const step = num / Math.min(h, num);
-
+      console.log({ num, step })
       const draw = () => {
-        const padding = r / 2;
+        const padding = r;
 
         for (let i = 0; i < num; i++) {
           // update x and y using sin and i and date.now to create a wave effect
