@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+
+
+      ctx.globalAlpha = 0.25;
+
+      const drawCircle = (x, y, r, color) => {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      let activeIdx = 0;
+      const SPEED = 0.075;
+      const num = Math.min(Math.floor(h * 0.75), 600);
+      const r = Math.min(h * 0.05, 45);
+      const color = 'indianred';
+      const step = num / Math.min(h, num);
+
+      const draw = () => {
+        const padding = r / 2;
+
+        for (let i = 0; i < num; i++) {
+          // update x and y using sin and i and date.now to create a wave effect
+          const x = w / 2 + Math.sin(activeIdx + i * 0.1) * 100 / 2;
+          // add padding so that the bottom of the animation is hidden (it fades out before leaving the screen)
+          const y = h + padding - i * step;
+          drawCircle(x, y, r, color);
+        }
+
+        if (activeIdx > Math.PI * 2) {
+          activeIdx = 0;
+        } else {
+          activeIdx += SPEED;
+        }
+      }
+
+      const animate = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
