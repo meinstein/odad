@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>for what?</title>
+    <title>vak vak vak</title>
     <style>
       * {
         box-sizing: border-box;
@@ -72,10 +72,20 @@
         return adjCells;
       }
 
+      let prevX = null;
+      let prevY = null;
+
       const onAnimationEnd = (x, y) => {
         const adjCells = getAdjCells(x, y);
         // pick random cell from adjCells to animate to
         const [nextX, nextY] = adjCells[Math.floor(Math.random() * adjCells.length)];
+        // store prevX, prevY so that we do not animate back to it
+        if (prevX === nextX && prevY === nextY) {
+          onAnimationEnd(x, y);
+          return;
+        }
+        prevX = x;
+        prevY = y;
         // move to randomAdjCell to x, y
         // cells[nextX][nextY].style.transform = `translate(${cellWidth * x}px, ${cellHeight * y}px)`;
         cells[nextX][nextY].animate([
