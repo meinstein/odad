@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>for what?</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      let cellHeight = null;
+      let cellWidth = null;
+
+      if (w > h) {
+        cellHeight = h / 10;
+        cellWidth = w / 10;
+      } else {
+        cellWidth = w / 10;
+        cellHeight = h / 10;
+      }
+
+      // create a 2d array of cells
+      const cells = [];
+
+      // pick random cell
+      const randomCellCoords = () => {
+        const x = Math.floor(Math.random() * 10);
+        const y = Math.floor(Math.random() * 10);
+        return [x, y];
+      }
+
+      // get adjacent cells to a cell
+      const getAdjCells = (x, y) => {
+        const adjCells = [];
+        // top
+        if (x - 1 >= 0) {
+          adjCells.push([x - 1, y]);
+        }
+        // bottom
+        if (x + 1 < 10) {
+          adjCells.push([x + 1, y]);
+        }
+        // left
+        if (y - 1 >= 0) {
+          adjCells.push([x, y - 1]);
+        }
+        // right
+        if (y + 1 < 10) {
+          adjCells.push([x, y + 1]);
+        }
+        return adjCells;
+      }
+
+      const onAnimationEnd = (x, y) => {
+        const adjCells = getAdjCells(x, y);
+        // pick random cell from adjCells to animate to
+        const [nextX, nextY] = adjCells[Math.floor(Math.random() * adjCells.length)];
+        // move to randomAdjCell to x, y
+        // cells[nextX][nextY].style.transform = `translate(${cellWidth * x}px, ${cellHeight * y}px)`;
+        cells[nextX][nextY].animate([
+          { transform: `translate(${cellWidth * nextX}px, ${cellHeight * nextY}px)` },
+          { transform: `translate(${cellWidth * x}px, ${cellHeight * y}px)` },
+        ], {
+          duration: 350,
+          easing: 'ease-in-out',
+          fill: 'forwards'
+        }).onfinish = () => {
+          // update data
+          cells[x][y] = cells[nextX][nextY];
+          onAnimationEnd(nextX, nextY)
+        };
+      }
+
+      const [x, y] = randomCellCoords();
+
+      for (let i = 0; i < 10; i++) {
+        cells[i] = [];
+        for (let j = 0; j < 10; j++) {
+          if (i === x && j === y) {
+            continue;
+          }
+
+          cells[i][j] = document.createElement('div');
+          cells[i][j].style.width = `${cellWidth}px`;
+          cells[i][j].style.height = `${cellHeight}px`;
+          //border
+          // remove outline
+          cells[i][j].style.outline = 'none';
+          cells[i][j].style.border = '1px solid white';
+          // background balck
+          cells[i][j].style.backgroundColor = 'black';
+          cells[i][j].style.position = 'absolute';
+          // absolutely position each cell using translate
+          // transition transform
+          cells[i][j].style.transform = `translate(${cellWidth * i}px, ${cellHeight * j}px)`;
+          main.appendChild(cells[i][j]);
+        }
+      }
+
+      const init = () => {
+        onAnimationEnd(x, y);
+      }
+
+      init();
+
+    </script>
+  </body>
+
+</html>
