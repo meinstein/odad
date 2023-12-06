@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      /* add styles here */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const createSquare = () => {
+        const square = document.createElement('div');
+        square.style.width = '100px';
+        square.style.height = '100px';
+        square.style.backgroundColor = 'indianred';
+        square.style.position = 'absolute';
+        square.style.top = `${h / 2 - 50}px`;
+        square.style.left = `${w / 2 - 50}px`;
+        square.style.display = 'flex';
+        square.style.justifyContent = 'center';
+        square.style.alignItems = 'center';
+        square.style.fontSize = 'rem';
+        square.style.fontWeight = 'bold';
+        square.style.color = 'white';
+        square.style.fontFamily = 'monospace';
+
+        return square;
+      }
+
+      const QUEUE_SIZE = 2;
+      const queue = [];
+
+      for (let i = 0; i < QUEUE_SIZE; i++) {
+        queue.push(createSquare());
+      }
+
+      const main = document.querySelector('main');
+
+      const drawQueue = () => {
+        queue.forEach((square, idx) => {
+          if (idx === 1) {
+            // add the current timestamp as text to the square second square in the queue
+            // this will cause it to animate out as well as update in the background
+            let hours = new Date().getHours();
+            hours = hours < 10 ? `0${hours}` : hours;
+            let minutes = new Date().getMinutes();
+            minutes = minutes < 10 ? `0${minutes}` : minutes;
+            let seconds = new Date().getSeconds();
+            seconds = seconds < 10 ? `0${seconds}` : seconds;
+            const text = document.createTextNode(`${hours}:${minutes}:${seconds}`);
+            square.appendChild(text);
+          }
+
+          // zindex is relative to the index of the element in the queue
+          square.style.zIndex = queue.length - idx;
+
+          main.appendChild(square);
+        });
+      }
+
+      drawQueue();
+
+      // const getRandRotate = () => {
+      //   // rand bt 45 and 90
+      //   return Math.floor(Math.random() * 45) + 45;
+      // }
+
+      let transformOrigin = 'top left';
+
+      const onAnimationEnd = () => {
+        // remove first element from stack
+        queue.shift();
+        // alter transform origin
+        transformOrigin = transformOrigin === 'top left' ? 'top right' : 'top left';
+        // add new element to stack
+        queue.push(createSquare());
+        // redraw stack
+        drawQueue();
+        // animate next element in stack
+        init();
+      }
+
+      const init = () => {
+        const [firstSquare] = queue;
+        // const rotate = getRandRotate();
+        // make duration relative to rotate
+        // const duration = rotate * 10;
+
+        firstSquare.animate([
+          {
+            opacity: 1,
+            transformOrigin,
+            transform: 'rotate(0deg)'
+          },
+          {
+            opacity: 0,
+            transformOrigin,
+            transform: transformOrigin === 'top left' ? `rotate(${60}deg)` : `rotate(-${60}deg)`
+          },
+        ], {
+          // Duration is 1 second to ensure a change in the time between the two squares
+          duration: 1_000,
+          easing: 'linear',
+          fill: 'forwards'
+        }).onfinish = () => {
+          onAnimationEnd()
+        };;
+      }
+
+      init();
+    </script>
+  </body>
+
+</html>
