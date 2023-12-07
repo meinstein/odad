@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      // Make canvas square using the smaller of the two dimensions
+      canvas.width = w;
+      canvas.height = h;
+      // Add canvas to DOM
+      main.appendChild(canvas);
+
+      const getRand = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      let lastX = w / 2;
+      let lastY = h;
+      let operator = 'decrement';
+      let strokeWidth = getRand(20, 30);
+      let currColor = 'black'
+      // speed should be based on height + FPS
+      let speed = 5;
+
+      const draw = () => {
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        const x = lastX;
+
+        let y = lastY + speed;
+
+        if (operator === 'decrement') {
+          y = lastY - speed;
+        }
+
+        ctx.lineTo(x, y);
+        ctx.lineWidth = strokeWidth;
+        ctx.strokeStyle = currColor;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        lastX = x;
+        lastY = y;
+
+        if (lastY < 0) {
+          lastX = w / 2;
+          lastY = 0;
+          strokeWidth = getRand(5, 19);
+          operator = 'increment';
+          // currColor = Math.random() > 0.5 ? 'indianred' : 'steelblue';
+          currColor = 'indianred';
+        } else if (lastY > h) {
+          lastX = w / 2;
+          lastY = h;
+          strokeWidth = getRand(20, 34);
+          operator = 'decrement';
+          currColor = 'black';
+        }
+      }
+
+      const animate = () => {
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
