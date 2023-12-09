@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>strumming my brain with</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // init ceremonies
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      // data and consts
+      const verticalBarData = []
+      const BAR_WIDTH = Math.min(w * 0.03, 30);
+      const TOTAL_BARS = 12;
+
+      const drawVerticalBars = () => {
+        for (let i = 0; i < TOTAL_BARS; i++) {
+          const x = w / 2 - BAR_WIDTH * (TOTAL_BARS + 1.5) + (i + 1) * BAR_WIDTH * 2;
+          // Do not push more than 20 bars to the array -- they are stationary and no need to push on every animation frame
+          if (verticalBarData.length < TOTAL_BARS) {
+            verticalBarData.push(x)
+          }
+          const y = 0;
+          const width = BAR_WIDTH;
+          const height = h;
+          // ctx.globalAlpha = 0.5;
+          // fill white
+          // ctx.fillStyle = '#fff';
+          ctx.fillRect(x, y, width, height);
+        }
+      }
+
+      const drawHorizontalLines = () => {
+        ctx.globalAlpha = 1;
+
+        for (let i = 0; i < h; i += h * 0.02) {
+          ctx.beginPath();
+
+          verticalBarData.slice(1).forEach((x, idx) => {
+            // pin the first bezier down on the first bar
+            if (idx === 0) {
+              ctx.moveTo(x - (BAR_WIDTH * 3) / 2, i + h * 0.02);
+            }
+
+            ctx.bezierCurveTo(
+              x + Math.sin(Date.now() * 0.01) * BAR_WIDTH / 2,
+              i + Math.sin(Date.now() * 0.02) * BAR_WIDTH / 2,
+              x,
+              i + h * 0.02,
+              x + BAR_WIDTH / 2,
+              i + h * 0.02
+            )
+          })
+
+          // blend is xor
+          ctx.globalCompositeOperation = 'xor';
+
+          // ctx.lineTo(w, i + h * 0.02);
+          // white stroke
+          // ctx.strokeStyle = '#fff';
+          // stroke width
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+      }
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+        drawVerticalBars();
+        drawHorizontalLines();
+      }
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
