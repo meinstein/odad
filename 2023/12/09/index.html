@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // init ceremony
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+
+      const ROW_HEIGHT = h * 0.02;
+      // Make the font size a little bigger than the row height
+      const NUM_OF_ROWS = Math.floor(h / ROW_HEIGHT) + 1;
+      let FONT_SIZE_FACTOR = 1;
+      let INCREMENT_BY_DIR = 1;
+      let INCREMENT_BY = 0.01;
+      const WORD = 'memory'
+
+      const draw = () => {
+        let FONT_SIZE = ROW_HEIGHT * FONT_SIZE_FACTOR;
+        let currWordChar = 0;
+        let charWidth = 3;
+
+        for (let i = 1; i < NUM_OF_ROWS; i++) {
+          let currX = 0;
+
+          while (currX < w) {
+            ctx.font = `${FONT_SIZE}px monospace`;
+            // Add a little breathing room to the very top by starting + ROW_HEIGHT / 4
+            ctx.fillText(WORD[currWordChar], currX, i * ROW_HEIGHT);
+            currX += charWidth
+            charWidth += INCREMENT_BY;
+            currWordChar++;
+
+            ctx.globalAlpha = 0.5;
+
+            if (currWordChar >= WORD.length) {
+              currWordChar = 0;
+            }
+          }
+        }
+
+        if (FONT_SIZE_FACTOR > 1.5) {
+          INCREMENT_BY_DIR = -1;
+        } else if (FONT_SIZE_FACTOR < 0.75) {
+          INCREMENT_BY_DIR = 1;
+        }
+
+
+        FONT_SIZE_FACTOR += INCREMENT_BY_DIR * INCREMENT_BY;
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
