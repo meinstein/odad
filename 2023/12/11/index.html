@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>what lurks</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+      }
+
+      main {
+        display: relative;
+      }
+
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas1 = document.createElement('canvas');
+      const ctx1 = canvas1.getContext('2d');
+      const canvas2 = document.createElement('canvas');
+      const ctx2 = canvas2.getContext('2d');
+
+      canvas1.width = w;
+      canvas1.height = h;
+      canvas2.width = w;
+      canvas2.height = h;
+
+      main.appendChild(canvas1);
+      main.appendChild(canvas2);
+
+      // canvas one is covered with a grid of dots separated by 1% of the width
+      // and height of the canvas
+      let dotSize = w * 0.01;
+      let dotSpacing = dotSize * 2;
+      const dotGrid = [];
+      const dotGridRows = Math.floor(h / dotSpacing);
+      const dotGridCols = Math.floor(w / dotSpacing);
+
+      for (let row = 0; row <= dotGridRows; row++) {
+        for (let col = 0; col <= dotGridCols; col++) {
+          dotGrid.push({
+            x: col * dotSpacing + dotSize,
+            y: row * dotSpacing + dotSize,
+            r: dotSize / 2,
+            color: 'rgba(255, 255, 100, 0.5)'
+          });
+        }
+      }
+
+      // canvas two is covered with a grid of dots separated by 1% of the width
+      // and height of the canvas
+      dotSize = w * 0.01;
+      dotSpacing = dotSize * 2;
+      const dotGrid2 = [];
+      const dotGrid2Rows = Math.floor(h / dotSpacing);
+      const dotGrid2Cols = Math.floor(w / dotSpacing);
+
+      for (let row = 0; row <= dotGrid2Rows; row++) {
+        for (let col = 0; col <= dotGrid2Cols; col++) {
+          dotGrid2.push({
+            x: col * dotSpacing + dotSize,
+            y: row * dotSpacing + dotSize,
+            r: dotSize / 2,
+            color: 'rgba(0, 0, 0, 1)'
+          });
+        }
+      }
+
+      // draw the dots on the canvas
+      const draw = (ctx, dots) => {
+        dots.forEach(dot => {
+          ctx.beginPath();
+          ctx.globalAlpha = 0.85;
+          ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+          ctx.fillStyle = dot.color;
+          ctx.fill();
+        });
+      }
+
+      // animate
+      const animate = () => {
+        // clear the canvas
+        ctx2.clearRect(0, 0, w, h);
+        // iterate over the dots in dot grid 2 and use Sin to slightly move in a circular motion
+        // half of the dots move clockwise and the other half counter clockwise
+        dotGrid2.forEach(dot => {
+          if (dotGrid2.indexOf(dot) % 2 === 0) {
+            dot.x += Math.sin(dot.y / 25) * 0.75;
+            dot.y += Math.cos(dot.x / 25) * 0.75;
+          } else {
+            dot.x -= Math.sin(dot.y / 25) * 0.75;
+            dot.y -= Math.cos(dot.x / 25) * 0.75;
+          }
+        });
+
+        // draw the dots on the canvas
+        draw(ctx2, dotGrid2);
+
+        requestAnimationFrame(animate);
+      }
+
+
+      draw(ctx1, dotGrid);
+      animate();
+    </script>
+  </body>
+
+</html>
