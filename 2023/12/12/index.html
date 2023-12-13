@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>pas de bezier</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth
+      const h = window.innerHeight
+
+      const main = document.querySelector('main')
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.width = w
+      canvas.height = h
+      main.appendChild(canvas)
+
+      const bezier = {
+        start: {
+          x: w / 2,
+          y: 0
+        },
+        control1: {
+          x: w / 3,
+          y: h / 3
+        },
+        control2: {
+          x: w / 2,
+          y: h / 2
+        },
+        end: {
+          x: w / 2,
+          y: h
+        }
+      }
+
+      const getBezierXY = (t, startPt, controlPt1, controlPt2, endPt) => {
+        // cubic bezier formula
+        const x = Math.pow(1 - t, 3) * startPt.x + 3 * Math.pow(1 - t, 2) * t * controlPt1.x + 3 * (1 - t) * Math.pow(t, 2) * controlPt2.x + Math.pow(t, 3) * endPt.x
+        const y = Math.pow(1 - t, 3) * startPt.y + 3 * Math.pow(1 - t, 2) * t * controlPt1.y + 3 * (1 - t) * Math.pow(t, 2) * controlPt2.y + Math.pow(t, 3) * endPt.y
+        return ({
+          x: x,
+          y: y
+        })
+      }
+
+
+      const draw = () => {
+        const lineWidth = h * 0.01
+        // draw a single bezier curve from the middle top to the middle bottom
+        ctx.beginPath()
+        ctx.moveTo(w / 2, 0)
+        // use bezier const to draw a bezier curve
+        ctx.bezierCurveTo(
+          bezier.control1.x,
+          bezier.control1.y,
+          bezier.control2.x,
+          bezier.control2.y,
+          bezier.end.x,
+          bezier.end.y
+        )
+        // stroke width
+        ctx.lineWidth = lineWidth
+        // cap style
+        ctx.lineCap = 'round'
+        // stroke color
+        ctx.strokeStyle = 'black'
+        ctx.stroke()
+
+        // draw mirror
+        ctx.beginPath()
+        ctx.moveTo(w / 2, 0)
+        ctx.bezierCurveTo(
+          w - bezier.control1.x,
+          bezier.control1.y,
+          w - bezier.control2.x,
+          bezier.control2.y,
+          w / 2,
+          h
+        )
+        ctx.lineWidth = lineWidth
+        ctx.lineCap = 'round'
+        ctx.strokeStyle = 'indianred'
+        ctx.stroke()
+
+        const INCREMENT = 0.005
+        // draw circles all along the bezier curve
+        for (let i = INCREMENT; i < 1; i += INCREMENT) {
+          ctx.beginPath()
+          // move to
+          // ctx.moveTo(bezier.start.x, bezier.start.y)
+          const point = getBezierXY(i, bezier.start, bezier.control1, bezier.control2, bezier.end)
+          const radius = lineWidth * 2 + Math.sin(Date.now() / 1000 + i * 10) * lineWidth / 2;
+          ctx.arc(point.x, point.y, radius, 0, Math.PI * 2)
+          // ctx.strokeStyle = `rgba(0,0,0,1)`
+          ctx.strokeStyle = `steelblue`
+          ctx.lineWidth = 1;
+          ctx.stroke()
+          // ctx.fillStyle = `rgba(0,0,0,${0.25})`
+          // ctx.fill()
+          ctx.closePath()
+        }
+      }
+
+      const updateBeizer = () => {
+        // update control point1 x and y
+        bezier.control1.x = w / 2 + Math.sin(Date.now() / 1000) * w / 2
+        bezier.control1.y = h / 2 + Math.cos(Date.now() / 1000) * h / 2
+
+        // update control point2 x and y
+        bezier.control2.x = w / 2 + Math.sin(Date.now() / 1000 + Math.PI) * w / 2
+        bezier.control2.y = h / 2 + Math.cos(Date.now() / 1000 + Math.PI) * h / 2
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h)
+        draw()
+        updateBeizer()
+        requestAnimationFrame(loop)
+      }
+
+      loop()
+    </script>
+  </body>
+
+</html>
