@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const h = window.innerHeight
+      const w = window.innerWidth
+      const main = document.querySelector('main')
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.width = w
+      canvas.height = h
+      main.appendChild(canvas)
+
+      let dir = 1
+      let currentIteration = 0
+
+      const ITERATIONS = 30
+      // something that works on small and large screens
+      let RADIUS = Math.max(Math.min(w * 0.01, 18), 5)
+      const MAX_RADIUS = ITERATIONS * RADIUS
+
+      const drawCircles = () => {
+        for (let i = 0; i < ITERATIONS; i++) {
+          ctx.beginPath()
+          ctx.arc(
+            (w / 2 - MAX_RADIUS + RADIUS) + RADIUS * i,
+            h / 2,
+            i * RADIUS,
+            0,
+            Math.PI,
+            false
+          )
+
+          // line width based on iteration
+          if (i === currentIteration) {
+            ctx.lineWidth = i * 0.25
+          } else {
+            ctx.lineWidth = i * 0.125
+          }
+
+
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.03})`
+          ctx.fill()
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.1})`
+          ctx.stroke()
+        }
+      }
+
+      const draw = () => {
+        // draw first set of circles
+        drawCircles()
+
+
+        // flip and rotate horizontally
+        ctx.translate(w / 2, h / 2)
+        // create mirrow image scale and flip horizontally
+        ctx.scale(1, 1)
+        // rotate 180 degrees
+        ctx.rotate(Math.PI)
+        // translate back
+        ctx.translate(-w / 2, -h / 2)
+
+        // draw second set of circles
+        drawCircles()
+      }
+
+      const update = () => {
+        if (currentIteration === ITERATIONS) {
+          dir = -1
+        } else if (currentIteration === 0) {
+          dir = 1
+        }
+
+        // use wave function to update iteration -- not every frame
+        // use timestamp plus sin to slowly increment iteration
+        currentIteration = Math.floor(
+          Math.sin(Date.now() * 0.005) * ITERATIONS
+        )
+        console.log(currentIteration)
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h)
+        draw()
+        update()
+        window.requestAnimationFrame(loop)
+      }
+
+      loop()
+
+
+    </script>
+  </body>
+
+</html>
