@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>zonder titel</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // inspired by: https://www.centraalmuseum.nl/nl/collectie/20700-zonder-titel-geni-peter
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      let startWidth = w;
+      let iterations = 10;
+      let delta = w / iterations;
+      let rotate = 0;
+
+
+      // draw a square perfectly centered inside a circle
+      const drawSquareInCircle = (idx, ctx, w, h) => {
+        ctx.save();
+        ctx.translate(w / 2, h / 2);
+        // rotate in counter clockwise direction depending on the index
+        ctx.rotate(-rotate * (idx + 1) / 2);
+        // seagreen with opacity
+        ctx.fillStyle = 'rgba(46, 139, 87, 0.5)';
+        ctx.beginPath();
+        ctx.arc(0, 0, startWidth / 2, 0, Math.PI * 2);
+        ctx.fill();
+        // indigo with opacity
+        ctx.fillStyle = 'rgba(75, 0, 130, 0.5)';
+        // draw the square so that it's corners are perfectly aligned with the circle
+        // use the pythagorean theorem to calculate the width of the square
+        const squareWidth = Math.sqrt(Math.pow(startWidth, 2) / 2);
+        ctx.fillRect(-squareWidth / 2, -squareWidth / 2, squareWidth, squareWidth);
+        ctx.lineWidth = 2;
+        ctx.restore();
+      }
+
+      const draw = () => {
+        // reset the startWidth to the original width
+        startWidth = w;
+
+        for (let i = 0; i < iterations; i++) {
+          // blend mode -- difference or xor work well
+          // ctx.globalCompositeOperation = 'xor'
+          drawSquareInCircle(i, ctx, w, h);
+          // go from the outside in so that the squares are drawn on top of each other
+          startWidth -= startWidth / iterations;
+        }
+      }
+
+      const animate = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        rotate += Math.PI / 180;
+
+        // reset the rotation to 0 when it reaches 360 degrees
+        if (rotate > Math.PI * 2) {
+          rotate = 0;
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
