@@ -25,6 +25,9 @@
 
       const w = window.innerWidth;
       const h = window.innerHeight;
+      // allow for some padding around the edges
+      // also add a max width of 1000px
+      const minDim = Math.min(Math.min(w, h) * 0.95, 1000);
       const main = document.querySelector('main');
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -32,14 +35,14 @@
       canvas.height = h;
       main.appendChild(canvas);
 
-      let startWidth = w;
+      let startWidth = minDim;
       let iterations = 10;
       let delta = w / iterations;
       let rotate = 0;
 
 
       // draw a square perfectly centered inside a circle
-      const drawSquareInCircle = (idx, ctx, w, h) => {
+      const drawSquareInCircle = (idx, ctx, minDim) => {
         ctx.save();
         ctx.translate(w / 2, h / 2);
         // rotate in counter clockwise direction depending on the index
@@ -61,12 +64,12 @@
 
       const draw = () => {
         // reset the startWidth to the original width
-        startWidth = w;
+        startWidth = minDim;
 
         for (let i = 0; i < iterations; i++) {
           // blend mode -- difference or xor work well
           // ctx.globalCompositeOperation = 'xor'
-          drawSquareInCircle(i, ctx, w, h);
+          drawSquareInCircle(i, ctx, minDim);
           // go from the outside in so that the squares are drawn on top of each other
           startWidth -= startWidth / iterations;
         }
