@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>T 00-00</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // inspired by: https://www.centraalmuseum.nl/nl/collectie/25757-t-82-27-jan-schoonhoven
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      let dim = Math.min(w, h);
+      dim = Math.min(dim, 1000) * 0.9;
+
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      canvas.width = dim;
+      canvas.height = dim;
+      main.appendChild(canvas);
+
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'white';
+
+      // 2% of dim or 16px, whichever is greater
+      const STEP = Math.max(dim * 0.02, 12);
+      const STEPS = Math.round(dim / STEP);
+
+      const getData = () => {
+        const data = [];
+        const bounds = {
+          x1: dim * 0.25,
+          y1: dim * 0.25,
+          x2: dim * 0.85,
+          y2: dim * 0.55,
+        };
+
+        // create 2d array and push to data
+        // use STEP to calculate x and y
+        // if x and y are within bounds, add d = 1, else d = -1
+        for (let i = 0; i < STEPS; i++) {
+          const row = [];
+          for (let j = 0; j < STEPS; j++) {
+            const x = i * STEP;
+            const y = j * STEP;
+            const d = (x > bounds.x1 && x < bounds.x2 && y > bounds.y1 && y < bounds.y2) ? 1 : -1;
+            row.push({
+              x,
+              y,
+              d,
+              r: Math.random() * STEP * (x + y) / 1000,
+            });
+          }
+          data.push(row);
+        }
+
+        return data;
+      };
+
+      const data = getData();
+
+      let rotate = 0;
+
+      const draw = () => {
+        data.forEach((row) => {
+          row.forEach((point) => {
+            const {
+              x,
+              y,
+              d,
+              r
+            } = point;
+            const IS_IN_BOUNDS = d === 1;
+            ctx.save();
+            if (IS_IN_BOUNDS) {
+              ctx.translate(x + STEP, y);
+              ctx.rotate(Math.PI / 2);
+            } else {
+              ctx.translate(x, y);
+              ctx.rotate(Math.PI / 10);
+            }
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            const x1 = d + STEP + r;
+            const y1 = d + STEP + r / 4;
+            ctx.lineTo(x1, y1);
+            ctx.lineWidth = STEP * 0.25;
+            // blend mode
+
+            ctx.strokeStyle = `rgba(0, 0, 0, 1)`;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+            ctx.restore();
+
+            // update point r
+            point.r = point.r + Math.sin(Date.now() / 1000 + x) * 0.2;
+
+          });
+        });
+
+
+      };
+
+      const updateData = () => { };
+
+      const loop = () => {
+        ctx.clearRect(0, 0, dim, dim);
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
