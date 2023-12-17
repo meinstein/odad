@@ -7,9 +7,13 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>await</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
     </style>
   </head>
 
@@ -18,7 +22,59 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      const draw = () => {
+        // clear the canvas
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, w, h / 2);
+
+        // set the line width
+        ctx.lineWidth = 2;
+
+        // set the line color
+        ctx.strokeStyle = '#000';
+
+        ctx.beginPath();
+
+        // move to the first point
+        ctx.moveTo(0, h / 2);
+
+        for (let i = 0; i < 11; i++) {
+          // the first point is at the top of the canvas
+          if (i % 2 === 0) {
+            // use index, sin, date now to calculate next H between 0 and h / 2
+            const nextH = Math.sin(i * 0.1 + Date.now() * 0.005) * h / 5;
+            // the control point is at the middle of the canvas
+            ctx.quadraticCurveTo(w / 2, nextH, w / 11 * (i + 1), h / 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+            ctx.fill();
+          }
+          else {
+            // the control point is at the middle of the canvas
+            ctx.quadraticCurveTo(w / 2, h, w / 11 * (i + 1), h / 2);
+          }
+        }
+
+        ctx.stroke();
+
+      };
+
+
+      // draw the line
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+      loop();
     </script>
   </body>
 
