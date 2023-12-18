@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>breathe and chug, along</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      let xLoc = w / 2;
+      let x2Loc = w / 2;
+      let yLoc = h / 2;
+      let ySpeed = 3;
+      let yDir = 1;
+      let radius = 25;
+      const pathWidth = 50;
+
+      const draw = () => {
+        // draw left line of path from top to bottom
+        ctx.beginPath();
+        ctx.moveTo(xLoc - pathWidth / 2, 0);
+        ctx.lineTo(x2Loc - pathWidth / 2, yLoc - radius * 1.25);
+        ctx.quadraticCurveTo(x2Loc - radius * 2, yLoc, x2Loc - pathWidth / 2, yLoc + radius * 1.25);
+        ctx.lineTo(xLoc - pathWidth / 2, h);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#000';
+        ctx.stroke();
+
+        // right right line of path from top to bottom
+        ctx.beginPath();
+        ctx.moveTo(xLoc + pathWidth / 2, 0);
+        ctx.lineTo(x2Loc + pathWidth / 2, yLoc - radius * 1.25);
+        ctx.quadraticCurveTo(x2Loc + radius * 2, yLoc, x2Loc + pathWidth / 2, yLoc + radius * 1.25);
+        ctx.lineTo(xLoc + pathWidth / 2, h);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#000';
+        ctx.stroke();
+
+        // draw ball in the middle of the path
+        ctx.beginPath();
+        ctx.arc(x2Loc, yLoc, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#000';
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      const update = () => {
+        if (yLoc > h - radius * 3) {
+          yDir = -1;
+        }
+        else if (yLoc < radius * 3) {
+          yDir = 1;
+        }
+
+        let foo = h * 0.001;
+        ySpeed = foo + Math.sin(Date.now() * 0.0025) * foo;
+
+        const nextY = yLoc + ySpeed * yDir;
+        yLoc = nextY;
+
+        const nextX2 = xLoc + Math.sin(Date.now() * 0.0025) * 10;
+        x2Loc = nextX2;
+
+        const nextRadius = 25 + Math.sin(Date.now() * 0.0025) * 25;
+        radius = nextRadius;
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        update();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+
+      draw();
+    </script>
+  </body>
+
+</html>
