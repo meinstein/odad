@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>twists and yearn</title>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* canvas {
+        border: 1px solid black;
+      } */
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const MAX_WIDHT = 800;
+      const w = Math.min(window.innerWidth * 0.95, MAX_WIDHT);
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+
+      // canvas
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.style.position = 'absolute';
+      // center
+      canvas.style.left = (window.innerWidth - w) / 2 + 'px';
+      canvas.style.zIndex = -1;
+      main.appendChild(canvas);
+
+      // canvas2
+      const canvas2 = document.createElement('canvas');
+      const ctx2 = canvas2.getContext('2d');
+      canvas2.width = w;
+      canvas2.height = h;
+      canvas2.style.position = 'absolute';
+      // center
+      canvas2.style.left = (window.innerWidth - w) / 2 + 'px';
+      canvas2.style.zIndex = 1;
+      main.appendChild(canvas2);
+
+
+      let strokeW = Math.round(Math.min(w * 0.025, MAX_WIDHT * 0.025));
+      let SEGMENTS = Math.floor(w / (strokeW * 0.8));
+      let TWISTS = Math.floor(SEGMENTS * 0.65);
+      let twistH = Math.round(h / TWISTS);
+      const padding = strokeW;
+      let segmentW = (w - padding * 2) / SEGMENTS;
+
+      const draw = () => {
+        let x1 = 0;
+        let y1 = 0;
+
+        // begin path
+        ctx.beginPath();
+        ctx2.beginPath();
+
+        // move to
+        ctx.moveTo(x1 + padding, y1);
+        ctx2.moveTo(x1 + padding, y1);
+
+        for (twist = 0; twist < TWISTS; twist++) {
+          // for each twist we move the line down a little bit
+          y1 += twistH;
+          // go straight down
+
+
+
+          // last twist just goes straight down and ends.
+          if (twist === TWISTS - 1) {
+            ctx.lineTo(x1 + padding, h);
+            ctx2.lineTo(x1 + padding, h);
+            continue;
+          } else {
+            ctx.lineTo(x1 + padding, y1 - strokeW / 2);
+            ctx2.lineTo(x1 + padding, y1 - strokeW / 2);
+          }
+
+          for (segment = 0; segment < SEGMENTS; segment++) {
+
+            // each segment starts at the end of the previous one and goes in the opposite direction from the last segment
+            if (twist % 2 === 0) {
+              x1 += segmentW;
+            } else {
+              x1 -= segmentW;
+            }
+
+            // use sin and date to create wavy lines
+            const y = y1 + Math.sin(segment + Date.now() / 1500) * strokeW * 0.5;
+
+            ctx.lineTo(x1 + padding, y);
+            ctx2.lineTo(x1 + padding, y);
+          }
+        }
+
+        ctx2.lineCap = 'round';
+        ctx2.lineWidth = Math.floor(strokeW * 0.25);
+        ctx2.strokeStyle = 'rgba(255, 255, 255, 1)';
+        ctx2.stroke();
+
+        ctx.lineCap = 'round';
+        ctx.lineWidth = strokeW;
+        ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+        ctx.stroke();
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        ctx2.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
