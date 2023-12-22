@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>void tempt</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const colors = [
+        '#FB5067',
+        '#FB626C',
+        '#FB6969',
+        '#FB7769',
+        '#fb846f',
+        '#fb8d6f',
+        '#fb9877',
+        '#fba579',
+        '#fcb27e',
+        '#fbbb7c',
+        '#fbc883',
+        '#f5d183',
+        '#f4da86',
+        '#ece58b',
+        '#ece58b',
+        '#efe88d',
+        '#ece88d',
+        '#e3e68f',
+        '#d7e38d',
+        '#c6da8b',
+        '#aed18d',
+        '#97c890',
+        '#7fbe93',
+        '#75b994',
+        '#68b798',
+        '#5eb49b',
+        '#50af9b',
+        '#3dac9f',
+        '#26a89e',
+        '#20a3a2',
+        '#219da9',
+        '#2295ae',
+        '#248ab4',
+        '#2481b5',
+        '#2376b4',
+        '#236eb3',
+        '#2263ae',
+        '#2059a7',
+        '#1d529e',
+        '#1c4698',
+        '#1b3e95',
+        '#243e95',
+        '#313792',
+        '#3f3491',
+        '#503590',
+        '#633793',
+        '#723793',
+        '#793993',
+      ];
+
+      const minDim = Math.min(w, h);
+      const radiusFactor = minDim / 2 / colors.length;
+
+      const draw = () => {
+        colors.forEach((color, i) => {
+          ctx.beginPath();
+          ctx.arc(w / 2, h / 2, i * radiusFactor, 0, Math.PI * 2);
+          ctx.strokeStyle = color;
+          // global alpha
+          ctx.globalAlpha = 1 - i / colors.length;
+          ctx.lineWidth = radiusFactor * 2;
+          ctx.stroke();
+        });
+
+        // move the first color to the end of the array
+        colors.push(colors.shift());
+      };
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
