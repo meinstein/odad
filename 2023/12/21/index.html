@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>arbez</title>
+    <title>untitled</title>
     <style>
       body {
         margin: 0;
@@ -33,19 +33,104 @@
       canvas.height = h;
       main.appendChild(canvas);
 
-      const RANGE = 100;
+      const colors = [
+        '#FB5067',
+        '#FB626C',
+        '#FB6969',
+        '#FB7769',
+        '#fb846f',
+        '#fb8d6f',
+        '#fb9877',
+        '#fba579',
+        '#fcb27e',
+        '#fbbb7c',
+        '#fbc883',
+        '#f5d183',
+        '#f4da86',
+        '#ece58b',
+        '#ece58b',
+        '#efe88d',
+        '#ece88d',
+        '#e3e68f',
+        '#d7e38d',
+        '#c6da8b',
+        '#aed18d',
+        '#97c890',
+        '#7fbe93',
+        '#75b994',
+        '#68b798',
+        '#5eb49b',
+        '#50af9b',
+        '#3dac9f',
+        '#26a89e',
+        '#20a3a2',
+        '#219da9',
+        '#2295ae',
+        '#248ab4',
+        '#2481b5',
+        '#2376b4',
+        '#236eb3',
+        '#2263ae',
+        '#2059a7',
+        '#1d529e',
+        '#1c4698',
+        '#1b3e95',
+        '#243e95',
+        '#313792',
+        '#3f3491',
+        '#503590',
+        '#633793',
+        '#723793',
+        '#793993',
+        // now go back down
+        '#723793',
+        '#633793',
+        '#503590',
+        '#3f3491',
+        '#313792',
+        '#243e95',
+        '#1b3e95',
+        '#1c4698',
+        '#1d529e',
+        '#2059a7',
+        '#2263ae',
+        '#236eb3',
+        '#2376b4',
+        '#2481b5',
+        '#248ab4',
+        '#2295ae',
+        '#219da9',
+        '#20a3a2',
+        '#26a89e',
+        '#3dac9f',
+        '#50af9b',
+        '#5eb49b',
+        '#68b798',
+        '#75b994',
+        '#7fbe93',
+        '#97c890',
+        '#aed18d',
+        '#c6da8b',
+        '#d7e38d',
+        '#e3e68f',
+        '#ece88d',
+        '#efe88d',
+        '#ece58b',
+        '#ece58b',
+        '#f4da86',
+        '#f5d183',
+        '#fbc883',
+        '#fbbb7c',
+        '#fcb27e',
+        '#fb9877',
+        '#fb8d6f',
+        '#fb846f',
+        '#FB7769',
+        '#FB6969',
+        '#FB626C',
+        '#FB5067',
 
-      const getColors = () => {
-        const colors = [];
-        // iterate over 255 and get every gradation of red
-        for (let i = RANGE; i < RANGE * 2.55; i++) {
-          colors.push(`rgb(${i}, ${i}, ${i})`);
-        }
-
-        return colors
-      }
-
-      const colors = getColors();
+      ];
 
       const draw = () => {
         ctx.clearRect(0, 0, w, h);
@@ -53,14 +138,14 @@
         // iterate over the colors array and draw a line for each color
         for (let i = 0; i <= colors.length; i++) {
           ctx.beginPath();
-          ctx.moveTo(0, lineWidth * i + Math.sin(Date.now() / 1000 + i));
-          ctx.lineTo(w, lineWidth * i + Math.sin(Date.now() / 1000 + i));
+          ctx.moveTo(0, lineWidth * i + Math.sin(Date.now() / 500 + i));
+          ctx.lineTo(w, lineWidth * i + Math.sin(Date.now() / 500 + i));
           ctx.strokeStyle = colors[i];
-          // make line width radiate out from the center usng math sin and date now
-          ctx.lineWidth = lineWidth / 2 + Math.sin(Date.now() / 1000 + i) * lineWidth / 2;
           ctx.globalCompositeOperation = 'lighten'
-          // opacity
-          // ctx.globalAlpha = 0.5;
+          // line width is thicker in the middle and fades out to the edges
+          ctx.lineWidth = lineWidth * (1 - Math.abs(i - colors.length / 2) / (colors.length / 2)) * 1.5;
+          // based on i -- middle is brightest and fades out to the edges
+          ctx.globalAlpha = 1 - Math.abs(i - colors.length / 2) / (colors.length / 2);
           ctx.stroke();
         }
       };
