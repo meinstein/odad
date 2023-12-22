@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>slink beam</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const draw = () => {
+        for (let i = 0; i < 18; i++) {
+          ctx.beginPath();
+          const x = w / 2 + Math.sin(Date.now() / 1000) * i * 2 * Math.PI;
+          const y = h / 2 + Math.cos(Date.now() / 1000) * i * 2 * Math.PI;
+          const radius = Math.min(Math.min(w, h) / 7, 400);
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+
+          // white to gray
+          const color = Math.floor(255 - i * 255 / 18);
+
+          ctx.fillStyle = `rgba(${color},${color},${color},${0.05})`;
+          ctx.fill();
+
+          ctx.strokeStyle = `rgba(${color},${color},${color},0.75)`;
+          ctx.lineWidth = 5;
+          ctx.stroke();
+        }
+      };
+
+      const animate = () => {
+        // clear the canvas
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(animate);
+      };
+
+      animate();
+    </script>
+  </body>
+
+</html>
