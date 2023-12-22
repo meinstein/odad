@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>arbez</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const RANGE = 100;
+
+      const getColors = () => {
+        const colors = [];
+        // iterate over 255 and get every gradation of red
+        for (let i = RANGE; i < RANGE * 2.55; i++) {
+          colors.push(`rgb(${i}, ${i}, ${i})`);
+        }
+
+        return colors
+      }
+
+      const colors = getColors();
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+        const lineWidth = h / colors.length;
+        // iterate over the colors array and draw a line for each color
+        for (let i = 0; i <= colors.length; i++) {
+          ctx.beginPath();
+          ctx.moveTo(0, lineWidth * i + Math.sin(Date.now() / 1000 + i));
+          ctx.lineTo(w, lineWidth * i + Math.sin(Date.now() / 1000 + i));
+          ctx.strokeStyle = colors[i];
+          // make line width radiate out from the center usng math sin and date now
+          ctx.lineWidth = lineWidth / 2 + Math.sin(Date.now() / 1000 + i) * lineWidth / 2;
+          ctx.globalCompositeOperation = 'lighten'
+          // opacity
+          // ctx.globalAlpha = 0.5;
+          ctx.stroke();
+        }
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
