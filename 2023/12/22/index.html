@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const r = Math.min(w, h) / 2.5;
+      let angle = 0;
+
+      // between 0.5 and 1.5
+      // uses sin and math floor to get 0, 1, 2
+      // then adds 0.5 to get 0.5, 1.5, 2.5
+      const updateAngle = () => {
+        angle = Math.sin(Date.now() / 1000) + 2;
+      }
+
+      const drawPetal = (idx) => {
+        ctx.beginPath();
+        ctx.moveTo(w / 2, h / 2);
+        const x1 = w / 2 + Math.cos(idx + angle - 1) * r;
+        const y1 = h / 2 + Math.sin(idx + angle - 1) * r;
+        const x2 = w / 2 + Math.cos(idx + angle - 0.5) * r;
+        const y2 = h / 2 + Math.sin(idx + angle - 0.5) * r;
+        const x3 = w / 2 + Math.cos(idx + angle) * r;
+        const y3 = h / 2 + Math.sin(idx + angle) * r;
+        ctx.bezierCurveTo(x1, y1, x2, y2, x3, y3);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - idx / 50})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.lineCap = 'round';
+        ctx.globalCompositeOperation = 'lighter';
+        const gradient = ctx.createLinearGradient(0, 0, 0, h);
+        gradient.addColorStop(0, 'orange');
+        gradient.addColorStop(1, 'indigo');
+        ctx.globalAlpha = 0.2;
+        ctx.fillStyle = gradient;
+        ctx.fill();
+      }
+
+      const draw = () => {
+        for (let i = 0; i < 50; i++) {
+          drawPetal(i);
+        }
+      }
+
+      const animate = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        updateAngle();
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+
+</html>
