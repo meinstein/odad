@@ -36,9 +36,6 @@
       const r = Math.min(w, h) / 2.5;
       let angle = 0;
 
-      // between 0.5 and 1.5
-      // uses sin and math floor to get 0, 1, 2
-      // then adds 0.5 to get 0.5, 1.5, 2.5
       const updateAngle = () => {
         angle = Math.sin(Date.now() / 1000) + 2;
       }
@@ -46,10 +43,10 @@
       const drawPetal = (idx) => {
         ctx.beginPath();
         ctx.moveTo(w / 2, h / 2);
-        const x1 = w / 2 + Math.cos(idx + angle - 1) * r;
-        const y1 = h / 2 + Math.sin(idx + angle - 1) * r;
-        const x2 = w / 2 + Math.cos(idx + angle - 0.5) * r;
-        const y2 = h / 2 + Math.sin(idx + angle - 0.5) * r;
+        const x1 = w / 2 + Math.cos(idx + angle - 1.5) * r * 0.75;
+        const y1 = h / 2 + Math.sin(idx + angle - 1.5) * r * 0.75;
+        const x2 = w / 2 + Math.cos(idx + angle - 0.75) * r * 0.85;
+        const y2 = h / 2 + Math.sin(idx + angle - 0.75) * r * 0.85;
         const x3 = w / 2 + Math.cos(idx + angle) * r;
         const y3 = h / 2 + Math.sin(idx + angle) * r;
         ctx.bezierCurveTo(x1, y1, x2, y2, x3, y3);
@@ -67,7 +64,7 @@
       }
 
       const draw = () => {
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 60; i++) {
           drawPetal(i);
         }
       }
