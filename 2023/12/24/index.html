@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ezag</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const COLORS = [
+        '#FF0000',
+        '#FF0D00',
+        '#FF1A00',
+        '#FF2600',
+        '#FF3300',
+        '#FF4000',
+        '#FF4D00',
+        '#FF5900',
+        '#FF6600',
+        '#FF7300',
+        '#FF8000',
+        '#FF8C00',
+        '#FF9900',
+        '#FFA600',
+        '#FFB200',
+        '#FFBF00',
+        '#FFCC00',
+        '#FFD900',
+        '#FFE500',
+        '#FFF200',
+        '#FFFF00',
+        '#F2FF00',
+        '#E5FF00',
+        '#D9FF00',
+        '#CCFF00',
+        '#BFFF00',
+        '#B2FF00',
+        '#A6FF00',
+        '#99FF00',
+        '#8CFF00',
+        '#80FF00',
+        '#73FF00',
+        '#66FF00',
+        '#59FF00',
+        '#4DFF00',
+        '#40FF00',
+        '#33FF00',
+        '#26FF00',
+        '#1AFF00',
+        '#0DFF00',
+        '#00FF00',
+        '#00FF0D',
+        '#00FF1A',
+        '#00FF26',
+        '#00FF33',
+        '#00FF40',
+        '#00FF4D',
+        '#00FF59',
+        '#00FF66',
+        '#00FF73',
+        '#00FF80',
+        '#00FF8C',
+        '#00FF99',
+        '#00FFA6',
+        '#00FFB2',
+        '#00FFBF',
+        '#00FFCC',
+        '#00FFD9',
+        '#00FFE5',
+        '#00FFF2',
+        '#00FFFF'
+      ];
+
+      const minDim = Math.min(w, h);
+      const LINE_WIDTH = minDim * 0.015;
+
+      const draw = () => {
+        // draw concentric circles for each color
+        COLORS.forEach((color, i) => {
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = LINE_WIDTH;
+          // use sin and i and date.now to get a value between 0.25 and 0.75
+          const val = Math.sin(Date.now() * 0.001) * 0.25 + 0.5;
+          ctx.arc(w / 2, h / 2, i * LINE_WIDTH * val, 0, Math.PI * 2);
+          ctx.stroke();
+          // the center of COLORS has the highest alpha, the rest fade out towards the end
+          const middle = COLORS.length / 2;
+          const alpha = i < middle ? i / middle : (COLORS.length - i) / middle;
+          ctx.globalAlpha = alpha > 0.85 ? 0.85 : alpha;
+          // blend mode
+          ctx.globalCompositeOperation = 'darken';
+        });
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
