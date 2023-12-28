@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>electric reels</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      const main = document.querySelector('main');
+      main.appendChild(canvas);
+
+      // create a list of 60 unique shades of blue to red
+      // each shade is 1/60th of the way from blue to red
+      // each shade is 1/60th of the way from blue to red
+      const shades = [];
+      for (let i = 0; i < 60; i++) {
+        const r = Math.floor((i / 60) * 255);
+        const g = 0;
+        const b = Math.floor(255 - ((i / 60) * 255));
+        shades.push(`rgb(${r}, ${g}, ${b})`);
+      }
+
+      // draw 60 circles on the screen
+      // six rows of ten circles
+      // each circle is 5% of the screen width
+      // each circle is 5% of the screen width
+      // each circle is 5% of the screen width apart
+      // each circle is 5% of the screen width apart
+      // the circles have a white stroke, no fill
+      // center the circles on the screen
+      const ROWS = 10;
+      const COLS = 6;
+
+      let minDim = Math.min(w, h);
+      minDim = Math.min(minDim, 600);
+
+      const draw = (isCounter) => {
+        for (let i = 0; i < 60; i++) {
+          // use i and sin and current time to get a value between 0.1 and 1
+          // use i and sin and current time to get a value between 0.1 and 1
+          const val = Math.sin(i + (Date.now() / 1000)) + 1;
+          const p = 0.09;
+          const diameter = minDim * p;
+          const radius = diameter / 2;
+
+          // center it
+          let x = (i % COLS) * diameter + radius;
+          // center
+          x += (w - (minDim * p * COLS)) / 2;
+          let y = Math.floor(i / COLS) * diameter + radius;
+          // center
+          y += (h - (minDim * p * ROWS)) / 2;
+
+          // ctx.lineWidth = w * 0.035 * val * 0.25;
+          ctx.lineWidth = minDim * 0.04;
+          ctx.beginPath();
+          // use i and sin and current time to get a value between 0.1 and 1
+          // use i and sin and current time to get a value between 1 and 2
+          // const val2 = Math.sin(i + (Date.now() / 1000)) + 1;
+          // use val to get a start and end angle
+          const startAngle = val * Math.PI * 2;
+          const endAngle = (val + 0.25) * Math.PI * 2;
+          if (isCounter) {
+            ctx.strokeStyle = shades[i];
+            // get start angle based on current time
+            ctx.arc(x, y, radius, startAngle, endAngle);
+            ctx.globalAlpha = 0.75;
+          } else {
+            ctx.globalAlpha = 0.25;
+            // get the inverse shade
+            const inverse = shades[shades.length - 1 - i];
+            ctx.strokeStyle = inverse;
+            // get inverse start and end
+            const inverseStart = endAngle;
+            const inverseEnd = startAngle;
+            ctx.arc(x, y, radius, inverseStart, inverseEnd);
+          }
+          // blend mode
+          ctx.globalCompositeOperation = 'lighter';
+          // ctx.fillStyle = shades[i];
+          ctx.fill();
+          ctx.stroke();
+        }
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw(false);
+        draw(true);
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
