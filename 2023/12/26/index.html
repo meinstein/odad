@@ -9,7 +9,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>add title here</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
     </style>
   </head>
 
@@ -18,7 +23,109 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const main = document.querySelector('main');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const colors = [
+        '#FB5067',
+        '#FB626C',
+        '#FB6969',
+        '#FB7769',
+        '#fb846f',
+        '#fb8d6f',
+        '#fb9877',
+        '#fba579',
+        '#fcb27e',
+        '#fbbb7c',
+        '#fbc883',
+        '#f5d183',
+        '#f4da86',
+        '#ece58b',
+        '#ece58b',
+        '#efe88d',
+        '#ece88d',
+        '#e3e68f',
+        '#d7e38d',
+        '#c6da8b',
+        '#aed18d',
+        '#97c890',
+        '#7fbe93',
+        '#75b994',
+        '#68b798',
+        '#5eb49b',
+        '#50af9b',
+        '#3dac9f',
+        '#26a89e',
+        '#20a3a2',
+        '#219da9',
+        '#2295ae',
+        '#248ab4',
+        '#2481b5',
+        '#2376b4',
+        '#236eb3',
+        '#2263ae',
+        '#2059a7',
+        '#1d529e',
+        '#1c4698',
+        '#1b3e95',
+        '#243e95',
+        '#313792',
+        '#3f3491',
+        '#503590',
+        '#633793',
+        '#723793',
+        '#793993',
+      ];
+
+      const draw = () => {
+        colors.forEach((color, i) => {
+          ctx.beginPath();
+          ctx.moveTo(w / 2, 0);
+          // get a val between -1 and 1
+          const cp1xVal = Math.sin(i + Date.now() * 0.0001);
+          const cp1x = w / 2 + cp1xVal * w / 2;
+          const cp1y = 0;
+          const cp2xVal = Math.cos(i + Date.now() * 0.0001);
+          const cp2x = w / 2 - cp2xVal * w / 2;
+          const cp2y = h;
+          const x = w / 2;
+          const y = h;
+          ctx.bezierCurveTo(
+            cp1x,
+            cp1y,
+            cp2x,
+            cp2y,
+            x,
+            y
+          );
+          ctx.strokeStyle = color;
+          ctx.globalCompositeOperation = 'darken';
+          // global alpha is based on the width from the center
+          // the further from w/2 that the cp1xval or cp2xval is,
+          // the more transparent the line will be
+          //use both cp1xval and cp2xval to get the distance from the center
+
+          const disFromCenter = Math.abs(cp1xVal) + Math.abs(cp2xVal);
+          ctx.globalAlpha = (1 - Math.abs(cp1xVal)) * 0.5;
+          ctx.lineWidth = Math.min(w * 0.03, 15);
+          ctx.stroke();
+        });
+      }
+
+      const loop = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
     </script>
   </body>
 
