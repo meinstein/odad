@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>yoni gem</title>
     <style>
       body {
         margin: 0;
@@ -83,19 +83,22 @@
         '#793993',
       ];
 
+      const maxW = Math.min(w / 2, 250)
+      const paddingY = h * 0.03;
+
       const draw = () => {
         colors.forEach((color, i) => {
           ctx.beginPath();
-          ctx.moveTo(w / 2, 0);
+          ctx.moveTo(w / 2, paddingY);
           // get a val between -1 and 1
           const cp1xVal = Math.sin(i + Date.now() * 0.0001);
-          const cp1x = w / 2 + cp1xVal * w / 2;
-          const cp1y = 0;
+          const cp1x = w / 2 + cp1xVal * maxW;
+          const cp1y = paddingY;
           const cp2xVal = Math.cos(i + Date.now() * 0.0001);
-          const cp2x = w / 2 - cp2xVal * w / 2;
-          const cp2y = h;
+          const cp2x = w / 2 - cp2xVal * maxW;
+          const cp2y = h - paddingY;
           const x = w / 2;
-          const y = h;
+          const y = h - paddingY;
           ctx.bezierCurveTo(
             cp1x,
             cp1y,
@@ -105,15 +108,15 @@
             y
           );
           ctx.strokeStyle = color;
-          ctx.globalCompositeOperation = 'darken';
+          ctx.globalCompositeOperation = 'lighten';
           // global alpha is based on the width from the center
           // the further from w/2 that the cp1xval or cp2xval is,
           // the more transparent the line will be
           //use both cp1xval and cp2xval to get the distance from the center
 
-          const disFromCenter = Math.abs(cp1xVal) + Math.abs(cp2xVal);
-          ctx.globalAlpha = (1 - Math.abs(cp1xVal)) * 0.5;
-          ctx.lineWidth = Math.min(w * 0.03, 15);
+          const min = Math.max(Math.abs(cp1xVal), Math.abs(cp2xVal));
+          ctx.globalAlpha = 1 - (min - 0.5) * 2;
+          ctx.lineWidth = Math.min(h * 0.02, 10);
           ctx.stroke();
         });
       }
