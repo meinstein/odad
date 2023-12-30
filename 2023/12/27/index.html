@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>strelitzia</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const colors = [
+        '#FB5067',
+        '#FB626C',
+        '#FB6969',
+        '#FB7769',
+        '#fb846f',
+        '#fb8d6f',
+        '#fb9877',
+        '#fba579',
+        '#fcb27e',
+        '#fbbb7c',
+        '#fbc883',
+        '#f5d183',
+        '#f4da86',
+        '#ece58b',
+        '#ece58b',
+        '#efe88d',
+        '#ece88d',
+        '#e3e68f',
+        '#d7e38d',
+        '#c6da8b',
+        '#aed18d',
+        '#97c890',
+        '#7fbe93',
+        '#75b994',
+        '#68b798',
+      ];
+
+      const paddingY = h * 0.05;
+      const maxW = Math.min(w * 0.2, 50);
+      const middle = w / 2;
+      const startX = w > 800 ? 400 : 0;
+      const endX = w - startX;
+
+      const draw = () => {
+        colors.forEach((color, i) => {
+          // convert i to a value between 0 and 1
+          const val = i / colors.length;
+          const relativeVal = val * w / 100;
+          ctx.beginPath();
+          ctx.moveTo(startX, -paddingY);
+          const cp1xVal = Math.sin(Date.now() * 0.001) + relativeVal;
+          const cp1x = middle + cp1xVal * maxW;
+          const cp1y = paddingY;
+          const cp2xVal = Math.cos(Date.now() * 0.001) + relativeVal;
+          const cp2x = middle - cp2xVal * maxW;
+          const cp2y = h - paddingY;
+          const x = endX;
+          const y = h + paddingY;
+          ctx.bezierCurveTo(
+            cp1x,
+            cp1y,
+            cp2x,
+            cp2y,
+            x,
+            y
+          );
+          ctx.strokeStyle = color;
+          ctx.lineWidth = val + 1 * maxW * 0.5;
+          ctx.globalAlpha = val;
+          ctx.globalCompositeOperation = 'saturation';
+          ctx.stroke();
+        });
+      }
+
+      const loop = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
