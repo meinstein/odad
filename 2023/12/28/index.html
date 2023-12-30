@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>caterpillar</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const colors = [
+        '#FB5067',
+        '#FB626C',
+        '#FB6969',
+        '#FB7769',
+        '#fb846f',
+        '#fb8d6f',
+        '#fb9877',
+        '#fba579',
+        '#fcb27e',
+        '#fbbb7c',
+        '#fbc883',
+        '#f5d183',
+        '#f4da86',
+        '#ece58b',
+        '#ece58b',
+        '#efe88d',
+        '#ece88d',
+        '#e3e68f',
+        '#d7e38d',
+        '#c6da8b',
+        '#aed18d',
+        '#97c890',
+        '#7fbe93',
+        '#75b994',
+        '#68b798',
+      ];
+
+      // update colors by adding the array in reverse to it
+      colors.push(...colors.slice().reverse());
+
+      const paddingY = h * 0.08;
+      const maxW = Math.min(w * 0.2, 50);
+      const middle = w / 2;
+      const startX = w > 800 ? 400 : 0;
+      const endX = w - startX;
+
+      const val = middle;
+      const relativeVal = val / w;
+
+      const draw = () => {
+        ctx.beginPath();
+        ctx.moveTo(startX, -paddingY);
+        const cp1xVal = Math.sin(Date.now() * 0.001) + relativeVal;
+        const cp1x = middle - cp1xVal * maxW;
+        const cp1y = paddingY;
+        const cp2xVal = Math.cos(Date.now() * 0.001) + relativeVal;
+        const cp2x = middle + cp2xVal * maxW;
+        const cp2y = h - paddingY;
+        const x = endX;
+        const y = h + paddingY;
+        ctx.bezierCurveTo(
+          cp1x,
+          cp1y,
+          cp2x,
+          cp2y,
+          x,
+          y
+        );
+        ctx.strokeStyle = 'black';
+        // dash
+        // ctx.setLineDash([maxW * 0.025, maxW * 0.05]);
+        ctx.lineWidth = maxW * 0.5;
+        // ctx.globalAlpha = 0.5;
+        ctx.stroke();
+
+        colors.forEach((color, i) => {
+          const distanceFromCenter = Math.abs(i - colors.length / 2);
+          const t = i / colors.length;
+          const x = (1 - t) * (1 - t) * (1 - t) * startX + 3 * (1 - t) * (1 - t) * t * cp1x + 3 * (1 - t) * t * t * cp2x + t * t * t * endX;
+          const y = (1 - t) * (1 - t) * (1 - t) * -paddingY + 3 * (1 - t) * (1 - t) * t * cp1y + 3 * (1 - t) * t * t * cp2y + t * t * t * (h + paddingY);
+          ctx.beginPath();
+          ctx.arc(x, y, h * 0.045, 0, Math.PI * 2);
+          const alpha = (0.75 - (distanceFromCenter / (colors.length / 2)));
+          ctx.fillStyle = color;
+          ctx.globalAlpha = alpha;
+          ctx.fill();
+
+          // add another small circle on top to create a solid core
+          ctx.beginPath();
+          ctx.arc(x, y, h * 0.035, 0, Math.PI * 2);
+          ctx.fillStyle = color;
+          ctx.fill();
+          // stroke
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = maxW * 0.02;
+          ctx.stroke();
+          // glow
+          // ctx.shadowColor = color;
+          // ctx.shadowBlur = maxW * 0.1;
+          // ctx.globalAlpha = 0.5;
+        });
+
+        ctx.globalCompositeOperation = 'multiply';
+      }
+
+      const loop = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
