@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>strelitzia</title>
+    <title>bird of paradise lying in wait</title>
     <style>
       body {
         margin: 0;
@@ -73,10 +73,15 @@
           const relativeVal = val * w / 100;
           ctx.beginPath();
           ctx.moveTo(startX, -paddingY);
-          const cp1xVal = Math.sin(Date.now() * 0.001) + relativeVal;
+          // const cp1xVal = Math.sin(Date.now() * 0.001) + relativeVal;
+          // cp1xVal is between -1 and 1 and we want it to only
+          // be active once per second with a one second gap
+          // so we multiply it by 0.5 and add 0.5
+          const cp1xVal = Math.sin(Date.now() * 0.001) * 0.5 + 0.5;
           const cp1x = middle + cp1xVal * maxW;
           const cp1y = paddingY;
           const cp2xVal = Math.cos(Date.now() * 0.001) + relativeVal;
+          // const cp2xVal = Math.cos(Date.now() * 0.001) * 0.5 + 0.5;
           const cp2x = middle - cp2xVal * maxW;
           const cp2y = h - paddingY;
           const x = endX;
