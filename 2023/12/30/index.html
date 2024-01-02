@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>a verge</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const branches = 50;
+
+      const draw = () => {
+        // clear the canvas
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < branches; i++) {
+          // move to bottom center
+          ctx.save();
+          ctx.translate(w / 2, h);
+          // draw a bezier curve from bottom center to i * h / branches
+
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          // each curve goes up the middle and then braches
+          // out to the left and right depending on i % 2 === 0
+          const x = i % 2 === 0 ? -w / 2 : w / 2;
+          const y = -i * h / branches;
+          const cp1x = i % 2 === 0 ? -w / 100 : w / 100;
+          const cp1y = -i * h / branches - h / branches / 2;
+          // use sin to make the curves wave
+          const valS = Math.sin(Date.now() / 500 + i / 10);
+          const valC = Math.cos(Date.now() / 500 + i / 10);
+          const cp2x = i % 2 === 0 ? -w / 75 + valS * 75 : w / 75 + valC * 75;
+          const cp2y = -i * h / branches - h / branches / 2;
+
+          ctx.bezierCurveTo(
+            cp1x,
+            cp1y,
+            cp2x,
+            cp2y,
+            x,
+            y
+          );
+          ctx.strokeStyle = `rgba(255, 255, 255, ${1 - i / branches + 0.05})`;
+          ctx.lineWidth = i / branches * h / 50 + 2;
+          ctx.stroke();
+          ctx.restore();
+          // blend mode
+          ctx.globalCompositeOperation = 'multiply';
+        }
+      }
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
