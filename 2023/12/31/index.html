@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>a cleave</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const BRANCHES = 60;
+      const STEP = h / BRANCHES;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        // blend mode
+        // ctx.globalCompositeOperation = 'multiply';
+
+        for (let i = 0; i < BRANCHES; i++) {
+          ctx.save();
+          ctx.translate(w / 2, h);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          const side = i % 2 === 0 ? 1 : -1;
+          // xVal is between 0.15 and 0.35
+          const xVal = Math.sin(i * 0.1 + Date.now() * 0.0025) * 0.1 + 0.25;
+          const x = w * xVal * side;
+          // yVal is between 0.85 and 0.97
+          const yVal = Math.cos(i * 0.1 + Date.now() * 0.0025) * 0.05 + 0.9;
+          const y = STEP * i * -1 * yVal;
+          // cp1xVal is sin wave between 0.05 and 0.1
+          const cp1xVal = Math.sin(i * 0.1 + Date.now() * 0.0025) * 0.05 + 0.075;
+          const cp1x = w * cp1xVal * side;
+          // cp1yVal is between 0.4 and 0.6
+          const cp1yVal = Math.cos(i * 0.1 + Date.now() * 0.0025) * 0.1 + 0.5;
+          const cp1y = y * cp1yVal;
+          // cp2xVal is between 0.1 and 0.15
+          const cp2xVal = Math.sin(i * 0.1 + Date.now() * 0.0025) * 0.05 + 0.125;
+          const cp2x = w * cp2xVal * side;
+          // cp2yVal is between 0.4 and 0.6
+          const cp2yVal = Math.cos(i * 0.1 + Date.now() * 0.0025) * 0.1 + 0.5;
+          const cp2y = y * cp2yVal;
+          ctx.bezierCurveTo(
+            cp1x,
+            cp1y,
+            cp2x,
+            cp2y,
+            x,
+            y
+          );
+          ctx.strokeStyle = `rgba(255, 255, 255, ${i / BRANCHES * 0.5})`;
+          ctx.lineWidth = i * 0.5 + 2;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+          ctx.restore();
+        }
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
