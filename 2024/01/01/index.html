@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      const main = document.querySelector('main');
+      main.appendChild(canvas);
+
+      const BRANCHES = 360;
+      let minDim = Math.min(w, h);
+      // set upper max
+      if (minDim > 1000) {
+        minDim = 1000;
+      }
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+        // blend mode
+        // ctx.globalCompositeOperation = 'lighten';
+
+        for (let i = 0; i < BRANCHES; i++) {
+          const x = w / 2;
+          const y = h / 2;
+          const angle = i * Math.PI * 2 / BRANCHES;
+          // val is b/t 0.08 and 0.12
+          const val = Math.sin(i + Date.now() * 0.001) * 0.025 + 0.12;
+          const radius = minDim * val;
+          const x1 = x + Math.cos(angle) * radius;
+          const y1 = y + Math.sin(angle) * radius;
+          // make this one half of y2val so it's a bit of an oval
+          const x2val = Math.cos(i + Date.now() * 0.001) * 0.02 + 0.11;
+          const x2 = x + Math.cos(angle) * (radius + minDim * x2val);
+          // y2val is b/t 0.2 and 0.24
+          const y2val = Math.sin(i + Date.now() * 0.0025) * 0.02 + 0.22;
+          const y2 = y + Math.sin(angle) * (radius + minDim * y2val);
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          const alpha = val * 0.5 + 0.5;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.lineWidth = minDim * 0.02;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        }
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
