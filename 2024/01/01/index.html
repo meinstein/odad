@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>untitled</title>
+    <title>urchin</title>
     <style>
       body {
         margin: 0;
@@ -33,6 +33,7 @@
       main.appendChild(canvas);
 
       const BRANCHES = 360;
+
       let minDim = Math.min(w, h);
       // set upper max
       if (minDim > 1000) {
@@ -49,12 +50,12 @@
           const y = h / 2;
           const angle = i * Math.PI * 2 / BRANCHES;
           // val is b/t 0.08 and 0.12
-          const val = Math.sin(i + Date.now() * 0.001) * 0.025 + 0.12;
+          const val = Math.sin(i + Date.now() * 0.001) * 0.03 + 0.12;
           const radius = minDim * val;
           const x1 = x + Math.cos(angle) * radius;
           const y1 = y + Math.sin(angle) * radius;
           // make this one half of y2val so it's a bit of an oval
-          const x2val = Math.cos(i + Date.now() * 0.001) * 0.02 + 0.11;
+          const x2val = Math.cos(i + Date.now() * 0.001) * 0.02 + 0.15;
           const x2 = x + Math.cos(angle) * (radius + minDim * x2val);
           // y2val is b/t 0.2 and 0.24
           const y2val = Math.sin(i + Date.now() * 0.0025) * 0.02 + 0.22;
