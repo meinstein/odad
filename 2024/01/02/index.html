@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>hip to be plaid</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const colors = [
+        '#FB5067',
+        '#FB626C',
+        '#FB6969',
+        '#FB7769',
+        '#fb846f',
+        '#fb8d6f',
+        '#fb9877',
+        '#fba579',
+        '#fcb27e',
+        '#fbbb7c',
+        '#fbc883',
+        '#f5d183',
+        '#f4da86',
+        '#ece58b',
+        '#ece58b',
+        '#efe88d',
+        '#ece88d',
+        '#e3e68f',
+        '#d7e38d',
+        '#c6da8b',
+        '#aed18d',
+        '#97c890',
+        '#7fbe93',
+        '#75b994',
+        '#68b798',
+        '#5eb49b',
+        '#50af9b',
+        '#3dac9f',
+        '#26a89e',
+        '#20a3a2',
+        '#219da9',
+        '#2295ae',
+        '#248ab4',
+        '#2481b5',
+        '#2376b4',
+        '#236eb3',
+        '#2263ae',
+        '#2059a7',
+        '#1d529e',
+        '#1c4698',
+        '#1b3e95',
+        '#243e95',
+        '#313792',
+        '#3f3491',
+        '#503590',
+        '#633793',
+        '#723793',
+        '#793993',
+      ];
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+        // global alpha
+        ctx.globalAlpha = 0.75;
+        // blend mode
+        ctx.globalCompositeOperation = 'difference';
+
+
+        // RIGHT
+        for (let i = 0; i < 12; i++) {
+          const color = colors[i];
+          const val = Math.sin(i + Date.now() * 0.001) * 0.5 + 0.5;
+          const x = w - w * 0.05 - w * i * 0.1 + val * w * 0.05;
+          ctx.fillStyle = color;
+          ctx.fillRect(x, 0, val * w * .08, h);
+        }
+
+        // LEFT
+        for (let i = 0; i < 12; i++) {
+          const color = colors[12 + i];
+          const val = Math.cos(i + Date.now() * 0.002) * 0.5 + 0.5;
+          const x = w * 0.05 + w * i * 0.1 - val * w * 0.05;
+          ctx.fillStyle = color;
+          ctx.fillRect(x, 0, val * w * .08, h);
+        }
+
+        // TOP
+        for (let i = 0; i < 12; i++) {
+          const color = colors[24 + i];
+          const val = Math.sin(i + Date.now() * 0.001) * 0.5 + 0.5;
+          const y = w * 0.05 + h * i * 0.1 - val * w * 0.05;
+          ctx.fillStyle = color;
+          ctx.fillRect(0, y, w, val * w * .08);
+        }
+
+        // BOTTOM
+        for (let i = 0; i < 12; i++) {
+          const color = colors[36 + i];
+          const val = Math.cos(i + Date.now() * 0.0015) * 0.5 + 0.5;
+          const y = h - w * 0.05 - h * i * 0.1 + val * w * 0.05;
+          ctx.fillStyle = color;
+          ctx.fillRect(0, y, w, val * w * .08);
+        }
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
