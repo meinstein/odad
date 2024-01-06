@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>there there</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      // 10px radius balls
+      // max number of balls is 200
+
+      const BALLS = Math.min(150, Math.floor(w / 25));
+
+      class Ball {
+        constructor(x, y, radius, color, colorInside) {
+          this.x = x;
+          this.y = y;
+          this.radius = radius;
+          this.color = color;
+          this.colorInside = colorInside;
+          this.draw();
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.strokeStyle = 'indianred'
+          ctx.lineWidth = this.radius * 0.15;
+          ctx.stroke();
+          ctx.closePath();
+
+          // draw a white circle in the middle
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius * .5, 0, Math.PI * 2);
+          ctx.fillStyle = this.colorInside;
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < BALLS; i++) {
+          // calculate radius based on width and number of balls - one per column
+          const radius = w / BALLS / 2;
+          // save context and translate so that we can use the -1 to 1 range for sin
+          ctx.save();
+          ctx.translate(w / BALLS * i + radius, h / 2);
+          const fn = Math.sin;
+          // subtract radius to make sure the balls are not cut off by screen edge
+          // one frame shuold be 1 pixel. so use height to determine
+          const speed = 1 / h;
+          const fnVal = fn(i + Date.now() * speed)
+          const y = fnVal * (h / 2 - radius);
+          const x = 0;
+          const alpha = 1 - Math.abs(fnVal);
+          // rgb for indianred
+          const color = `rgba(205, 92, 92, ${alpha})`;
+          const colorInside = `rgba(100, 0, 0, ${Math.abs(fnVal) * .5})`;
+          // const color = `rgba(255, 255, 255, ${alpha})`;
+          const ball = new Ball(x, y, radius, color, colorInside);
+          ball.draw();
+          // restore context
+          ctx.restore();
+        }
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
