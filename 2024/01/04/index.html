@@ -46,7 +46,7 @@
           const minDim = Math.min(w, h);
           const radius = minDim * 0.0075;
           // use sin and time and i to make each circle animate through the origin and back
-          const x = Math.sin(i * 0.0075 + Date.now() * 0.001) * minDim * 0.25;
+          const x = Math.sin(i * 0.0075 + Date.now() * 0.001) * minDim * 0.32;
           ctx.arc(x, 0, radius, 0, Math.PI * 2);
           // fill style white with alpha based on Abs of x divided by half of minDim
           // also, subtract 0.05 to ensure that the core is always transparent
