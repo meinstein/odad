@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>a matter of degree</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const particles = 180;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < particles; i++) {
+          ctx.save();
+          ctx.translate(w * 0.5, h * 0.5);
+          // not passing in radians, but degrees...
+          ctx.rotate(i);
+          ctx.beginPath();
+          const minDim = Math.min(w, h);
+          const radius = minDim * 0.0075;
+          // use sin and time and i to make each circle animate through the origin and back
+          const x = Math.sin(i * 0.0075 + Date.now() * 0.001) * minDim * 0.25;
+          ctx.arc(x, 0, radius, 0, Math.PI * 2);
+          // fill style white with alpha based on Abs of x divided by half of minDim
+          // also, subtract 0.05 to ensure that the core is always transparent
+          // indian red: rgb(205, 92, 92)
+          ctx.fillStyle = `rgba(205, 92, 92, ${Math.abs(x) / (minDim * 0.5) - 0.05})`;
+          ctx.fill();
+          ctx.restore();
+        }
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
