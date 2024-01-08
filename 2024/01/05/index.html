@@ -44,8 +44,8 @@
           // draw a bezier curve from the left side of the screen to the right
           // on each iteration, go h/i pixels down the screen
           // start at the left side of the screen
-          ctx.beginPath();
           // add a little extra so we don't see the edge of the lines
+          ctx.beginPath();
           const startX = -padding;
           const startY = step * i;
           const cpx1 = w * 0.5;
@@ -58,8 +58,14 @@
           const endX = w + padding;
           const endY = startY;
           ctx.moveTo(startX, startY);
-          ctx.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, endX, endY);
-
+          ctx.bezierCurveTo(
+            Math.round(cpx1),
+            Math.round(cpy1),
+            Math.round(cpx2),
+            Math.round(cpy2),
+            Math.round(endX),
+            Math.round(endY)
+          );
           const gradient = ctx.createLinearGradient(0, 0, w, 0);
           gradient.addColorStop(0, 'white');
           gradient.addColorStop(0.25, 'gray');
@@ -68,10 +74,8 @@
           gradient.addColorStop(1, 'white');
           ctx.strokeStyle = gradient;
 
-          ctx.lineWidth = step * 0.1;
+          ctx.lineWidth = Math.round(step * 0.1);
           ctx.stroke();
-          // close path
-          ctx.closePath();
         }
       }
 
