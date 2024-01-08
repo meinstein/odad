@@ -34,7 +34,7 @@
 
       const step = 32;
       const lines = h / step;
-      const padding = 2;
+      const padding = 1;
 
       const draw = () => {
         // clear canvas
@@ -57,7 +57,7 @@
           const cpy2 = h / 2 - skew2 * h * 0.1;
           const endX = w + padding;
           const endY = startY;
-          ctx.moveTo(startX, startY);
+          ctx.moveTo(Math.round(startX), Math.round(startY));
           ctx.bezierCurveTo(
             Math.round(cpx1),
             Math.round(cpy1),
@@ -66,7 +66,12 @@
             Math.round(endX),
             Math.round(endY)
           );
-          const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
+          const gradient = ctx.createLinearGradient(
+            Math.round(startX),
+            Math.round(startY),
+            Math.round(endX),
+            Math.round(endY)
+          );
           gradient.addColorStop(0, 'white');
           gradient.addColorStop(0.25, 'lightgray');
           gradient.addColorStop(0.5, 'gray');
