@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>continuous byte force</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const step = 32;
+      const lines = h / step;
+      const padding = 1;
+
+      const draw = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < lines; i++) {
+          // draw a bezier curve from the left side of the screen to the right
+          // on each iteration, go h/i pixels down the screen
+          // start at the left side of the screen
+          // add a little extra so we don't see the edge of the lines
+          ctx.beginPath();
+          const startX = -padding;
+          const startY = step * i;
+          const cpx1 = w * 0.5;
+          const cpy1 = h;
+          const cpx2 = w * 0.5;
+          const cpy2 = h;
+          const endX = w + padding;
+          const endY = startY;
+
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(
+            cpx1,
+            cpy1,
+            cpx2,
+            cpy2,
+            endX,
+            endY
+          );
+          const gradient = ctx.createLinearGradient(
+            startX,
+            startY,
+            endX,
+            endY
+          );
+
+          gradient.addColorStop(0, 'white');
+          gradient.addColorStop(0.25, 'lightgray');
+          gradient.addColorStop(0.5, 'gray');
+          gradient.addColorStop(0.75, 'lightgray');
+          gradient.addColorStop(1, 'white');
+          ctx.strokeStyle = gradient;
+
+          ctx.lineWidth = step * 0.1;
+          ctx.stroke();
+        }
+
+        const widthSteps = w / step;
+
+        for (let i = 1; i < (widthSteps / 2); i++) {
+          ctx.beginPath();
+
+
+          const startX = step * i;
+          const startY = -padding;
+          const cpx1 = w * 0.5;
+          const cpy1 = h * 0.995;
+          const cpx2 = w * 0.5;
+          const cpy2 = h * 0.995;
+          const endX = w - startX;
+          if (endX - startX < step) {
+            continue;
+          }
+          const endY = startY;
+
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(
+            cpx1,
+            cpy1,
+            cpx2,
+            cpy2,
+            endX,
+            endY
+          );
+          const gradient = ctx.createLinearGradient(
+            startX,
+            startY,
+            endX,
+            endY
+          );
+
+          gradient.addColorStop(0, 'white');
+          gradient.addColorStop(0.25, 'lightgray');
+          gradient.addColorStop(0.5, 'black');
+          gradient.addColorStop(0.75, 'lightgray');
+          gradient.addColorStop(1, 'white');
+          ctx.strokeStyle = gradient;
+
+          ctx.lineWidth = Math.min(widthSteps * 0.2, step * 0.1);
+          ctx.stroke();
+        }
+      }
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
