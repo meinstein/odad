@@ -35,7 +35,7 @@
       // global blend
       ctx.globalCompositeOperation = 'lighten';
 
-      const step = 32;
+      const step = 36;
       const lines = h / step;
       const padding = 1;
 
@@ -43,14 +43,17 @@
         // clear canvas
         ctx.clearRect(0, 0, w, h);
 
+        // skew uses time and i and sin to create a value between 0.9 and 1.1
+        const skew = 1.05 + Math.sin(Date.now() * 0.001) * 0.075;
+
         for (let i = 0; i < lines; i++) {
           ctx.beginPath();
           const startX = -padding;
           const startY = step * i;
           const cpx1 = w * 0.5;
-          const cpy1 = h;
+          const cpy1 = h * skew;
           const cpx2 = w * 0.5;
-          const cpy2 = h;
+          const cpy2 = h * skew;
           const endX = w + padding;
           const endY = startY;
 
@@ -86,9 +89,9 @@
           const startY = -padding;
           const cpx1 = w * 0.5;
           // to avoid overlapping the first curve, go _almost_ the full height
-          const cpy1 = h * 0.991;
+          const cpy1 = h * skew * 0.99;
           const cpx2 = w * 0.5;
-          const cpy2 = h * 0.991;
+          const cpy2 = h * skew * 0.99;
           const endX = w - startX;
           if (endX - startX < step - step / 2) {
             continue;
