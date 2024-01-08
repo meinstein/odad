@@ -68,12 +68,8 @@
             Math.round(endX),
             Math.round(endY)
           );
-          gradient.addColorStop(0, 'white');
-          gradient.addColorStop(0.25, 'lightgray');
-          gradient.addColorStop(0.5, 'gray');
-          gradient.addColorStop(0.75, 'lightgray');
-          gradient.addColorStop(1, 'white');
-          ctx.strokeStyle = gradient;
+
+          ctx.strokeStyle = 'whitesmoke';
 
           ctx.lineWidth = Math.round(step * 0.1);
           ctx.stroke();

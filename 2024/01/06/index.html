@@ -32,6 +32,9 @@
       canvas.height = h;
       main.appendChild(canvas);
 
+      // global blend
+      ctx.globalCompositeOperation = 'lighten';
+
       const step = 32;
       const lines = h / step;
       const padding = 1;
@@ -67,12 +70,7 @@
             endY
           );
 
-          gradient.addColorStop(0, 'white');
-          gradient.addColorStop(0.25, 'lightgray');
-          gradient.addColorStop(0.5, 'gray');
-          gradient.addColorStop(0.75, 'lightgray');
-          gradient.addColorStop(1, 'white');
-          ctx.strokeStyle = gradient;
+          ctx.strokeStyle = 'whitesmoke';
 
           ctx.lineWidth = step * 0.1;
           ctx.stroke();
@@ -88,11 +86,11 @@
           const startY = -padding;
           const cpx1 = w * 0.5;
           // to avoid overlapping the first curve, go _almost_ the full height
-          const cpy1 = h * 0.995;
+          const cpy1 = h * 0.991;
           const cpx2 = w * 0.5;
-          const cpy2 = h * 0.995;
+          const cpy2 = h * 0.991;
           const endX = w - startX;
-          if (endX - startX < step) {
+          if (endX - startX < step - step / 2) {
             continue;
           }
           const endY = startY;
@@ -113,13 +111,7 @@
             endY
           );
 
-          gradient.addColorStop(0, 'white');
-          gradient.addColorStop(0.25, 'lightgray');
-          // use a black gradient to avoid and overly bright center
-          gradient.addColorStop(0.5, 'black');
-          gradient.addColorStop(0.75, 'lightgray');
-          gradient.addColorStop(1, 'white');
-          ctx.strokeStyle = gradient;
+          ctx.strokeStyle = 'whitesmoke';
 
           ctx.lineWidth = Math.min(widthSteps * 0.2, step * 0.1);
           ctx.stroke();
