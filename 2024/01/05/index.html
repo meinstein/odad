@@ -41,10 +41,6 @@
         ctx.clearRect(0, 0, w, h);
 
         for (let i = 0; i < lines; i++) {
-          // draw a bezier curve from the left side of the screen to the right
-          // on each iteration, go h/i pixels down the screen
-          // start at the left side of the screen
-          // add a little extra so we don't see the edge of the lines
           ctx.beginPath();
           const startX = -padding;
           const startY = step * i;

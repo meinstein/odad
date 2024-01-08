@@ -41,10 +41,6 @@
         ctx.clearRect(0, 0, w, h);
 
         for (let i = 0; i < lines; i++) {
-          // draw a bezier curve from the left side of the screen to the right
-          // on each iteration, go h/i pixels down the screen
-          // start at the left side of the screen
-          // add a little extra so we don't see the edge of the lines
           ctx.beginPath();
           const startX = -padding;
           const startY = step * i;
@@ -84,13 +80,14 @@
 
         const widthSteps = w / step;
 
+        // fill in the space
         for (let i = 1; i < (widthSteps / 2); i++) {
           ctx.beginPath();
-
 
           const startX = step * i;
           const startY = -padding;
           const cpx1 = w * 0.5;
+          // to avoid overlapping the first curve, go _almost_ the full height
           const cpy1 = h * 0.995;
           const cpx2 = w * 0.5;
           const cpy2 = h * 0.995;
@@ -118,6 +115,7 @@
 
           gradient.addColorStop(0, 'white');
           gradient.addColorStop(0.25, 'lightgray');
+          // use a black gradient to avoid and overly bright center
           gradient.addColorStop(0.5, 'black');
           gradient.addColorStop(0.75, 'lightgray');
           gradient.addColorStop(1, 'white');
