@@ -66,7 +66,7 @@
             Math.round(endX),
             Math.round(endY)
           );
-          const gradient = ctx.createLinearGradient(0, 0, w, 0);
+          const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
           gradient.addColorStop(0, 'white');
           gradient.addColorStop(0.25, 'gray');
           gradient.addColorStop(0.5, 'darkgray');
