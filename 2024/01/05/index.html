@@ -7,9 +7,14 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
+    <title>spindle stretch scratch</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
     </style>
   </head>
 
@@ -18,7 +23,62 @@
       <!-- add main content here -->
     </main>
     <script>
-      // add js here
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const step = 32;
+      const lines = h / step;
+      const padding = 2;
+
+      const draw = () => {
+        // clear canvas
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < lines; i++) {
+          // draw a bezier curve from the left side of the screen to the right
+          // on each iteration, go h/i pixels down the screen
+          // start at the left side of the screen
+          ctx.beginPath();
+          // add a little extra so we don't see the edge of the lines
+          const startX = -padding;
+          const startY = step * i;
+          const cpx1 = w * 0.5;
+          // create skew value using sin and date and i
+          const skew1 = Math.sin(Date.now() * 0.001);
+          const cpy1 = h / 2 + skew1 * h * 0.1;
+          const cpx2 = w * 0.5;
+          const skew2 = Math.sin(Date.now() * 0.001);
+          const cpy2 = h / 2 - skew2 * h * 0.1;
+          const endX = w + padding;
+          const endY = startY;
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, endX, endY);
+
+          const gradient = ctx.createLinearGradient(0, 0, w, 0);
+          gradient.addColorStop(0, 'white');
+          gradient.addColorStop(0.25, 'gray');
+          gradient.addColorStop(0.5, 'darkgray');
+          gradient.addColorStop(0.75, 'gray');
+          gradient.addColorStop(1, 'white');
+          ctx.strokeStyle = gradient;
+
+          ctx.lineWidth = step * 0.1;
+          ctx.stroke();
+        }
+      }
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
     </script>
   </body>
 
