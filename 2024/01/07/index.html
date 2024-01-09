@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>spindle stretch scratch</title>
+    <title>poles</title>
     <style>
       body {
         margin: 0;
@@ -32,8 +32,9 @@
       canvas.height = h;
       main.appendChild(canvas);
 
-      const step = 32;
-      const lines = h / step;
+      const step = 50;
+      // double the lines so that the entire canvas is covered (half being outside the canvas)
+      const lines = (h / step) * 5;
       const padding = 1;
 
       const draw = () => {
@@ -43,30 +44,35 @@
         for (let i = 0; i < lines; i++) {
           ctx.beginPath();
           const startX = -padding;
-          const startY = step * i;
+          // start y is the step value multiplied by i minus half the height of the canvas
+          const startY = (step * i) - h * 2;
           const cpx1 = w * 0.5;
           // create skew value using sin and date and i
-          const skew1 = Math.sin(Date.now() * 0.001);
+          const skew1 = Math.sin(Date.now() * 0.0022);
           const cpy1 = h / 2 + skew1 * h * 0.1;
           const cpx2 = w * 0.5;
-          const skew2 = Math.sin(Date.now() * 0.001);
+          const skew2 = Math.sin(Date.now() * 0.0022);
           const cpy2 = h / 2 - skew2 * h * 0.1;
           const endX = w + padding;
           const endY = startY;
-          ctx.moveTo(Math.round(startX), Math.round(startY));
+          ctx.moveTo(startX, startY);
           ctx.bezierCurveTo(
-            Math.round(cpx1),
-            Math.round(cpy1),
-            Math.round(cpx2),
-            Math.round(cpy2),
-            Math.round(endX),
-            Math.round(endY)
+            cpx1,
+            cpy1,
+            cpx2,
+            cpy2,
+            endX,
+            endY
           );
 
-          ctx.strokeStyle = 'whitesmoke';
+          const lineWidth = Math.abs(i - lines / 2) / lines;
+          ctx.lineWidth = lineWidth * 3;
 
-          ctx.lineWidth = Math.round(step * 0.1);
+          const alpha = lineWidth * 10;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
           ctx.stroke();
+          ctx.fillStyle = `rgba(255, 255, 255, ${lineWidth - 0.1})`;
+          ctx.fill();
         }
       }
 
