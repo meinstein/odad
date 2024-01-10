@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description"
+      content="Inspired by: https://hdl.handle.net/21.12130/collect.5F38EC90-415B-49D5-83EE-F84ADE0B13F7">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>constructive decomposition</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #ECE3DA;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      // Inspired by Konstruktieve kompositie
+      // https://hdl.handle.net/21.12130/collect.5F38EC90-415B-49D5-83EE-F84ADE0B13F7
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        // blend mode
+        // use blend mde so that top layer is subtracted from bottom layer
+        // use globalCompositeOperation that makes the intersection look 3d and the edges look like they're glowing
+        ctx.globalCompositeOperation = 'xor';
+
+        // get val between 0 and 1 using sin and date
+        const val = Math.sin(Date.now() * 0.0015) * 0.5 + 0.5;
+        // rotate the correct angle so that it goes from bottom left to the top right
+        const angle = Math.atan(h / w);
+        // get distance from center of screen to bottom left corner
+        const dist = Math.sqrt(w * w + h * h);
+
+        // RED RECTANGLE
+        ctx.save();
+        // from middle of screen, draw a rectangle from the left center that is 10% of the screen height
+        // make the rectangle angle towards the bottom right corner
+        ctx.translate(-h * 0.1, h / 2 - h * 0.1);
+        // skew so that the rect looks like it's standing on its side
+        ctx.transform(1, 0, val / 2, 1, 0, 0);
+        ctx.rotate(angle / 2);
+        ctx.fillStyle = '#BC192E';
+        ctx.fillRect(0, 0, dist, h * 0.2);
+        ctx.restore();
+
+        // BLUE RECTANGLE
+        ctx.save();
+        ctx.translate(0, h);
+        ctx.transform(1, 0, -val / 2, 1, 0, 0);
+        ctx.rotate(-angle);
+        ctx.fillStyle = '#006DA8';
+        ctx.fillRect(0, 0, dist, h * 0.2);
+        ctx.restore();
+
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
