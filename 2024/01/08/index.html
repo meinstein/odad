@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>leveling on the shoulders of giants</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const ROWS = 19;
+      const ROW_HEIGHT = h / ROWS;
+      const isEven = (n) => n % 2 === 0;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < ROWS; i++) {
+          const y = i * ROW_HEIGHT;
+          const isEvenRow = isEven(i);
+
+          // for even rows, draw 5 bezier curves from left to right
+          if (isEvenRow) {
+            const STRIPES = 5;
+            for (let j = 0; j <= STRIPES; j++) {
+              const isFirstOrLast = j === 0 || j === STRIPES;
+              const startX = 0;
+              const startY = y + (ROW_HEIGHT / STRIPES) * j;
+              const endX = w;
+              const endY = y + (ROW_HEIGHT / STRIPES) * j;
+
+              const skew = isFirstOrLast ? 0 : Math.sin(j * Date.now() * 0.0008) * (ROW_HEIGHT / STRIPES * 0.75);
+
+              const cp1x = w * 0.25;
+              const cp1y = y + (ROW_HEIGHT / STRIPES) * j + skew;
+              const cp2x = w * 0.75;
+              const cp2y = y + (ROW_HEIGHT / STRIPES) * j - skew;
+
+              ctx.beginPath();
+              ctx.moveTo(startX, startY);
+              ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+              ctx.strokeStyle = 'white';
+              ctx.lineWidth = 2;
+              ctx.stroke();
+            }
+          } else {
+            const COL_WIDTH = w / 20;
+            const COLS = Math.floor(w / COL_WIDTH);
+            // for odd rows, draw COLS bezier curves from top to bottom
+            for (let j = 0; j <= COLS; j++) {
+              const startX = w / COLS * j;
+              const startY = y;
+              const endX = w / COLS * j;
+              const endY = y + ROW_HEIGHT;
+
+              const isFirstOrLast = j === 0 || j === COLS;
+              const distanceFromCenter = Math.abs(j - COLS / 2);
+
+              const skew = isFirstOrLast ? 0 : Math.sin(distanceFromCenter * Date.now() * 0.0019) * (w / COL_WIDTH * 0.75);
+
+              const cp1x = w / COLS * j + skew;
+              const cp1y = y + ROW_HEIGHT * .25;
+              const cp2x = w / COLS * j - skew;
+              const cp2y = y + ROW_HEIGHT * .75;
+
+              ctx.beginPath();
+              ctx.moveTo(startX, startY);
+              ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+              ctx.strokeStyle = 'white';
+              ctx.lineWidth = 2;
+              ctx.stroke();
+            }
+          }
+        }
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
