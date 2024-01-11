@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>leveling on the shoulders of giants</title>
+    <title>balancing on the scaffolding of giants</title>
     <style>
       body {
         margin: 0;
@@ -45,20 +45,21 @@
 
           // for even rows, draw 5 bezier curves from left to right
           if (isEvenRow) {
-            const STRIPES = 5;
+            const STRIPES = 4;
             for (let j = 0; j <= STRIPES; j++) {
               const isFirstOrLast = j === 0 || j === STRIPES;
+              const skew = isFirstOrLast ? 0 : Math.sin(j * Date.now() * 0.0008) * (ROW_HEIGHT / STRIPES * 0.95);
+
               const startX = 0;
-              const startY = y + (ROW_HEIGHT / STRIPES) * j;
+              const startY = y + (ROW_HEIGHT / STRIPES) * j + skew / 4;
               const endX = w;
-              const endY = y + (ROW_HEIGHT / STRIPES) * j;
+              const endY = y + (ROW_HEIGHT / STRIPES) * j + skew / 4;
 
-              const skew = isFirstOrLast ? 0 : Math.sin(j * Date.now() * 0.0008) * (ROW_HEIGHT / STRIPES * 0.75);
 
-              const cp1x = w * 0.25;
+              const cp1x = w * 0.15;
               const cp1y = y + (ROW_HEIGHT / STRIPES) * j + skew;
-              const cp2x = w * 0.75;
-              const cp2y = y + (ROW_HEIGHT / STRIPES) * j - skew;
+              const cp2x = w * 0.85;
+              const cp2y = y + (ROW_HEIGHT / STRIPES) * j + skew;
 
               ctx.beginPath();
               ctx.moveTo(startX, startY);
