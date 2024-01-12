@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>almost</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const minDim = Math.min(w, h);
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        const CIRCLES = 30;
+        // spacing is based on min of w and h and uses CIRCLES
+        const SPACING = minDim / CIRCLES / 2 * 0.8;
+
+        // draw concentric circles based on CIRCLES
+        // each circle should be spaced out by SPACING
+        // the stroke should be white
+        // no fill
+        for (let i = 0; i < CIRCLES; i++) {
+          const radius = (i + 1) * SPACING;
+          ctx.beginPath();
+          // end angle should be based on i
+          const endAngle = Math.PI * 1.5
+          ctx.arc(w / 2, h / 2, radius, 0, endAngle);
+          ctx.strokeStyle = 'white';
+
+          // create skew using date and i and radius and sin
+          const skew = Math.sin(Date.now() * 0.001 + i / 2) * radius * 0.1;
+
+          // draw a bezier curve starting at the end of the arc
+          ctx.moveTo(w / 2 + radius, h / 2);
+          // control point should be based on i
+          const controlPoint = {
+            x: w / 2 + radius,
+            y: h / 2 - radius
+          };
+          // end point should be based on i
+          const endPoint = {
+            x: w / 2 + radius + skew,
+            y: h / 2 - radius
+          };
+          ctx.bezierCurveTo(
+            controlPoint.x,
+            controlPoint.y,
+            endPoint.x,
+            endPoint.y,
+            endPoint.x,
+            endPoint.y
+          );
+
+          // alphaa
+          const alpha = (1 - i / CIRCLES) + 0.05;
+
+          // ignore the first circles in the center
+          if (alpha > 1) {
+            continue;
+          }
+
+          ctx.globalAlpha = alpha;
+          // stroke width should be based on i and minDim
+          ctx.lineWidth = (i + 2) / CIRCLES * minDim * 0.012;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        }
+
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
