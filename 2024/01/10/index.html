@@ -40,14 +40,11 @@
         // spacing is based on min of w and h and uses CIRCLES
         const SPACING = minDim / CIRCLES / 2 * 0.8;
 
-        // draw concentric circles based on CIRCLES
-        // each circle should be spaced out by SPACING
-        // the stroke should be white
-        // no fill
         for (let i = 0; i < CIRCLES; i++) {
           const radius = (i + 1) * SPACING;
           ctx.beginPath();
-          // end angle should be based on i
+
+          // draw 3/4 of a circle
           const endAngle = Math.PI * 1.5
           ctx.arc(w / 2, h / 2, radius, 0, endAngle);
           ctx.strokeStyle = 'white';
@@ -55,18 +52,19 @@
           // create skew using date and i and radius and sin
           const skew = Math.sin(Date.now() * 0.001 + i / 2) * radius * 0.1;
 
-          // draw a bezier curve starting at the end of the arc
+          // draw a bezier curve starting at the end of the arc (top right quadrant)
           ctx.moveTo(w / 2 + radius, h / 2);
-          // control point should be based on i
+
           const controlPoint = {
             x: w / 2 + radius,
             y: h / 2 - radius
           };
-          // end point should be based on i
+
           const endPoint = {
             x: w / 2 + radius + skew,
             y: h / 2 - radius
           };
+
           ctx.bezierCurveTo(
             controlPoint.x,
             controlPoint.y,
@@ -76,11 +74,11 @@
             endPoint.y
           );
 
-          // alphaa
+          // alpha
           const alpha = (1 - i / CIRCLES) + 0.05;
 
-          // ignore the first circles in the center
-          if (alpha > 1) {
+          // ignore the first few circles in the center this way
+          if (alpha > 0.95) {
             continue;
           }
 
@@ -90,7 +88,6 @@
           ctx.lineCap = 'round';
           ctx.stroke();
         }
-
       };
 
       const loop = () => {

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>emergent waveform</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const minDim = Math.min(w, h);
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      // add a little extra glow to the overlapping lines
+      ctx.globalCompositeOperation = 'lighter';
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        const CIRCLES = 40;
+
+        // spacing is based on min of w and h and uses CIRCLES
+        const SPACING = minDim / CIRCLES / 2 * 0.8;
+
+        // start at 10 to create some space in the center
+        for (let i = 10; i < CIRCLES; i++) {
+          const radius = i * SPACING;
+
+          ctx.beginPath();
+
+          const movement = Math.sin(Date.now() * 0.0012 + i / 3) * radius * 0.25;
+
+          // TOP RIGHT (starting at intersection of the bottom right and top right)
+          ctx.moveTo(w / 2 + radius, h / 2);
+
+          const controlPoint = {
+            x: w / 2 + radius,
+            y: h / 2 - radius
+          };
+
+          const endPoint = {
+            x: w / 2 + radius,
+            y: h / 2 - radius
+          };
+
+          ctx.bezierCurveTo(
+            controlPoint.x,
+            controlPoint.y,
+            endPoint.x + movement,
+            endPoint.y,
+            w / 2,
+            h / 2 - radius
+          );
+
+          // TOP LEFT
+          ctx.moveTo(w / 2, h / 2 - radius);
+
+          const controlPoint2 = {
+            x: w / 2 - radius,
+            y: h / 2 - radius
+          };
+
+          const endPoint2 = {
+            x: w / 2 - radius,
+            y: h / 2 - radius
+          };
+
+          ctx.bezierCurveTo(
+            controlPoint2.x,
+            controlPoint2.y,
+            endPoint2.x,
+            endPoint2.y + movement,
+            w / 2 - radius,
+            h / 2
+          );
+
+          // BOTTOM LEFT
+          ctx.moveTo(w / 2 - radius, h / 2);
+
+          const controlPoint3 = {
+            x: w / 2 - radius,
+            y: h / 2 + radius
+          };
+
+          const endPoint3 = {
+            x: w / 2 - radius,
+            y: h / 2 + radius
+          };
+
+          ctx.bezierCurveTo(
+            controlPoint3.x,
+            controlPoint3.y,
+            endPoint3.x + movement,
+            endPoint3.y,
+            w / 2,
+            h / 2 + radius
+          );
+
+          // BOTTOM RIGHT
+          ctx.moveTo(w / 2, h / 2 + radius);
+
+          const controlPoint4 = {
+            x: w / 2 + radius,
+            y: h / 2 + radius
+          };
+
+          const endPoint4 = {
+            x: w / 2 + radius,
+            y: h / 2 + radius
+          };
+
+          ctx.bezierCurveTo(
+            controlPoint4.x,
+            controlPoint4.y,
+            endPoint4.x,
+            endPoint4.y + movement,
+            w / 2 + radius,
+            h / 2
+          );
+
+
+          // ALPHA AND STROKE
+          ctx.globalAlpha = (1 - i / CIRCLES) + 0.025;
+          ctx.lineWidth = i / CIRCLES * minDim * 0.01 + 2;
+          ctx.strokeStyle = 'white';
+          ctx.stroke();
+        }
+
+      };
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      loop();
+    </script>
+  </body>
+
+</html>
