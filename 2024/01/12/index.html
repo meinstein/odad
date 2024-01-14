@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>aerate</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const WEED_WIDTH = 8;
+      const ACTIVE_WIDTH = w * 0.9;
+      const WEEDS = Math.min(Math.floor(ACTIVE_WIDTH / WEED_WIDTH), 90);
+      const DIFF = w - WEEDS * WEED_WIDTH;
+      const PADDING = DIFF / 2;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter';
+
+        for (let i = 1; i < WEEDS; i++) {
+          // Add padding to perfectly center the weeds in the viewport
+          const x = i * WEED_WIDTH + PADDING;
+
+          const distFromCenter = Math.abs(w / 2 - x);
+          const distFromCenterRatio = distFromCenter / (w / 2);
+
+          // 82 is the perfect movement to create a curtain effect
+          const movement = Math.sin(Date.now() / 1000 + i * 0.25) * 82;
+
+          // hide the start of the weed off screen
+          const y = -1;
+
+          const cp1x = x + movement * 0.3;
+          const cp1y = h * (1 - distFromCenterRatio) * 0.3;
+          const cp2x = x + movement * 0.6;
+          const cp2y = h * (1 - distFromCenterRatio) * 0.6;
+          const endX = x + movement * 0.9;
+          const endY = h * (1 - distFromCenterRatio) * 0.9;
+
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.bezierCurveTo(
+            cp1x,
+            cp1y,
+            cp2x,
+            cp2y,
+            endX,
+            endY
+          );
+
+          // alpha - the center is opaque, the edges are transparent
+          const alpha = 1 - distFromCenterRatio;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.lineCap = 'round';
+
+          // the outsides are thicker than the center - makes the movement more visible
+          const lineWidth = 1 + distFromCenterRatio * 10 + 1;
+          ctx.lineWidth = lineWidth;
+          ctx.stroke();
+        }
+      }
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
