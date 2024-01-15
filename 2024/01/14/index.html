@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>flimsy ledge</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const LINE_WIDTH = 18;
+      const LINES = Math.min(Math.floor(w * 0.8 / LINE_WIDTH), 50)
+      const PADDING = (w - LINES * LINE_WIDTH) / 2;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < LINES; i++) {
+          const movement = Math.sin(Date.now() * 0.001 + i * 0.25) * LINE_WIDTH;
+
+          const startX = PADDING + i * LINE_WIDTH - movement * 1.5;
+          const startY = -movement - LINE_WIDTH - 2;
+          const cp1x = PADDING + i * LINE_WIDTH - LINE_WIDTH;
+          const cp1y = h + movement + LINE_WIDTH + 2;
+          const cp2x = PADDING + i * LINE_WIDTH + LINE_WIDTH;
+          const cp2y = 0;
+          const endX = PADDING + i * LINE_WIDTH + LINE_WIDTH * 2 + movement * 1.5;
+          const endY = h;
+
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = i % 2 === 0 ? 2 : 4;
+          ctx.stroke();
+        }
+      }
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
