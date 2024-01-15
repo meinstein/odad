@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>coyly</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const main = document.querySelector('main');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+
+      const HOOK_WIDTH = 36;
+      const LEFT_PADDING = w * 0.1;
+      let HOOKS = Math.floor((w - LEFT_PADDING * 2) / HOOK_WIDTH);
+
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < HOOKS; i++) {
+          // resetn sacle
+          ctx.beginPath();
+          // TOP TO MIDDLE BEZIER CURVE
+
+          const movementX = Math.sin(Date.now() * 0.002 + i * 0.25) * Math.min(w * 0.025, 20);
+          const movementY = Math.cos(Date.now() * 0.002 + i * 0.25) * Math.min(h * 0.025, 30);
+
+          if (i !== HOOKS - 1) {
+            const startX = LEFT_PADDING + i * HOOK_WIDTH;
+            const startY = 0;
+            const cp1x = LEFT_PADDING + i * HOOK_WIDTH + movementX / 2;
+            const cp1y = h * 0.25;
+            const cp2x = LEFT_PADDING + i * HOOK_WIDTH + movementX;
+            const cp2y = h * 0.75 + movementY;
+            const endX = LEFT_PADDING + i * HOOK_WIDTH + HOOK_WIDTH;
+            const endY = h / 2;
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+
+          }
+
+
+
+          // SAME CURVE BUT INVERTED
+          if (i !== 0) {
+            const startX2 = LEFT_PADDING + i * HOOK_WIDTH + HOOK_WIDTH;
+            const startY2 = h;
+            const cp1x2 = LEFT_PADDING + i * HOOK_WIDTH + HOOK_WIDTH + movementX / 2;
+            const cp1y2 = h * 0.75;
+            const cp2x2 = LEFT_PADDING + i * HOOK_WIDTH + HOOK_WIDTH + movementX;
+            const cp2y2 = h * 0.25 + movementY;
+            const endX2 = LEFT_PADDING + i * HOOK_WIDTH;
+            const endY2 = h / 2;
+            ctx.moveTo(startX2, startY2);
+            ctx.bezierCurveTo(cp1x2, cp1y2, cp2x2, cp2y2, endX2, endY2);
+          }
+
+          ctx.lineWidth = 8;
+          const opacity = 1;
+          // NOTE: need round cap to prevent the join from being visible at certain angles
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+          // no line dash
+          ctx.setLineDash([]);
+          ctx.stroke();
+        }
+
+      }
+
+      const loop = () => {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
