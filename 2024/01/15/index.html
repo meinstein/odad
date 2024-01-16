@@ -50,19 +50,18 @@
         '#7fbe93',
         '#75b994',
         '#68b798',
-        '#5eb49b',
       ];
 
       // now reverse the above and add it to the end
       const reversed = colors.slice()
       colors.push(...reversed);
 
-      // blend mode
-      // ctx.globalCompositeOperation = 'difference';
-
       const minDim = Math.min(w, h);
       const CIRCLES = colors.length;
       const RADIUS = Math.floor(minDim * 0.44 / CIRCLES);
+
+      ctx.globalAlpha = 0.85;
+      // ctx.globalCompositeOperation = 'saturation';
 
       const draw = () => {
         for (let i = 0; i < CIRCLES; i++) {
@@ -70,9 +69,9 @@
             ctx.beginPath();
             const x = w / 2;
             const y = h / 2;
-            const radius = RADIUS * (CIRCLES - i) + RADIUS * 2;
-            const endAngleDelta = Math.sin(Date.now() * 0.001 + j * 0.25) * Math.PI / 4 + Math.PI / 2;
-            const startAngle = j * (2 * Math.PI) / (CIRCLES - i);
+            const radius = RADIUS * (CIRCLES - i);
+            const endAngleDelta = Math.sin(Date.now() * 0.001 + i * 0.25) * Math.PI / 4 + Math.PI / 2;
+            const startAngle = j * (2 * Math.PI) / (CIRCLES - i) + endAngleDelta;
             const endAngle = startAngle + (2 * Math.PI) / (CIRCLES - i) + endAngleDelta;
             ctx.arc(
               x,
@@ -81,16 +80,9 @@
               startAngle,
               endAngle
             );
-            ctx.globalAlpha = 0.65;
-            ctx.lineWidth = RADIUS * 1.1;
-            ctx.strokeStyle = colors[j + i];
-            ctx.stroke();
 
-            // SLOWLY rotate
-            ctx.translate(x, y);
-            ctx.rotate(Math.sin(Date.now() * 0.001 + i * 0.5) * Math.PI / (1080 * 5));
-            ctx.translate(-x, -y);
-
+            ctx.fillStyle = colors[j + i];
+            ctx.fill();
           }
         }
       }
