@@ -58,7 +58,10 @@
 
       const minDim = Math.min(w, h);
       const CIRCLES = colors.length;
-      const RADIUS = Math.floor(minDim * 0.48 / CIRCLES);
+      const RADIUS = Math.floor(minDim * 0.44 / CIRCLES);
+
+      ctx.globalAlpha = 0.85;
+      // ctx.globalCompositeOperation = 'saturation';
 
       const draw = () => {
         for (let i = 0; i < CIRCLES; i++) {
@@ -78,14 +81,8 @@
               endAngle
             );
 
-            // change alpha based on radius
-            ctx.globalAlpha = 1 - (radius / (RADIUS * CIRCLES)) * 0.5;
-            ctx.fillStyle = colors[j];
+            ctx.fillStyle = colors[j + i];
             ctx.fill();
-
-            ctx.translate(w / 2, h / 2);
-            ctx.rotate(0.00001);
-            ctx.translate(-w / 2, -h / 2);
           }
         }
       }
