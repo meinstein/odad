@@ -58,7 +58,7 @@
 
       const minDim = Math.min(w, h);
       const CIRCLES = colors.length;
-      const RADIUS = Math.floor(minDim * 0.48 / CIRCLES);
+      const RADIUS = Math.min(Math.floor(minDim * 0.49 / CIRCLES), 12);
 
       const draw = () => {
         for (let i = 0; i < CIRCLES; i++) {
@@ -66,10 +66,14 @@
             ctx.beginPath();
             const x = w / 2;
             const y = h / 2;
+
+            // the further out the circle, the larger it is
             const radius = RADIUS * (CIRCLES - i);
-            const endAngleDelta = Math.sin(Date.now() * 0.001 + i * 0.25) * Math.PI / 4 + Math.PI / 2;
-            const startAngle = j * (2 * Math.PI) / (CIRCLES - i) + endAngleDelta;
-            const endAngle = startAngle + (2 * Math.PI) / (CIRCLES - i) + endAngleDelta;
+
+            const endAngleMovement = Math.sin(Date.now() * 0.001 + i * 0.25) * Math.PI / 4 + Math.PI / 2;
+            const startAngle = j * (2 * Math.PI) / (CIRCLES - i) + endAngleMovement;
+            const endAngle = startAngle + (2 * Math.PI) / (CIRCLES - i) + endAngleMovement;
+
             ctx.arc(
               x,
               y,
@@ -78,13 +82,18 @@
               endAngle
             );
 
-            // change alpha based on radius
-            ctx.globalAlpha = 1 - (radius / (RADIUS * CIRCLES)) * 0.5;
+
+            // the further out the circle, the more transparent it is
+            const alpha = 1 - (radius / (RADIUS * CIRCLES)) + 0.025;
+            ctx.globalAlpha = alpha > 1 ? 1 : alpha;
             ctx.fillStyle = colors[j];
             ctx.fill();
 
             ctx.translate(w / 2, h / 2);
-            ctx.rotate(0.00001);
+            // rotate the canvas by a tiny amount on each iteration
+            // the outer rings rotate slower
+            const r = (i + 1) * 0.0000001;
+            ctx.rotate(r);
             ctx.translate(-w / 2, -h / 2);
           }
         }
