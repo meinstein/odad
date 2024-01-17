@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>the climates they are a-changin'</title>
+    <title>untitled</title>
     <style>
       body {
         margin: 0;
@@ -32,63 +32,68 @@
       canvas.height = h;
       main.appendChild(canvas);
 
-      const colors = [
-        '#fb9877',
-        '#fba579',
-        '#fcb27e',
-        '#fbbb7c',
-        '#fbc883',
-        '#f5d183',
-        '#f4da86',
-        '#ece58b',
-        '#ece88d',
-        '#e3e68f',
-        '#d7e38d',
-        '#c6da8b',
-        '#aed18d',
-        '#97c890',
-        '#7fbe93',
-        '#75b994',
-        '#68b798',
-      ];
-
-      // now reverse the above and add it to the end
-      const reversed = colors.slice()
-      colors.push(...reversed);
 
       const minDim = Math.min(w, h);
+
+      // colors - a range of 16 red colors that go dark to light and back to dark
+      const colors = [
+        '#000000',
+        '#1a0000',
+        '#330000',
+        '#4d0000',
+        '#660000',
+        '#800000',
+        '#990000',
+        '#b30000',
+        '#cc0000',
+        '#e60000',
+        '#ff0000',
+        '#e60000',
+        '#cc0000',
+        '#b30000',
+        '#990000',
+        '#800000',
+        '#660000',
+        '#4d0000',
+        '#330000',
+        '#1a0000',
+        '#000000'
+      ];
+
+
       const CIRCLES = colors.length;
       const RADIUS = Math.floor(minDim * 0.44 / CIRCLES);
 
-      ctx.globalAlpha = 0.85;
-      // ctx.globalCompositeOperation = 'saturation';
-
       const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+
+        // blend mode
+        ctx.globalCompositeOperation = 'lighten';
+
         for (let i = 0; i < CIRCLES; i++) {
-          for (let j = 0; j < CIRCLES - i; j++) {
+          for (let j = 0; j < i; j++) {
             ctx.beginPath();
             const x = w / 2;
             const y = h / 2;
-            const radius = RADIUS * (CIRCLES - i);
-            const endAngleDelta = Math.sin(Date.now() * 0.001 + i * 0.25) * Math.PI / 4 + Math.PI / 2;
-            const startAngle = j * (2 * Math.PI) / (CIRCLES - i) + endAngleDelta;
-            const endAngle = startAngle + (2 * Math.PI) / (CIRCLES - i) + endAngleDelta;
-            ctx.arc(
-              x,
-              y,
-              radius,
-              startAngle,
-              endAngle
-            );
+            const r = RADIUS * (i + 1);
+            const arcLength = Math.PI * 2 / CIRCLES;
+            const startAngle = arcLength * j;
+            const foo = (Math.sin(Date.now() / 1000 + i / CIRCLES) * 0.5 + 0.5);
+            const endAngle = startAngle + arcLength + (arcLength * foo);
+            const color = colors[j]
+            ctx.moveTo(x, y);
+            ctx.arc(x, y, r, startAngle, endAngle);
 
-            ctx.fillStyle = colors[j + i];
+            // alpha based on the circle's index
+            const alpha = 0.1;
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = color;
             ctx.fill();
           }
         }
       }
 
       const loop = () => {
-        ctx.clearRect(0, 0, w, h);
         draw();
         requestAnimationFrame(loop);
       }
