@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>helixish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = w;
+      canvas.height = h;
+      main.appendChild(canvas);
+
+      const SPACING = 36;
+      const SEGMENTS = Math.floor(h / SPACING);
+      const PADDING = 5;
+
+      const POINTS = [];
+
+      for (let i = 0; i < SEGMENTS; i++) {
+        const prevX = POINTS[i - 1] ? POINTS[i - 1].x : 0;
+        let nextX = prevX + (Math.random() * 2 - 1) * SPACING;
+        // if nextX is outside the 33% of the canvas width, straighten it out
+        if (nextX < w * 0.33 || nextX > w * 0.66) {
+          nextX = w * 0.5;
+        }
+
+        POINTS.push({
+          // semi random X position based on previous point
+          x: nextX,
+          // x: Math.random() * w * 0.33 + w * 0.33,
+          y: i * SPACING
+        });
+      }
+
+      const draw = () => {
+        // draw bezier curve through points
+        for (let i = 0; i < POINTS.length - 1; i++) {
+          ctx.beginPath();
+
+          const movementX = Math.sin(Date.now() * 0.001 + i * 0.12) * Math.min(w * 0.5, 200);
+          const movementY = Math.cos(Date.now() * 0.001 + i * 0.12) * Math.min(h * 0.5, 75);
+
+          const startX = POINTS[i].x;
+          let startY = POINTS[i].y;
+          // ensure that the first point is always above the canvas
+          if (i === 0) startY = -PADDING;
+
+          const cp1x = POINTS[i].x + (POINTS[i + 1].x - POINTS[i].x) * 0.5;
+          const cp1y = POINTS[i].y;
+
+          const cp2x = POINTS[i].x + (POINTS[i + 1].x - POINTS[i].x) * 0.5;
+          const cp2y = POINTS[i + 1].y;
+
+          const endX = POINTS[i + 1].x;
+          let endY = POINTS[i + 1].y;
+          // ensure that the last point is always below the canvas
+          if (i === POINTS.length - 2) endY = h + PADDING;
+
+          ctx.moveTo(startX, startY);
+
+          ctx.bezierCurveTo(
+            cp1x + movementX,
+            cp1y + movementY,
+            cp2x - movementX,
+            cp2y - movementY,
+            endX,
+            endY
+          );
+
+          // smokey white
+          ctx.strokeStyle = 'lavenderblush'
+
+          // round - necessarry to keep the lines connected during animation
+          ctx.lineCap = 'round';
+
+          // glow
+          ctx.shadowColor = 'white';
+          ctx.shadowBlur = 10;
+
+          // opacity
+          // ctx.globalAlpha = 0.75;
+          ctx.lineWidth = 10;
+          ctx.stroke();
+        }
+      }
+
+      const loop = () => {
+        ctx.clearRect(0, 0, w, h);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    </script>
+  </body>
+
+</html>
