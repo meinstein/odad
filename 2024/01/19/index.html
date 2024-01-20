@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>js jelly</title>
+    <title>weeping sea jelly</title>
     <style>
       body {
         margin: 0;
@@ -52,15 +52,17 @@
             // Do not let large width viewports spread too wide
             const xDelta = Math.min(this.width * 0.07, 40);
 
-            const x3 = x2 - Math.random() * xDelta - xDelta * 0.1;
+            const x3 = x2 - Math.random() * xDelta - xDelta * 0.095;
             // LIMIT - limit ensures that the closer to the bottom, the longer the y distance gets
             const y3 = y2 + Math.random() * this.height * 0.05 * (LIMIT - limit);
 
-            const x4 = x2 + Math.random() * xDelta + xDelta * 0.1;
+            const x4 = x2 + Math.random() * xDelta + xDelta * 0.095;
             const y4 = y2 + Math.random() * this.height * 0.05 * (LIMIT - limit);
 
-            this.data.push([x2, y2, x3, y3]);
-            this.data.push([x2, y2, x4, y4]);
+            const isLast = limit === 1;
+
+            this.data.push([x2, y2, x3, y3, isLast]);
+            this.data.push([x2, y2, x4, y4, isLast]);
 
             // recursive calls
             addLine(x2, y2, x3, y3, limit - 1);
@@ -77,7 +79,7 @@
         }
 
         draw = () => {
-          this.data.forEach(([x1, y1, x2, y2], idx) => {
+          this.data.forEach(([x1, y1, x2, y2, isLast], idx) => {
             // the closer y2 is to this.height, the highter the speed (bt 5-12)
             const speed = 4 + (12 - 5) * (y2 / this.height);
             const fn = idx % 2 === 0 ? Math.sin : Math.cos;
@@ -95,8 +97,8 @@
             const cp2x = x2 - movement;
             // cpy2 is 2/3 between y1 and y2
             const cp2y = y2 + (y1 - y2) * 0.66;
-            const endX = x2;
-            const endY = y2;
+            const endX = isLast ? x2 + movement * 0.5 : x2;
+            const endY = isLast ? y2 + fn(movement * variation * 0.5) * 0.5 : y2;
 
             this.ctx.beginPath();
             this.ctx.moveTo(startX, startY);
@@ -110,13 +112,14 @@
             );
 
             // alpha - the closer y2 is to height, the more transparent the line gets.
-            const alpha = (1 - y2 / this.height) * 0.75;
+            const alpha = (1 - y2 / this.height) * 0.85;
             this.ctx.globalAlpha = alpha;
             this.ctx.strokeStyle = 'lavenderblush';
-            this.ctx.lineWidth = 6;
+            this.ctx.lineWidth = alpha * 8 + 2;
             this.ctx.lineCap = 'round';
             this.ctx.shadowColor = 'white';
-            this.ctx.shadowBlur = 3;
+            // higher alpha at the top of the jelly
+            this.ctx.shadowBlur = alpha * 10;
             this.ctx.stroke();
           });
         }
