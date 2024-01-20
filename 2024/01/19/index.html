@@ -110,13 +110,13 @@
             );
 
             // alpha - the closer y2 is to height, the more transparent the line gets.
-            const alpha = 1 - y2 / this.height;
-            this.ctx.globalAlpha = alpha * 0.85;
+            const alpha = (1 - y2 / this.height) * 0.75;
+            this.ctx.globalAlpha = alpha;
             this.ctx.strokeStyle = 'lavenderblush';
             this.ctx.lineWidth = 6;
             this.ctx.lineCap = 'round';
             this.ctx.shadowColor = 'white';
-            this.ctx.shadowBlur = 5;
+            this.ctx.shadowBlur = 3;
             this.ctx.stroke();
           });
         }
