@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>moonwalkers</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- add main content here -->
+    </main>
+    <script>
+      class Canvas2D {
+        constructor({
+          width = window.innerWidth,
+          height = window.innerHeight,
+          rootElement = document.querySelector('body'),
+          draw
+        }) {
+          this.draw = draw;
+          this.width = width;
+          this.height = height;
+          this.rootElement = rootElement;
+          this.canvas = document.createElement('canvas');
+          this.rootElement.appendChild(this.canvas)
+          this.canvas.width = width;
+          this.canvas.height = height;
+          this.ctx = this.canvas.getContext('2d');
+          this.animate = this.animate.bind(this);
+        }
+
+        #clearCanvas() {
+          this.ctx.clearRect(0, 0, this.width, this.height);
+        }
+
+        #draw() {
+          this.draw({
+            ctx: this.ctx,
+            w: this.width,
+            h: this.height,
+          });
+        }
+
+        animate() {
+          this.#clearCanvas();
+          this.#draw();
+          requestAnimationFrame(this.animate);
+        }
+      }
+
+      const draw = ({ ctx, w, h }) => {
+        // blend mode - black goes to white and white goes to black
+        ctx.globalCompositeOperation = 'xor';
+        // make the overall scene a tad lighter
+        ctx.globalAlpha = 0.9;
+
+        const radius = Math.min(Math.min(w, h) * 0.3, 175);
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'lavenderblush';
+        ctx.fill();
+
+        const planets = 100;
+        const radians_per_planet = (2 * Math.PI) / planets;
+
+        for (let i = 0; i < planets; i++) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.translate(w / 2, h / 2);
+          ctx.rotate(radians_per_planet * i)
+          ctx.translate(-w / 2, -h / 2);
+          const circumference = 2 * Math.PI * radius;
+          const r = circumference / (planets * 2);
+          const x = w / 2 + Math.sin(Date.now() * 0.001 + i * 0.5) * radius - r;
+          const y = h / 2 + Math.cos(Date.now() * 0.00115 + i * 0.75) * radius - r;
+          ctx.arc(x, y, r, 0, 2 * Math.PI);
+          // blacn bean color = #3d3d3d
+          ctx.fillStyle = '#3d0c02';
+          ctx.fill();
+          ctx.restore();
+        }
+
+      }
+
+      const canvas = new Canvas2D({
+        draw,
+      });
+
+      canvas.animate();
+    </script>
+  </body>
+
+</html>
