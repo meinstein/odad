@@ -62,16 +62,17 @@
       }
 
       const draw = ({ ctx, w, h }) => {
-        // blend mode - black goes to white and white goes to black
-        ctx.globalCompositeOperation = 'xor';
         // make the overall scene a tad lighter
-        ctx.globalAlpha = 0.9;
+        ctx.globalAlpha = 0.85;
 
         const radius = Math.min(Math.min(w, h) * 0.3, 175);
         ctx.beginPath();
         ctx.arc(w / 2, h / 2, radius, 0, 2 * Math.PI);
         ctx.fillStyle = 'lavenderblush';
         ctx.fill();
+        // add glow to moon
+        ctx.shadowColor = 'lavenderblush';
+        ctx.shadowBlur = radius * 0.33;
 
         const planets = 100;
         const radians_per_planet = (2 * Math.PI) / planets;
@@ -87,7 +88,7 @@
           const x = w / 2 + Math.sin(Date.now() * 0.001 + i * 0.5) * radius - r;
           const y = h / 2 + Math.cos(Date.now() * 0.00115 + i * 0.75) * radius - r;
           ctx.arc(x, y, r, 0, 2 * Math.PI);
-          // blacn bean color = #3d3d3d
+          // black bean color
           ctx.fillStyle = '#3d0c02';
           ctx.fill();
           ctx.restore();
