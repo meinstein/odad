@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>shallot peel in orbit</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Canvas2D } from './main.js';
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const size = Math.min(w, h) * 0.5;
+      const padding = Math.min(w, h) * 0.1;
+
+      const getData = ({ w, h, size }) => {
+        const data = [];
+
+        for (let i = 0; i < 45; i++) {
+          data.push({
+            startX: -padding,
+            startY: -padding,
+            endX: w + padding,
+            endY: h + padding,
+            cp1x: w / 2 - size / 2,
+            cp1y: h / 2 - size / 2,
+            cp2x: w / 2 + size / 2,
+            cp2y: h / 2 + size / 2
+          });
+        }
+
+        return data;
+      }
+
+      const data = getData({ w: window.innerWidth, h: window.innerHeight, size });
+
+      const canvas = new Canvas2D({
+        draw: ({ ctx, w, h }) => {
+          // blend mode
+          // ctx.globalCompositeOperation = 'lighten';
+          // ctx.fillStyle = 'black';
+          // ctx.fillRect(0, 0, w, h);
+
+          // draw square that is 20% of the min(w, h)
+          // ctx.fillStyle = `rgba(255,255,255,0.25)`;
+          // ctx.fillRect(w / 2 - size / 2, h / 2 - size / 2, size, size);
+
+          data.forEach(({ startX, startY, endX, endY, cp1x, cp1y, cp2x, cp2y }, idx) => {
+            const movement = Math.sin(Date.now() * 0.0005 + idx * 0.05);
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x + movement * h * 0.25,
+              cp1y - movement * h * 0.25,
+              cp2x + movement * h * 0.25,
+              cp2y - movement * h * 0.25,
+              endX,
+              endY
+            );
+            // proximity to center makes more opaque
+            const alpha = 1 - Math.abs(movement) + 0.05;
+            // ctx.strokeStyle = `rgba(255,255,255,${0.75})`;
+            // rgb for lavenderblush
+            const lavenderblush = [255, 240, 245];
+            ctx.strokeStyle = `rgba(${lavenderblush.join(',')},${alpha < 1 ? alpha : 1})`;
+            // ctx.globalAlpha = alpha;
+            // proximity to the edges makes thicker
+            // const lineWidth = w * 0.01 * (1 - Math.abs(movement));
+            ctx.lineWidth = w * 0.02 > 10 ? 10 : w * 0.02;
+            ctx.stroke();
+          });
+        }
+      });
+
+      canvas.animate();
+    </script>
+  </body>
+
+</html>

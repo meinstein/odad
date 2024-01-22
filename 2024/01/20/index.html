@@ -57,6 +57,7 @@
           this.height = window.innerHeight;
           this.canvas.width = this.width;
           this.canvas.height = this.height;
+          this.#draw();
         }
 
         #clearCanvas() {
@@ -110,7 +111,6 @@
           ctx.fill();
           ctx.restore();
         }
-
       }
 
       const canvas = new Canvas2D({
