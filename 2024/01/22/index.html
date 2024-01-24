@@ -7,7 +7,7 @@
     <meta name="keywords" content="...">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>confluent yet disoriented</title>
+    <title>polyester field</title>
     <style>
       body {
         margin: 0;
@@ -20,72 +20,68 @@
 
   <body>
     <script type="module">
-      import { Ctx2d } from './ctx2d.js';
+      import Canvas2D from './main.js';
+
 
       const draw = ({ w, h, ctx, memoize }) => {
-        const rowH = 16;
-        const rows = Math.round(h / rowH);
+        // consts
+        const LANE_HEIGHT = 32;
+        const LANES = h / LANE_HEIGHT;
+        const SEGMENT_WIDTH = 32;
+        const SEGMENTS_PER_LANE = w / SEGMENT_WIDTH;
 
         const getData = () => {
-          return new Array(rows).fill(0).map((_, i) => {
-            const startX_1 = 0;
-            const startY_1 = i * rowH + rowH / 2;
-            const endX_1 = w / 2;
-            const endY_1 = i * rowH + rowH / 2;
+          const data = [];
 
-            const startX_2 = w / 2;
-            const startY_2 = i * rowH;
-            const endX_2 = w;
-            const endY_2 = i * rowH;
+          // 2d array that creates a grid of lanes and segments
+          for (let i = 0; i < LANES; i++) {
+            data[i] = [];
+            for (let j = 0; j < SEGMENTS_PER_LANE; j++) {
+              // startX, startY, endX, endY
+              data[i][j] = {
+                startX: j * SEGMENT_WIDTH,
+                startY: i * LANE_HEIGHT,
+                endX: (j + 1) * SEGMENT_WIDTH,
+                endY: (i + 1) * LANE_HEIGHT
+              };
+            }
+          }
 
-            return [
-              {
-                startX: startX_1,
-                startY: startY_1,
-                endX: endX_1 - Math.sin(i / rows) * w / 3 + w / 3,
-                endY: endY_1
-              },
-              {
-                startX: startX_2 + Math.sin(1 - (i / rows)) * w / 3 - w / 3,
-                startY: startY_2,
-                endX: endX_2,
-                endY: endY_2
-              }
-            ];
-          });
-        }
+          return data;
+        };
 
         const memoized = memoize(getData);
         const data = memoized();
+
         // draw grid
-        for (let i = 0; i < rows; i++) {
-          const [left, right] = data[i];
+        for (let i = 0; i < LANES; i++) {
+          for (let j = 0; j < SEGMENTS_PER_LANE; j++) {
+            const { startX, startY, endX, endY } = data[i][j];
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            const movement = Math.sin(Date.now() / 1000 + i + j) * Math.max(h, w) * 0.01;
+            const cp1x = startX + SEGMENT_WIDTH / 2;
+            const cp1y = startY + LANE_HEIGHT / 2 + movement;
+            const cp2x = endX - SEGMENT_WIDTH / 2 - movement;
+            const cp2y = endY - LANE_HEIGHT / 2;
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
 
-          ctx.lineWidth = rowH / 4;
-          ctx.lineCap = 'round';
-
-
-          ctx.beginPath();
-          ctx.moveTo(left.startX, left.startY);
-          const leftEndX = left.endX - Math.sin(Date.now() / 800 - i / rows) * w / 6 - w / 6;
-          ctx.lineTo(leftEndX, left.endY);
-          ctx.strokeStyle = 'indianred';
-          ctx.stroke();
-
-          ctx.beginPath();
-          const rightStartX = right.startX + Math.sin(Date.now() / 800 + (1 - i / rows)) * w / 6 + w / 6;
-          ctx.moveTo(rightStartX, right.startY);
-          ctx.lineTo(right.endX, right.endY);
-          ctx.strokeStyle = 'lavenderblush';
-          ctx.stroke();
+            // alternate stroke style indianred and steelblue
+            ctx.strokeStyle = i % 2 === 0 ? 'indianred' : 'steelblue';
+            // stroke width
+            ctx.lineWidth = LANE_HEIGHT / 2;
+            // line cap
+            ctx.lineCap = 'round';
+            ctx.stroke();
+          }
         }
-      }
+      };
 
-      const ctx2d = new Ctx2d({
+      const canvas = new Canvas2D({
         draw
       });
 
-      ctx2d.animate();
+      canvas.animate();
     </script>
   </body>
 
