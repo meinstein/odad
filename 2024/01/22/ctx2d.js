@@ -1,4 +1,4 @@
-export class Canvas2D {
+export class Ctx2d {
   constructor({
     width = window.innerWidth,
     height = window.innerHeight,
@@ -15,7 +15,7 @@ export class Canvas2D {
     this.canvas.height = height;
     this.ctx = this.canvas.getContext('2d');
     this.animate = this.animate.bind(this);
-    this.cache = {};
+    this.cache = new Map();
 
     window.addEventListener('resize', () => {
       clearTimeout(this.resizeTimeout);
@@ -33,8 +33,7 @@ export class Canvas2D {
     this.height = window.innerHeight;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
-    // clear cache
-    this.cache = {};
+    this.cache.clear();
     this.#draw();
   }
 
@@ -42,16 +41,15 @@ export class Canvas2D {
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
 
-  #memoize = (key, fn) => {
-    if (this.cache[key]) {
-      return () => this.cache[key];
+  #memoize = (fn, config = {}) => (...args) => {
+    const key = JSON.stringify(...args);
+    if (this.cache.has(key)) {
+      return this.cache.get(key);
     }
 
-    return (...args) => {
-      const result = fn(...args);
-      this.cache[key] = result;
-      return result;
-    }
+    const result = fn(...args);
+    this.cache.set(key, result);
+    return result;
   }
 
   #draw() {
@@ -69,3 +67,5 @@ export class Canvas2D {
     requestAnimationFrame(this.animate);
   }
 }
+
+export default Ctx2d;

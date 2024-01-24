@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>polyester field</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import Canvas2D from './main.js';
+
+
+      const draw = ({ w, h, ctx, memoize }) => {
+        // consts
+        const LANE_HEIGHT = 32;
+        const LANES = h / LANE_HEIGHT;
+        const SEGMENT_WIDTH = 32;
+        const SEGMENTS_PER_LANE = w / SEGMENT_WIDTH;
+
+        const getData = () => {
+          const data = [];
+
+          // 2d array that creates a grid of lanes and segments
+          for (let i = 0; i < LANES; i++) {
+            data[i] = [];
+            for (let j = 0; j < SEGMENTS_PER_LANE; j++) {
+              // startX, startY, endX, endY
+              data[i][j] = {
+                startX: j * SEGMENT_WIDTH,
+                startY: i * LANE_HEIGHT,
+                endX: (j + 1) * SEGMENT_WIDTH,
+                endY: (i + 1) * LANE_HEIGHT
+              };
+            }
+          }
+
+          return data;
+        };
+
+        const memoized = memoize(getData);
+        const data = memoized();
+
+        // draw grid
+        for (let i = 0; i < LANES; i++) {
+          for (let j = 0; j < SEGMENTS_PER_LANE; j++) {
+            const { startX, startY, endX, endY } = data[i][j];
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            const movement = Math.sin(Date.now() / 1000 + i + j) * Math.max(h, w) * 0.01;
+            const cp1x = startX + SEGMENT_WIDTH / 2;
+            const cp1y = startY + LANE_HEIGHT / 2 + movement;
+            const cp2x = endX - SEGMENT_WIDTH / 2 - movement;
+            const cp2y = endY - LANE_HEIGHT / 2;
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+
+            // alternate stroke style indianred and steelblue
+            ctx.strokeStyle = i % 2 === 0 ? 'indianred' : 'steelblue';
+            // stroke width
+            ctx.lineWidth = LANE_HEIGHT / 2;
+            // line cap
+            ctx.lineCap = 'round';
+            ctx.stroke();
+          }
+        }
+      };
+
+      const canvas = new Canvas2D({
+        draw
+      });
+
+      canvas.animate();
+    </script>
+  </body>
+
+</html>
