@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>doomscrolling</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Ctx2d } from './ctx2d.js';
+
+      const draw = ({ w, h, ctx }) => {
+        const padding = h * 0.2;
+        const speed = 0.004;
+        const movement = Math.sin(Date.now() * 0.004) * padding;
+
+        const drawEyeball = () => {
+          ctx.beginPath();
+          const x = w / 2;
+          const radius = h * 0.05;
+          // not sure why (* 2) works, but it does
+          // i think it's related to the radius of the ball being 0.05...
+          const y = h / 2 + movement * 2;
+          const startAngle = 0;
+          const endAngle = 2 * Math.PI;
+          ctx.arc(
+            x,
+            y,
+            radius,
+            startAngle,
+            endAngle
+          );
+          ctx.fillStyle = 'lavenderblush';
+          ctx.fill();
+
+          // add blue circle to the ball
+          ctx.beginPath();
+          ctx.arc(
+            x,
+            y + movement * 0.025,
+            radius * 0.5,
+            startAngle,
+            endAngle
+          );
+          ctx.fillStyle = 'steelblue';
+          ctx.fill();
+
+          // add black circle to the ball
+          ctx.beginPath();
+
+          ctx.arc(
+            x,
+            // use movement to move circle closer to the top or bottom
+            y + movement * 0.05,
+            radius * 0.2,
+            startAngle,
+            endAngle
+          );
+          ctx.fillStyle = 'black';
+          ctx.fill();
+        }
+
+        const drawTop = () => {
+          ctx.beginPath();
+          const startX = 0;
+          const startY = padding;
+          const endX = w;
+          const endY = padding;
+          const controlX = w / 2;
+          // Make controlY a function of movement so that the curve is
+          // more pronounced when the ball is closer to the top.
+          const controlY = padding + movement;
+          ctx.moveTo(
+            startX,
+            startY
+          );
+          ctx.bezierCurveTo(
+            controlX,
+            controlY,
+            controlX,
+            controlY,
+            endX,
+            endY
+          );
+          ctx.lineWidth = 5;
+          ctx.strokeStyle = 'lavenderblush';
+          ctx.stroke();
+        }
+
+        const drawBottom = () => {
+          ctx.beginPath();
+          const startX = 0;
+          const startY = h - padding;
+          const endX = w;
+          const endY = h - padding;
+          const controlX = w / 2;
+          const controlY = h - padding + movement;
+          ctx.moveTo(
+            startX,
+            startY
+          );
+          ctx.bezierCurveTo(
+            controlX,
+            controlY,
+            controlX,
+            controlY,
+            endX,
+            endY
+          );
+          ctx.lineWidth = 5;
+          ctx.strokeStyle = 'lavenderblush';
+          ctx.stroke();
+        }
+
+        drawEyeball();
+        drawTop();
+        drawBottom();
+      }
+
+
+
+      const ctx2d = new Ctx2d({
+        draw
+      });
+
+      ctx2d.animate();
+    </script>
+  </body>
+
+</html>
