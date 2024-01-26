@@ -33,7 +33,7 @@
 
           // frequency is related to the width of the screen
           // but also has a max value of 600 so never gets too slow on wide screens
-          const frequency = Math.min(w * 0.6, 600);
+          const frequency = Math.min(w * 0.6, 500);
           const oscillation = oscillate({
             frequency: frequency,
             amplitude: w * 0.55,
@@ -62,18 +62,21 @@
           // alpha gets bigger as we get closer to the middle
           const alpha = 1 - Math.abs(i - (lines / 2)) / (lines / 2);
           // alternate lavenderblush and transparent lavenderblush
-          const strokeStyle = i % 2 === 0 ? `rgba(255, 240, 245, ${alpha * 0.5})` : `rgba(255, 240, 245, ${alpha * 0.25})`;
+          // const strokeStyle = i % 2 === 0 ? `rgba(255, 240, 245, ${alpha * 0.5})` : `rgba(255, 240, 245, ${alpha * 0.25})`;
+          const strokeStyle = `rgba(255, 240, 245, ${alpha * 0.85})`;
           ctx.strokeStyle = strokeStyle;
-          ctx.lineWidth = alpha * spacing * 0.75;
+          ctx.lineWidth = alpha * spacing * 0.35;
+          // round
+          ctx.lineCap = 'round';
           ctx.stroke();
 
           // draw a white line down the middle
-          ctx.beginPath();
-          ctx.moveTo(w / 2, 0);
-          ctx.lineTo(w / 2, h);
-          ctx.strokeStyle = 'lavenderblush';
-          ctx.lineWidth = spacing * 0.5;
-          ctx.stroke();
+          // ctx.beginPath();
+          // ctx.moveTo(w / 2, 0);
+          // ctx.lineTo(w / 2, h);
+          // ctx.strokeStyle = 'lavenderblush';
+          // ctx.lineWidth = spacing * 0.5;
+          // ctx.stroke();
         }
       }
 
