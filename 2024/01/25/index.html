@@ -64,7 +64,7 @@
           // alternate lavenderblush and transparent lavenderblush
           const strokeStyle = i % 2 === 0 ? `rgba(255, 240, 245, ${alpha * 0.5})` : `rgba(255, 240, 245, ${alpha * 0.25})`;
           ctx.strokeStyle = strokeStyle;
-          ctx.lineWidth = alpha * spacing * 0.25 + 2;
+          ctx.lineWidth = alpha * spacing * 0.75;
           ctx.stroke();
 
           // draw a white line down the middle
