@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>domsock</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Ctx2d } from './ctx2d.js';
+
+      const spacing = 16;
+
+      const draw = ({ w, h, ctx, oscillate }) => {
+        const lines = Math.floor(h / spacing);
+
+        for (let i = 1; i <= lines; i++) {
+          ctx.beginPath();
+          const paddingY = h / lines * i * 0.5;
+
+          // frequency is related to the width of the screen
+          // but also has a max value of 600 so never gets too slow on wide screens
+          const frequency = Math.min(w * 0.6, 600);
+          const oscillation = oscillate({
+            frequency: frequency,
+            amplitude: w * 0.55,
+            offset: paddingY
+          })
+
+          const startX = w / 2;
+          const startY = paddingY;
+          const cp1X = w / 2 + oscillation;
+          const cp1Y = h * 0.5;
+          const cp2X = w / 2 + oscillation;
+          const cp2Y = h * 0.5;
+          const endX = w / 2;
+          const endY = h - paddingY;
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(
+            cp1X,
+            cp1Y,
+            cp2X,
+            cp2Y,
+            endX,
+            endY
+          );
+
+
+          // alpha gets bigger as we get closer to the middle
+          const alpha = 1 - Math.abs(i - (lines / 2)) / (lines / 2);
+          // alternate lavenderblush and transparent lavenderblush
+          const strokeStyle = i % 2 === 0 ? `rgba(255, 240, 245, ${alpha * 0.5})` : `rgba(255, 240, 245, ${alpha * 0.25})`;
+          ctx.strokeStyle = strokeStyle;
+          ctx.lineWidth = alpha * spacing * 0.25 + 2;
+          ctx.stroke();
+
+          // draw a white line down the middle
+          ctx.beginPath();
+          ctx.moveTo(w / 2, 0);
+          ctx.lineTo(w / 2, h);
+          ctx.strokeStyle = 'lavenderblush';
+          ctx.lineWidth = spacing * 0.5;
+          ctx.stroke();
+        }
+      }
+
+      const ctx2d = new Ctx2d();
+      ctx2d.draw(draw);
+    </script>
+  </body>
+
+</html>
