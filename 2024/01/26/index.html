@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>dustball</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.1';
+
+      const draw = ({ w, h, ctx, oscillate, memoize }) => {
+        const getData = () => {
+          const data = [];
+
+          const recurse = (x, y, i) => {
+            if (i === 0) {
+              return;
+            }
+
+            const x1 = x - w * 0.035 * Math.random();
+            const y1 = y - h * 0.035 * Math.random();
+            data.push([x, y, x1, y1])
+
+            const x2 = x + w * 0.035 * Math.random();
+            const y2 = y + h * 0.035 * Math.random();
+            data.push([x, y, x2, y2])
+
+            recurse(x1, y1, i - 1);
+            recurse(x2, y2, i - 1);
+          }
+
+          recurse(w / 2, h / 2, 13);
+
+          return data;
+        }
+
+        const memoizedGetData = memoize(getData);
+        const data = memoizedGetData();
+
+        data.forEach(([x1, y1, x2, y2], idx) => {
+          const oscillation = oscillate({
+            frequency: 350,
+            amplitude: Math.min(w, h) * 0.03,
+            offset: idx * 0.25
+          });
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2 + oscillation, y2 + oscillation);
+          // the bigger the index, the more transparent the line
+          const alpha = 1 - idx / data.length;
+          if (idx % 2 === 0) {
+            const eggshell = [255, 240, 245];
+            ctx.strokeStyle = `rgba(${eggshell.join(',')}, ${alpha * 0.1})`;
+          } else {
+            const indianred = [205, 92, 92];
+            ctx.strokeStyle = `rgba(${indianred.join(',')}, ${alpha * 0.1})`;
+          }
+          // stroke width - the bigger the index, the thicker the line
+          ctx.lineWidth = (idx / data.length) * Math.min(w, h) * 0.025;
+          ctx.stroke();
+        });
+
+      }
+
+      const context2d = new Context2D();
+      context2d.draw(draw);
+    </script>
+  </body>
+
+</html>
