@@ -48,7 +48,7 @@
             }
           };
 
-          recurse(w / 2, 0, 23);
+          recurse(w / 2, 0, 22);
           return data;
         }
 
@@ -63,7 +63,7 @@
             // increase freq and amplitude as we go down
             frequency: (y1 / h) * 1200,
             amplitude: (y1 / h) * 20,
-            offset: idx,
+            offset: idx * 0.1,
           });
 
           const nextLine = data[idx + 1];
@@ -86,27 +86,30 @@
 
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x1, y1);
           } else {
+            const foo = idx % 5 === 0
+            const xVal = !isConnected && foo ? x1 + oscillation : x1;
             ctx.lineTo(
               // oscillate x1 when it is not connected to the next line
-              isConnected ? x1 : x1 + oscillation,
+              xVal,
               y1
             );
           }
 
-          const alpha = Math.max(0.15, 1 - y / h - 0.1);
+          let alpha = Math.min(Math.max(0.025, Math.abs(x - w / 2) / 175), 0.75);
           const salmon = [250, 128, 114];
           const lavenderblush = [255, 240, 245];
+          let lineWidth = Math.max(1, Math.abs(x - w / 2) / 35);
+          // we want the top of the organic shape to be visible
+          if (y < h * 0.25) {
+            lineWidth = 2;
+            alpha = Math.max(alpha * 2, 0.15);
+          }
           if (idx % 2 === 0) {
             ctx.strokeStyle = `rgba(${salmon.join(',')}, ${alpha})`;
           } else {
             ctx.strokeStyle = `rgba(${lavenderblush.join(',')}, ${alpha})`;
           }
-          let lineWidth = Math.max(0.1, Math.abs(x - w / 2) / 50);
-          // we want the top of the organic shape to be visible
-          if (y < h * 0.25) {
-            lineWidth = 0.99;
-          }
-          ctx.lineWidth = lineWidth < 1 ? lineWidth : lineWidth * 1.5;
+          ctx.lineWidth = lineWidth <= 1 ? lineWidth : lineWidth * 1;
           ctx.lineCap = 'round';
           ctx.stroke();
         });
