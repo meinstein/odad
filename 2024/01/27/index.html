@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="...">
+    <meta name="keywords" content="...">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>suspended dual-chambered sac</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.3';
+
+      const draw = ({ ctx, w, h, memoize, oscillate }) => {
+        const getData = () => {
+          const data = [];
+
+          const recurse = (x, y, i) => {
+            if (i === 0) return;
+
+            if (x < 0 || x > w || y < 0 || y > h) {
+              recurse(w / 2, h / 2, i);
+              return;
+            }
+
+            const x1 = x + (Math.random() - 0.5) * Math.min(w * 0.075, 40);
+            const y1 = y + (Math.random()) * h * 0.05;
+            data.push([x, y, x1, y1]);
+            if (i % 2 === 0) {
+              const x2 = x1 + (Math.random() - 0.5) * Math.min(w * 0.075, 40);
+              const y2 = y1 + (Math.random()) * h * 0.05;
+              data.push([x1, y1, x2, y2]);
+              recurse(x2, y2, i - 1);
+              recurse(x1, y1, i - 1);
+            } else {
+              recurse(x1, y1, i - 1);
+            }
+          };
+
+          recurse(w / 2, 0, 23);
+          return data;
+        }
+
+        const memoized = memoize(getData);
+        const data = memoized();
+
+
+
+        data.forEach(([x, y, x1, y1], idx) => {
+          ctx.beginPath();
+          const oscillation = oscillate({
+            // increase freq and amplitude as we go down
+            frequency: (y1 / h) * 1200,
+            amplitude: (y1 / h) * 20,
+            offset: idx,
+          });
+
+          const nextLine = data[idx + 1];
+          // does next line start from x1+y1?
+          const isConnected = nextLine && nextLine[0] === x1 && nextLine[1] === y1;
+
+          ctx.moveTo(x, y);
+          // randomly draw bezier intead of line
+          if (idx % 2 === 0) {
+
+            const startX = x;
+            const startY = y;
+            // x2 is 0.33 of the way between x1 and x
+            const cp1x = x1 + (x - x1) * 0.33;
+            // y2 is 0.66 of the way between y1 and y
+            const cp1y = y1 + (y - y1) * 0.33;
+
+            const cp2x = x1 + (x - x1) * 0.66;
+            const cp2y = y1 + (y - y1) * 0.66;
+
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x1, y1);
+          } else {
+            ctx.lineTo(
+              // oscillate x1 when it is not connected to the next line
+              isConnected ? x1 : x1 + oscillation,
+              y1
+            );
+          }
+
+          const alpha = Math.max(0.15, 1 - y / h - 0.1);
+          const salmon = [250, 128, 114];
+          const lavenderblush = [255, 240, 245];
+          if (idx % 2 === 0) {
+            ctx.strokeStyle = `rgba(${salmon.join(',')}, ${alpha})`;
+          } else {
+            ctx.strokeStyle = `rgba(${lavenderblush.join(',')}, ${alpha})`;
+          }
+          let lineWidth = Math.max(0.1, Math.abs(x - w / 2) / 50);
+          // we want the top of the organic shape to be visible
+          if (y < h * 0.25) {
+            lineWidth = 0.99;
+          }
+          ctx.lineWidth = lineWidth < 1 ? lineWidth : lineWidth * 1.5;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        });
+      };
+
+      const context2d = new Context2D();
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
