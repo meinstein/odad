@@ -88,13 +88,12 @@
         const memoized = memoize(getData);
         const data = memoized();
 
-        ctx.globalAlpha = 0.75;
-
         data.forEach(([x, y, x1, y1], idx) => {
           const oscillation = oscillate({
             min: 50,
             max: 200,
-            frequency: idx / TERMIAL * 0.000009,
+            // bugs out on mobile if not toFixed
+            frequency: Math.min(parseFloat((idx / TERMIAL * 0.000009).toFixed(4)), 1_000),
             offset: 1 - (idx / TERMIAL),
           });
 

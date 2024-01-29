@@ -100,9 +100,9 @@
           const lavenderblush = [255, 240, 245];
           let lineWidth = Math.max(1, Math.abs(x - w / 2) / 35);
           // we want the top of the organic shape to be visible
-          if (y < h * 0.25) {
-            lineWidth = 2;
-            alpha = Math.max(alpha * 2, 0.15);
+          if (y < h * 0.33) {
+            lineWidth = Math.max(1, lineWidth * 2);
+            alpha = alpha * 2;
           }
           if (idx % 2 === 0) {
             ctx.strokeStyle = `rgba(${salmon.join(',')}, ${alpha})`;
