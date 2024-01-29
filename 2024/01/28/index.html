@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="odad">
+    <meta name="keywords" content="odad">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>pyro script</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const RECURSION_DEPTH = 13;
+      const getTermial = (n) => {
+        if (n === 0) return 0;
+        return n + getTermial(n - 1);
+      };
+      const TERMIAL = getTermial(RECURSION_DEPTH);
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const maxW = Math.min(w, 650)
+
+        const getData = () => {
+          const data = [];
+
+          const recurse = ({ x, y, i }) => {
+            if (i <= 0) return;
+
+            // the point of this recursion is to create longer segments
+            // at the start of the recursion, and shorter segments at the end.
+            // to do so, get the total sum of indices, and then divide the current.
+            const per = i / TERMIAL * 0.48;
+
+            const x1 = x + maxW * Math.random() * 0.08 - maxW * 0.04;
+            const y1 = y + per * h * 1.35;
+
+            data.push([
+              x,
+              y,
+              x1,
+              y1
+            ]);
+
+            recurse({
+              x: x1,
+              y: y1,
+              i: i - 1
+            });
+
+            const x2 = x1 + maxW * Math.random() * 0.14 - maxW * 0.07;
+            const y2 = y1 + per * h * 0.65;
+
+            data.push([
+              x1,
+              y1,
+              x2,
+              y2
+            ]);
+
+            recurse({
+              x: x2,
+              y: y2,
+              i: i - 1
+            });
+          };
+
+          recurse({
+            x: w / 2,
+            y: 0,
+            i: RECURSION_DEPTH
+          });
+
+          return data;
+        };
+
+        const memoized = memoize(getData);
+        const data = memoized();
+
+        ctx.globalAlpha = 0.75;
+
+        data.forEach(([x, y, x1, y1], idx) => {
+          const oscillation = oscillate({
+            min: 50,
+            max: 200,
+            frequency: idx / TERMIAL * 0.000009,
+            offset: 1 - (idx / TERMIAL),
+          });
+
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x1, y1);
+          const rgb = [Math.round(oscillation), 0, 0];
+          const strokeStyle = `rgb(${rgb.join(',')})`;
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = strokeStyle;
+          const alpha = Math.min(1, Math.max(0, (y1 - y) / (h * 0.25)));
+          ctx.lineWidth = Math.round(Math.max(2, Math.min(6, alpha * 30)));
+          ctx.stroke();
+        });
+      }
+
+      const ctx = new Context2D();
+      ctx.draw(draw);
+    </script>
+  </body>
+
+</html>

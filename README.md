@@ -9,10 +9,11 @@ See title.
 ```html
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8">
-    <meta name ="description" content="...">
-    <meta name ="keywords" content="...">
+    <meta name="description" content="odad">
+    <meta name="keywords" content="odad">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>add title here</title>
@@ -20,13 +21,13 @@ See title.
       /* add styles here */
     </style>
   </head>
+
   <body>
-    <main>
-      <!-- add main content here -->
-    </main>
-	<script>
-    // add js here
-  </script>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d';
+      // add code here
+    </script>
   </body>
+
 </html>
 ```
