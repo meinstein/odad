@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="odad">
+    <meta name="keywords" content="odad">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>velvet merry-go-round</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d';
+
+      const LINES = 100;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // lineW is bt 2 and 4
+        const lineW = Math.min(Math.max(w * 0.8 / LINES, 2), 5);
+        const p = (w - lineW * LINES) * 0.5;
+
+        for (let i = 0; i < LINES; i++) {
+          const oscillation = oscillate({
+            frequency: 0.005,
+            min: -w * 0.1,
+            max: w * 0.1,
+            offset: i * 0.1
+          });
+
+          const startX = i * lineW + p + i * 2;
+          const startY = 0;
+          const cp1x = startX + lineW * 0.33 + oscillation;
+          const cp1y = h * 0.5;
+          const cp2x = startX + lineW * 0.66 - oscillation;
+          const cp2y = h * 0.5;
+          const endX = i * lineW + p - i * 2;
+          const endY = h;
+
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+          ctx.lineWidth = lineW;
+
+          const r = 25 + i
+          const g = 0;
+          const b = 0;
+          ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+
+          ctx.stroke();
+        }
+
+
+      }
+
+      const context = new Context2D();
+      context.draw(draw);
+    </script>
+  </body>
+
+</html>
