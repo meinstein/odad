@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="odad">
+    <meta name="keywords" content="odad">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>irie iris</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const SEGMENTS = 100;
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // blend mode - performance decreases with blend mode :(
+        // ctx.globalCompositeOperation = 'lighter';
+
+        const minDim = Math.min(w, h);
+
+        const getData = () => {
+          const tmp = [];
+
+          const r = minDim * 0.25;
+
+          // add the points around a circle to tmp
+          for (let i = 0; i < SEGMENTS; i++) {
+            const angle = i / SEGMENTS * Math.PI * 2;
+            const x = w * 0.5 + Math.cos(angle) * r;
+            const y = h * 0.5 + Math.sin(angle) * r;
+            tmp.push([x, y]);
+          }
+
+
+          // iterate over tmp and create line pairs
+          const data = [];
+
+          // use the points to create a list of line pairs with control points
+          for (let i = 0; i < tmp.length; i++) {
+            const p1 = tmp[i];
+            // p2 is 4 over, but if it's over the length of tmp, wrap around
+            const p2 = tmp[i + 4 >= tmp.length ? i + 4 - tmp.length : i + 4];
+
+            const cp1 = [
+              // use the x y angle and smaller radius
+              p1[0] + Math.cos(i / SEGMENTS * Math.PI * 2) * r * 0.85,
+              p1[1] + Math.sin(i / SEGMENTS * Math.PI * 2) * r * 0.85
+            ];
+
+            const cp2 = [
+              // use the x y angle and smaller radius
+              p2[0] + Math.cos(i / SEGMENTS * Math.PI * 2) * r * 0.85,
+              p2[1] + Math.sin(i / SEGMENTS * Math.PI * 2) * r * 0.85
+            ];
+
+            data.push([p1, p2, cp1, cp2]);
+          }
+
+          return data;
+        }
+
+        const memoized = memoize(getData);
+        const data = memoized();
+
+        data.forEach(([p1, p2, cp1, cp2], idx) => {
+          ctx.beginPath();
+
+          const oscillation = oscillate({
+            frequency: 0.005,
+            min: -12,
+            max: 12,
+            offset: idx * 0.1
+          });
+
+          const alpha = oscillate({
+            frequency: 0.005,
+            min: 0.25,
+            max: 0.75,
+            // a high offset makes the lines look like they're slowly moving around the circle
+            offset: idx
+          });
+
+          const startX = p1[0];
+          const startY = p1[1];
+
+          const cp1x = cp1[0] + oscillation;
+          const cp1y = cp1[1] + oscillation;
+
+          const cp2x = cp2[0] - oscillation;
+          const cp2y = cp2[1] - oscillation;
+
+          const endX = p2[0];
+          const endY = p2[1];
+
+          ctx.moveTo(startX, startY);
+
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+
+          ctx.lineCap = 'round';
+          ctx.lineWidth = Math.min(minDim * 0.01, 5);
+
+          // lavenderblush rgb = indianred rgb = [205, 92, 92]
+          const rgb = [205, 92, 92];
+
+          // lavender rgb = [230, 230, 250]
+          // steelblue rgb = [70, 130, 180]
+          if (idx % 2 === 0) {
+            rgb[0] = 70
+            rgb[1] = 130
+            rgb[2] = 180
+          }
+
+          ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+          ctx.stroke();
+        });
+      };
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
