@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="odad">
+    <meta name="keywords" content="odad">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>enter the fold</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const LAYERS = 360;
+
+      const draw = ({ ctx, w, h, memoize, oscillate }) => {
+        const layerW = Math.min(w, h) * 0.35 / LAYERS
+        const core = Math.min(w, h) * 0.001;
+
+        // create a loop
+        // for each layer, draw an arc with a radius that oscillates in around the center
+        // in a full circular motion
+        for (let i = 0; i < LAYERS; i++) {
+          ctx.beginPath()
+          const r = layerW * i + core;
+          const oscillation = oscillate({
+            frequency: 0.001,
+            min: 0,
+            max: Math.PI * 2,
+            offset: i * 0.01
+          })
+          const angle = Math.PI * oscillation;
+          const x = w * 0.5 + Math.cos(angle) * r;
+          const y = h * 0.5 + Math.sin(angle) * r;
+          const arcR = (1 - i / LAYERS) * Math.min(w, h) * 0.1;
+          ctx.arc(x, y, arcR, 0, Math.PI * 2)
+          // the closer the layer is to the center, the more transparent it is
+          ctx.globalAlpha = i / LAYERS;
+          ctx.fillStyle = `lavenderblush`
+          ctx.fill();
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>

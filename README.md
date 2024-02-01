@@ -25,7 +25,13 @@ See title.
   <body>
     <script type="module">
       import { Context2D } from 'https://unpkg.com/context2d';
-      // add code here
+
+      const draw =  ({ ctx, w, h, oscillate, memoize }) => {
+        // add code here
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
     </script>
   </body>
 
