@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="odad">
+    <meta name="keywords" content="odad">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>untitled</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // Do not let the rings get too big.
+        const ringW = Math.min(Math.min(w, h) * 0.125, 75);
+        const strokeW = ringW * 0.3;
+        const realRingW = ringW + strokeW;
+        const halfRingW = realRingW / 2;
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter';
+
+        const rows = Math.floor(w / realRingW);
+        const cols = Math.floor(h / realRingW);
+
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const paddingY = (h - (cols * realRingW)) * 0.5;
+            const paddingX = (w - (rows * realRingW)) * 0.5;
+
+            const oscillateX = oscillate({
+              frequency: 0.006,
+              min: -0.5,
+              max: 0.5,
+              offset: i * 0.3
+            });
+
+            const oscillateY = oscillate({
+              frequency: 0.006,
+              min: -0.5,
+              max: 0.5,
+              offset: j * 0.3
+            });
+
+            const x = i * realRingW + halfRingW - (realRingW / 2) * (j % 2) * oscillateX + paddingX;
+            const y = j * realRingW + halfRingW - (realRingW / 2) * (i % 2) * oscillateY + paddingY;
+            const r = ringW / 2;
+
+
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            // fill black to match the background, gives the illusion of a ring
+            ctx.fillStyle = 'black';
+            ctx.fill();
+            ctx.strokeStyle = 'lavender';
+            // global alpha is related to the center
+            ctx.lineWidth = strokeW;
+            ctx.stroke();
+          }
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
