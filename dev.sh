@@ -1,2 +1,1 @@
-brew list http-server || brew install http-server
-http-server -p 1234
+npx live-server --port=1234 --entry-file=index.html
