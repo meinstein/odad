@@ -1,39 +1,12 @@
 # One Document A Day (ODAD)
 
-See title.
+```sh
+# start simple dev server with live reload capability
+npx live-server --port=1234
 
-## Templates
+# create document for new date
+deno run --allow-read --allow-write scripts/template.ts --date=YYYY/MM/DD
 
-**HTML Boilerplate**
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="odad">
-    <meta name="keywords" content="odad">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>add title here</title>
-    <style>
-      /* add styles here */
-    </style>
-  </head>
-
-  <body>
-    <script type="module">
-      import { Context2D } from 'https://unpkg.com/context2d';
-
-      const draw =  ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
-      }
-
-      const context2d = new Context2D()
-      context2d.draw(draw)
-    </script>
-  </body>
-
-</html>
+# build root index.html
+deno run --allow-read --allow-write scripts/build.ts
 ```
