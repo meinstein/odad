@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="odad">
+    <meta name="keywords" content="odad">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>devoid spatial creature</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d';
+
+      const rings = 45
+      const maxW = 600
+
+      const draw = ({ ctx, w, h, memoize, oscillate }) => {
+        const vertPadding = h * 0.05
+        const vertSpacing = ((h * 0.5) - vertPadding * 2) / rings
+        // clamp the width to 600
+        w = Math.min(w, 600)
+        const horzPadding = w * 0.05
+        const horzSpacing = ((w * 0.5) - horzPadding * 2) / rings
+
+        const getData = memoize(() => {
+          const data = []
+
+          for (let i = 0; i < 50; i++) {
+            const startX = horzPadding + horzSpacing * i + Math.random() * horzSpacing
+            const endX = w - horzPadding - horzSpacing * i + Math.random() * horzSpacing
+            const startY = vertPadding + vertSpacing * i - Math.random() * vertPadding
+            const endY = h - vertPadding - vertSpacing * i + Math.random() * vertPadding
+            data.push({
+              startX,
+              startY,
+              endX,
+              endY
+            })
+          }
+          return data
+        })
+
+        const data = getData()
+
+        data.forEach(({
+          startX,
+          startY,
+          endX,
+          endY
+        }, i) => {
+          ctx.beginPath()
+
+          const ox = oscillate({
+            min: -1,
+            max: 1,
+            frequency: 0.005,
+            offset: i * 0.1
+          })
+
+          const oy = oscillate({
+            min: -1,
+            max: 1,
+            frequency: 0.005,
+            // just slightly out of phase with the x oscillation
+            offset: i * 0.2
+          })
+
+          const leftStartX = startX + ox * horzSpacing
+          const leftStartY = startY + oy * vertSpacing
+          const leftEndX = startX + ox * horzSpacing
+          const leftEndY = endY + oy * vertSpacing
+
+          const leftCp1X = w * 0.25
+          const leftCp1Y = h * 0.4
+          const leftCp2X = w * 0.25
+          const leftCp2Y = h * 0.6
+
+          const rightStartX = endX + ox * horzSpacing
+          const rightStartY = startY + oy * vertSpacing
+          const rightEndX = endX + ox * horzSpacing
+          const rightEndY = endY + oy * vertSpacing
+
+          const rightCp1X = w * 0.75
+          const rightCp1Y = h * 0.4
+          const rightCp2X = w * 0.75
+          const rightCp2Y = h * 0.6
+
+          ctx.moveTo(leftStartX, leftStartY)
+          ctx.bezierCurveTo(leftCp1X, leftCp1Y, leftCp2X, leftCp2Y, leftEndX, leftEndY)
+          ctx.moveTo(rightStartX, rightStartY)
+          ctx.bezierCurveTo(rightCp1X, rightCp1Y, rightCp2X, rightCp2Y, rightEndX, rightEndY)
+
+          ctx.globalAlpha = (i + 1) / rings
+          ctx.strokeStyle = `lavender`
+          ctx.lineWidth = i * 0.125
+          ctx.lineCap = 'round'
+          ctx.stroke()
+        })
+
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
