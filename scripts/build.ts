@@ -68,3 +68,4 @@ document.body.appendChild(ul)
 
 // write the file
 await Deno.writeTextFile('index.html', document.documentElement.outerHTML)
+console.log('🎉 Created index.html')

@@ -39,20 +39,27 @@ const [
   month,
   day,
 ] = flags.date.split("/")
-console.log(year, month, day)
+
 // validate
-if (year.length !== 4 || month.length !== 2 || day.length !== 2) {
+if (
+  year.length !== 4 ||
+  month.length !== 2 ||
+  day.length !== 2 ||
+  isNaN(Number(year)) ||
+  isNaN(Number(month)) ||
+  isNaN(Number(day))
+) {
   throw new Error("Invalid date format")
 }
 
-
-// check if the directory exists
 try {
+  // check if dir exists
   await Deno.stat(flags.date)
   throw new Error("Directory already exists")
-} catch (error) {
-  // create the directory
+} catch {
+  // create dir
   await Deno.mkdir(flags.date)
   await Deno.writeTextFile(`${flags.date}/index.html`, document)
+  console.log(`🎉 Created ${flags.date}`)
 }
 

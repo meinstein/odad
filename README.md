@@ -1,4 +1,4 @@
-# One Document A Day (ODAD)
+# one document a day (odad)
 
 ```sh
 # start simple dev server with live reload capability
