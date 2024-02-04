@@ -4,9 +4,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add title here</title>
+    <title>continuing series of small tragedies</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: black;
+      }
     </style>
   </head>
 
@@ -15,7 +20,102 @@
       import { Context2D } from 'https://unpkg.com/context2d';
 
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
+        // gives the lavender a nice glow around edges and meeting points
+        ctx.globalCompositeOperation = 'multiply'
+
+        // alpha
+        ctx.globalAlpha = 0.25
+
+        const maxW = Math.min(w, 500)
+
+        const oyMain = oscillate({
+          min: -h * 0.2,
+          max: h * 0.2,
+          frequency: 0.0015,
+        })
+
+        const mainStalk = h * 0.5 + oyMain
+
+        const drawStalk = () => {
+          const stalks = 45;
+
+          for (let i = 0; i < stalks; i++) {
+            const ox = oscillate({
+              min: -maxW * 0.33,
+              max: maxW * 0.33,
+              frequency: 0.0005,
+              offset: i * 0.08
+            })
+
+            const oy = oscillate({
+              min: -h * 0.05,
+              max: h * 0.05,
+              frequency: 0.0005,
+              offset: i * 0.1
+            })
+
+            const startX = w * 0.5
+            const startY = h
+            const cp1X = w * 0.5 + ox
+            const cp1Y = h * 0.7 + oy
+            const cp2X = w * 0.5 + ox
+            const cp2Y = h * 0.5 + oy
+            const endX = w * 0.5
+            const endY = mainStalk
+
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
+            ctx.strokeStyle = 'lavender'
+            ctx.lineWidth = 3
+            ctx.lineCap = 'round'
+            ctx.stroke()
+          }
+        }
+
+        const drawOffshoots = () => {
+          const offshoots = 45
+
+          for (let i = 0; i < offshoots; i++) {
+            // get a range between -w * 0.25 and w * 0.25 based on i
+            const rangeVal = -maxW * 0.33 + (maxW * 0.33 - -maxW * 0.33) * (i / offshoots)
+
+            const ox = oscillate({
+              min: -rangeVal,
+              max: rangeVal,
+              frequency: 0.001,
+              offset: i * 0.01
+            })
+
+            const oy = oscillate({
+              min: -h * 0.1,
+              max: h * 0.1,
+              frequency: 0.001,
+              offset: i * 0.1
+            })
+
+            const offshootLength = h / 4
+            const startX = w * 0.5
+            const startY = mainStalk
+            const cp1X = w * 0.5 + ox
+            const cp1Y = h * 0.3
+            const cp2X = w * 0.5 + ox
+            const cp2Y = h * 0.3
+            const endX = w * 0.5 + ox
+            const endY = h * 0.15 + oy
+
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY)
+            ctx.strokeStyle = 'lavenderblush'
+            ctx.lineCap = 'round'
+            ctx.lineWidth = 3
+            ctx.stroke()
+          }
+        }
+
+        drawStalk()
+        drawOffshoots()
       }
 
       const context2d = new Context2D()
