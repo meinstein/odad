@@ -10,9 +10,4 @@ deno run --allow-read --allow-write scripts/make-document.ts --date=YYYY/MM/DD
 
 # build root index.html
 deno run --allow-read --allow-write scripts/build-index.ts
-
-# active post-commit hook
-deno run --allow-read --allow-write ./scripts/build-index.ts
-git add index.html
-git commit -m "update index.html"
 ```

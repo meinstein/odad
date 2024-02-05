@@ -19,11 +19,12 @@
     <script type="module">
       import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
 
+      // inspired by: Mira Schendel - Perforated II(Perfurados II)
+
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // get diagnal distance from 0,0 to w,h
         const d = Math.floor(Math.sqrt(w * w + h * h))
         const dotR = d * 0.004;
-
-        // get diagnal distance from 0,0 to w,h
 
         const getData = () => {
           const data = []
@@ -33,7 +34,6 @@
             const y = i * h / d
             // data.push([x, y])
 
-            // fill foo with 20 random yet unique integers
             const setSpace = Math.floor(h * 0.5);
             const setSize = setSpace * 0.1;
             const set = new Set()
@@ -45,6 +45,7 @@
             // iterate over the set and add points to the data array
             for (const j of set) {
               const rX = x;
+              // add only to the y axis to minimize the collison of the points
               const rY = y + j;
               data.push([rX, rY])
             }
@@ -75,7 +76,6 @@
 
           ctx.fill()
         })
-
       }
 
       const context2d = new Context2D()
