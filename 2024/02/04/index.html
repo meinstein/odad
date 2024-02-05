@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>finger on the pulse, band on the width</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const d = Math.floor(Math.sqrt(w * w + h * h))
+        const dotR = d * 0.004;
+
+        // get diagnal distance from 0,0 to w,h
+
+        const getData = () => {
+          const data = []
+          for (let i = 0; i < d; i = i + dotR * 2) {
+            // find point along the diagnal on each iteration
+            const x = i * w / d
+            const y = i * h / d
+            // data.push([x, y])
+
+            // fill foo with 20 random yet unique integers
+            const setSpace = Math.floor(h * 0.5);
+            const setSize = setSpace * 0.1;
+            const set = new Set()
+
+            while (set.size < setSize) {
+              set.add(Math.floor(Math.random() * setSpace) - setSpace / 2)
+            }
+
+            // iterate over the set and add points to the data array
+            for (const j of set) {
+              const rX = x;
+              const rY = y + j;
+              data.push([rX, rY])
+            }
+          }
+          return data
+        }
+
+        const memoized = memoize(getData)
+        const data = memoized()
+        data.forEach(([x, y], i) => {
+          const o = oscillate({
+            frequency: 0.009,
+            min: Math.min(w * 0.01, 10) * -1,
+            max: Math.min(w * 0.01, 10),
+            offset: i * 0.25
+          })
+
+          // distance to half of the canvas
+          const distanceToCenter = Math.sqrt((w / 2 - x) ** 2 + (h / 2 - y) ** 2)
+          // alpha based on distance to center
+          const alpha = (1 - distanceToCenter / d) ** 5
+          // lavender blush
+          const lavenderbrush = [255, 240, 245]
+          ctx.fillStyle = `rgba(${lavenderbrush[0]}, ${lavenderbrush[1]}, ${lavenderbrush[2]}, ${alpha})`
+          // draw circle at point
+          ctx.beginPath()
+          ctx.arc(x + o, y + o, dotR, 0, Math.PI * 2)
+
+          ctx.fill()
+        })
+
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
