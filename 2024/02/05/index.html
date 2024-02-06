@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>worm tongue</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const stackSize = 100;
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // blend mode
+        // ctx.globalCompositeOperation = 'lighten';
+
+        // draw stack of squares
+        // they are 50% of the size of the min dim
+        // all are stacked right in the middle, on top of each other
+        const minDim = Math.min(w, h);
+        for (let i = 0; i < stackSize; i++) {
+          // save context
+          // ctx.save();
+          ctx.save();
+          // size gets SLIGHTLY smaller on each iteration
+          const size = minDim * 0.25 * (1 - i / stackSize);
+          const x = w / 2 - size / 2;
+          const y = h / 2 - size / 2;
+          const alpha = i / stackSize;
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = 'lavender';
+          ctx.lineWidth = 3;
+          const o = oscillate({
+            min: -i,
+            max: i,
+            frequency: 0.0033,
+            offset: i * 0.0075
+          });
+          ctx.rotate(Math.PI / 720 * o);
+          ctx.strokeRect(x, y, size, size);
+          ctx.restore();
+        }
+
+        // draw a square in the middle
+        const size = minDim * 0.25;
+        const x = w / 2 - size / 2;
+        const y = h / 2 - size / 2;
+        // fill
+        ctx.fillStyle = 'indianred';
+        // alpha
+        ctx.globalAlpha = 0.1;
+        ctx.fillRect(x, y, size, size);
+        // add glow
+        // ctx.shadowColor = 'lavender';
+        // ctx.shadowBlur = 3;
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
