@@ -22,9 +22,11 @@
       // inspired by: Mira Schendel - Perforated II(Perfurados II)
 
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // get diagnal distance from 0,0 to w,h
+        // get diag distance from 0,0 to w,h
         const d = Math.floor(Math.sqrt(w * w + h * h))
-        const dotR = d * 0.004;
+        // radius of the dots - make bigger as the canvas gets bigger, else
+        // too many dots and performance issues
+        const dotR = d * 0.0075;
 
         const getData = () => {
           const data = []
