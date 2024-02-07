@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lines from corners to a foolish maroon circle</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      // Inspired by:
+      // By: Sol LeWitt
+      // Title: Lines from Corners, Sides & The Center, To Points on a Grid(Black)
+      // Ref: https://www.moma.org/collection/works/69276
+
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const draw = ({ ctx, w, h, memoize, oscillate }) => {
+        const getData = () => {
+          const data = []
+          const cx = w / 2
+          const cy = h / 2
+          const radius = Math.min(w, h) / 2 * 0.5
+          const angleStep = Math.PI / 180
+          for (let angle = 0; angle < Math.PI * 2 - angleStep; angle += angleStep) {
+            const x = cx + Math.cos(angle) * radius
+            const y = cy + Math.sin(angle) * radius
+            const startX = x;
+            const startY = y;
+            // endX and startX is the closest corner of the canvas
+            // if first quadrant, draw to bottom right
+            // if second quadrant, draw to bottom left
+            // if third quadrant, draw to top left
+            // if fourth quadrant, draw to top right
+            const endX = angle < Math.PI / 2
+              ? w
+              : angle < Math.PI
+                ? 0
+                : angle < Math.PI * 1.5
+                  ? 0
+                  : w
+            const endY = angle < Math.PI / 2
+              ? h
+              : angle < Math.PI
+                ? h
+                : angle < Math.PI * 1.5
+                  ? 0
+                  : 0
+
+            // cp1x is .33 of the way from startX to endX
+            // cp1y is .33 of the way from startY to endY
+            // cp2x is .66 of the way from startX to endX
+            // cp2y is .66 of the way from startY to endY
+            const cp1x = startX + (endX - startX) * 0.33
+            const cp1y = startY + (endY - startY) * 0.33
+            const cp2x = startX + (endX - startX) * 0.66
+            const cp2y = startY + (endY - startY) * 0.66
+
+            data.push({
+              startX,
+              startY,
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            })
+          }
+
+          return data
+        }
+
+        const memoized = memoize(getData)
+        const data = memoized()
+
+        // blend mode
+        // ctx.globalCompositeOperation = 'lighten'
+
+        // const draw a circle in the center
+        ctx.beginPath()
+        ctx.arc(w / 2, h / 2, Math.min(w, h) / 2 * 0.5, 0, Math.PI * 2)
+        // ctx.strokeStyle = 'steelblue'
+        // fill
+        // charcoal black
+        // ctx.fillStyle = 'rgba(0,0,0)'
+        // alpha
+        // make circle opaque
+        // ctx.globalAlpha = 0.25
+        // give circle a glow
+        // ctx.shadowColor = 'lavender'
+        // ctx.shadowBlur = Math.max(w, h) * 0.05
+
+        // ctx.fill()
+        ctx.globalAlpha = 0.75
+        ctx.lineWidth = 6
+        ctx.stroke()
+
+        const oc = oscillate({
+          min: Math.min(w, h) / 2 * 0.42,
+          max: Math.min(w, h) / 2 * 0.47,
+          frequency: 0.01,
+        })
+
+        // draw another inner circle that is half the other one
+        ctx.beginPath()
+        ctx.arc(w / 2, h / 2, oc, 0, Math.PI * 2)
+        ctx.lineWidth = 6
+        // fill lavender
+        ctx.fillStyle = 'maroon'
+        ctx.fill()
+
+
+
+        data.forEach(({ startX, startY, cp1x, cp1y, cp2x, cp2y, endX, endY }, idx) => {
+          // ctx.shadowBlur = 0
+          const ox = oscillate({
+            min: -1 * w * 0.025,
+            max: w * 0.025,
+            frequency: 0.005,
+            offset: idx * 0.1
+          })
+
+          const oy = oscillate({
+            min: -1 * h * 0.025,
+            max: h * 0.025,
+            frequency: 0.005,
+            offset: idx * 0.05
+          })
+
+          ctx.beginPath()
+          ctx.moveTo(startX, startY)
+          ctx.bezierCurveTo(
+            cp1x + ox,
+            cp1y + oy,
+            cp2x - ox,
+            cp2y - oy,
+            endX,
+            endY
+          )
+          // alpha is based on the index. if closer to 45 degrees, more opaque
+          // use modulo
+          ctx.globalAlpha = 1 - (idx % 45) / 45 * 0.5
+          // line width
+          ctx.lineWidth = 3
+          // round point end
+          ctx.lineCap = 'round'
+          ctx.strokeStyle = 'lavender'
+          ctx.stroke()
+        })
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
