@@ -45,7 +45,7 @@ const document = new DOMParser().parseFromString(
       </style>
     </head>
     <body>
-      <h1>One Document A Day (ODAD)</h1>
+      <h1>one document a day (odad)</h1>
     </body>
   </html>`,
   "text/html"
