@@ -18,7 +18,7 @@ const addToTree = async (path: string) => {
       const document = new DOMParser().parseFromString(file, "text/html")
       entries.push({
         date,
-        title: document.title,
+        title: document?.title || 'untitled',
         path: entry.path,
       })
     }
@@ -51,12 +51,17 @@ const document = new DOMParser().parseFromString(
   "text/html"
 )
 
+if (!document) {
+  throw new Error('Could not create document')
+}
+
 
 const ul = document.createElement('ul')
 
 for (const { date, title, path } of entries) {
-  const li = document.createElement('li')
-  const a = document.createElement('a')
+  const li = document?.createElement('li')
+  const a = document?.createElement('a')
+
   a.textContent = `${date} - ${title}`
   // set attribute - href does not work
   a.setAttribute('href', path)
@@ -66,6 +71,12 @@ for (const { date, title, path } of entries) {
 
 document.body.appendChild(ul)
 
+const outerHTML = document.documentElement?.outerHTML
+
+if (!outerHTML) {
+  throw new Error('Could not create outerHTML')
+}
+
 // write the file
-await Deno.writeTextFile('index.html', document.documentElement.outerHTML)
+await Deno.writeTextFile('index.html', outerHTML)
 console.log('🎉 Created index.html')

@@ -15,7 +15,7 @@ const document = `
 
   <body>
     <script type="module">
-      import { Context2D } from 'https://unpkg.com/context2d';
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
 
       const draw =  ({ ctx, w, h, oscillate, memoize }) => {
         // add code here
@@ -32,6 +32,10 @@ const document = `
 const flags = parseArgs(Deno.args, {
   string: ["date"],
 });
+
+if (!flags.date) {
+  throw new Error("Missing date flag")
+}
 
 // ensure that the date format YYYY/MM/DD - else throw
 const [
