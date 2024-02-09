@@ -27,17 +27,10 @@
       const arcs = 10
 
       const draw = ({ ctx, w, h, oscillate }) => {
-        // blend mode
-        // ctx.globalCompositeOperation = 'multiply'
-
         const p = w * 0.05
         const minDim = Math.min(w, h)
         const shapeW = Math.min(minDim, 950) - p * 2
 
-        // draw arcs
-        // they are made with bezier curves
-        // they start at h/2 0 and end at h/2 w
-        // the get progressively smaller, or closer to the center
         for (let i = 0; i < arcs; i++) {
           const yD = ((i + 1) * (h / 2) / (arcs + 1))
 
@@ -60,10 +53,10 @@
           const endX = w / 2 + shapeW / 2
           const endY = h / 2
 
+          // The the underlaying bezier curves
           ctx.beginPath()
           ctx.moveTo(startX, startY)
           ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
-          // ctx.strokeStyle = 'lavender'
           ctx.strokeStyle = `rgba(255, 255, 255, ${i * 0.05})`
           ctx.lineWidth = 1 - (i * 0.25)
           ctx.stroke()
@@ -71,6 +64,7 @@
           const pointsNum = 25 - i * 2
           const topPoint = h / 2 - yD + h * 0.05
 
+          // along each curve, draw a number of points
           for (let j = 0; j <= pointsNum; j++) {
             const t = j / pointsNum
             const x = (1 - t) ** 3 * startX + 3 * (1 - t) ** 2 * t * cp1x + 3 * (1 - t) * t ** 2 * cp2x + t ** 3 * endX
@@ -80,20 +74,16 @@
             ctx.fillStyle = 'lavender'
             ctx.fill()
 
-            // const topPoint = h / 2 - yD
 
-            // draw a line from the point to the w/2 0
+            // from each point, draw a line to the upper area of the canvas
             ctx.beginPath()
             ctx.moveTo(x, y)
             ctx.lineTo(w / 2, topPoint)
             // the closer to the center the more transparent
             const alpha = (1 - Math.abs(w / 2 - x) / (w / 2)) * 0.3
-            // ctx.globalAlpha = alpha;
             ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`
-            // stroke width
             ctx.lineWidth = alpha * 10 + 1
             ctx.stroke()
-
           }
         }
       }
