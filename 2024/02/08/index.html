@@ -4,9 +4,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add title here</title>
+    <title>orderly, groovy and schoon</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
     </style>
   </head>
 
@@ -15,10 +20,58 @@
       // inspired by: Jan J. Schoonhoven
       // title: T76 M2
       // link: https://www.moma.org/collection/works/34182
-      import { Context2D } from 'https://unpkg.com/context2d';
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
 
-      const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const width = Math.min(w * 0.85, 500)
+        const p = 6
+        const cols = 10
+        const rows = 50;
+        const colW = (width - p * (cols + 1)) / cols
+        const rowH = (h - p * (rows + 1)) / rows
+        const totalGridW = cols * (colW + p)
+        // get padding to center grid
+        const padding = (w - totalGridW) / 2
+
+        // draw the columns
+        for (let col = 0; col < cols; col++) {
+          // draw a line straight down the center of the col first
+          const x = p + col * (colW + p) + padding + colW / 2
+          const y = 0
+          const x2 = x
+          const y2 = h
+          ctx.strokeStyle = 'white'
+          ctx.lineWidth = 3
+          ctx.beginPath()
+          ctx.moveTo(x, y)
+          ctx.lineTo(x2, y2)
+          ctx.stroke()
+
+          // draw the rows in the column
+          for (let row = 0; row < rows; row++) {
+            const oy = oscillate({
+              min: -rowH / 10,
+              max: rowH / 10,
+              frequency: 0.005,
+              offset: row * 0.125
+            })
+
+            const ox = oscillate({
+              min: -colW / 10,
+              max: colW / 10,
+              frequency: 0.005,
+              offset: row * 0.125
+            })
+
+            const x = p + col * (colW + p) + padding
+            const y = p + row * (rowH + p)
+            // rgb lavenderblush
+            const rgb = [255, 240, 245]
+            const alpha = 0.875
+            ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`
+            ctx.fillRect(x + ox, y + oy, colW, rowH)
+          }
+        }
       }
 
       const context2d = new Context2D()
