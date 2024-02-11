@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>internet network</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        w = Math.min(w, 700)
+        const rows = 50
+        const px = w * 0.05
+        const py = h * (100 / rows) * 0.01
+        // 10cols and each px is 5% means that the final width of the net is 50%
+        // this is a nice balance on devices smaller than the max width above.
+        const cols = 10
+        const r = Math.min(w, h) * 0.005
+        const data = []
+
+        for (let i = 0; i < cols; i++) {
+          data[i] = []
+          for (let j = 0; j < rows; j++) {
+            // distance of j from the center of the canvas
+            // do this to concentrate movement in the center
+            const rowDist = Math.abs(j - rows / 2)
+            const rowVal = rowDist / (rows / 2)
+            const rowVal2 = 1 - rowVal
+
+            // add more vertical movement to the points in the center
+            const colDist = Math.abs(i - cols / 2)
+            const colVal = colDist / (cols / 2)
+            const colVal2 = 1 - colVal
+
+
+            // add more horizontal movement to the points in the center
+            const ox = oscillate({
+              min: -px * colVal2 * 0.75,
+              max: px * colVal2 * 0.75,
+              frequency: 0.0025,
+              offset: i * 0.125,
+            })
+
+
+            const oy = oscillate({
+              min: -py * rowVal2 * 0.5,
+              max: py * rowVal2 * 0.5,
+              frequency: 0.005,
+              offset: j * 0.5,
+            })
+
+            // center the points in the canvas
+            // the columns are spaced only by the px and py
+            // the rows are spaced only by the px and py
+            const x = i * px + ox + px
+            const y = j * py + py + oy
+
+            data[i][j] = {
+              x,
+              y
+            }
+          }
+        }
+
+        // draw a circle that is filled white at each point
+        // and draw a line from the previous point to the current point
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows - 1; j++) {
+            const { x, y } = data[i][j]
+            ctx.beginPath()
+            ctx.arc(x, y, r, 0, Math.PI * 2)
+            ctx.fillStyle = `rgba(255, 255, 255, 0.5)`
+            ctx.fill()
+            // draw a line from each point in the column to the point in the adjacent column
+            if (i > 0) {
+              // the adjacent point
+              const { x: x0, y: y0 } = data[i - 1][j]
+              ctx.beginPath()
+              ctx.moveTo(x0, y0)
+              ctx.lineTo(x, y)
+              ctx.strokeStyle = 'lavenderblush'
+              ctx.lineCap = 'round'
+              ctx.stroke()
+              // from the adjacent point to the next point in the adjacent column
+              if (j > 0) {
+                const { x: x1, y: y1 } = data[i - 1][j - 1]
+                ctx.beginPath()
+                ctx.moveTo(x1, y1)
+                ctx.lineTo(x, y)
+                ctx.strokeStyle = 'lavenderblush'
+                ctx.lineCap = 'round'
+                ctx.stroke()
+              }
+            }
+          }
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
