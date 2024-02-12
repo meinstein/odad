@@ -1,5 +1,6 @@
 # one document a day (odad)
 
+[https://meinstein.github.io/odad](https://meinstein.github.io/odad)
 
 ```sh
 # start simple dev server with live reload capability

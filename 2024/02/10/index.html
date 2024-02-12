@@ -66,20 +66,20 @@
             const ox = oscillate({
               min: 0,
               max: triW * 0.5,
-              frequency: 0.0025,
+              frequency: 0.002,
               offset: row * 0.1
             })
 
             const oy = oscillate({
               min: -triW * 0.5,
               max: triW * 0.5,
-              frequency: 0.0025,
+              frequency: 0.002,
               offset: row * 0.1
             })
 
             if (isEven) {
               const triangle = new Triangle({
-                x: i + ox - triW / 2,
+                x: i + ox - triW,
                 y: row * triW + oy - triW / 2,
                 w: triW,
                 h: triW,
@@ -89,7 +89,7 @@
               triangle.draw(ctx)
             } else {
               const triangle = new Triangle({
-                x: i - ox - triW / 2,
+                x: i - ox - triW,
                 y: row * triW + oy - triW / 2,
                 w: triW,
                 h: triW,
