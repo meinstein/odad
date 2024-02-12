@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i know the pieces fit</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      class Triangle {
+        constructor({ x, y, w, h, color, direction }) {
+          this.x = x
+          this.y = y
+          this.w = w
+          this.h = h
+          this.color = color
+          this.direction = direction
+        }
+
+        draw(ctx) {
+          ctx.beginPath()
+
+          if (this.direction === 'up') {
+            ctx.moveTo(this.x, this.y)
+            ctx.lineTo(this.x + this.w, this.y)
+            ctx.lineTo(this.x + this.w / 2, this.y + this.h)
+          }
+
+          if (this.direction === 'down') {
+            ctx.moveTo(this.x, this.y + this.h)
+            ctx.lineTo(this.x + this.w, this.y + this.h)
+            ctx.lineTo(this.x + this.w / 2, this.y)
+          }
+
+          ctx.closePath()
+          ctx.fillStyle = this.color
+          ctx.fill()
+        }
+      }
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        ctx.globalAlpha = 0.75
+        const triW = w > 800 ? 75 : 45
+
+        let isEven = true
+
+        // add triW to both w and h to make sure the last row and column are drawn
+        for (let i = 0; i <= w + triW; i += (triW * 0.5)) {
+
+          // this is silly and lazy, but it works
+          isEven = !isEven
+
+          for (let row = 0; row <= (h / triW) + triW; row++) {
+            const ox = oscillate({
+              min: 0,
+              max: triW * 0.5,
+              frequency: 0.0025,
+              offset: row * 0.1
+            })
+
+            const oy = oscillate({
+              min: -triW * 0.5,
+              max: triW * 0.5,
+              frequency: 0.0025,
+              offset: row * 0.1
+            })
+
+            if (isEven) {
+              const triangle = new Triangle({
+                x: i + ox - triW / 2,
+                y: row * triW + oy - triW / 2,
+                w: triW,
+                h: triW,
+                color: 'lightseagreen',
+                direction: 'up'
+              })
+              triangle.draw(ctx)
+            } else {
+              const triangle = new Triangle({
+                x: i - ox - triW / 2,
+                y: row * triW + oy - triW / 2,
+                w: triW,
+                h: triW,
+                color: 'steelblue',
+                direction: 'down'
+              })
+              triangle.draw(ctx)
+            }
+          }
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
