@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eye want</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      class Circle {
+        constructor({ ctx, r, color, w, h, oscillate, idx }) {
+          this.ctx = ctx;
+          this.r = r;
+          this.color = color
+          this.w = w;
+          this.h = h;
+          this.oscillate = oscillate;
+          this.idx = idx;
+        }
+
+        draw() {
+          const { ctx, r, w, h, color, oscillate } = this;
+
+          const draw = (x, y, r, n) => {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+          }
+
+          const x = w / 2;
+          const y = h / 2;
+
+          const ox = oscillate({
+            min: -1,
+            max: 1,
+            frequency: 0.005,
+            offset: this.idx / 20,
+          })
+
+          const oy = oscillate({
+            min: -1,
+            max: 1,
+            // half the frequency and double the offset makes the circular orbit
+            frequency: 0.0025,
+            offset: this.idx / 40,
+          })
+
+          draw(x + ox * r * 0.5, y + oy * r * 0.5, r);
+        }
+      }
+
+      const circles = 50;
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        let minDim = Math.min(w, h) * 0.6;
+        minDim = Math.min(minDim, 500)
+
+        // slight transparency makes the movement smoother
+        ctx.globalAlpha = 0.85;
+
+        // keep scaling down on each iteration
+        for (let i = 0; i < circles; i++) {
+          const r = minDim / 2 - i * minDim / 2 / circles;
+          const color = i % 2 === 0 ? 'white' : 'black';
+          const circle = new Circle({
+            ctx,
+            r,
+            color,
+            w,
+            h,
+            oscillate,
+            idx: i,
+          });
+
+          circle.draw();
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
