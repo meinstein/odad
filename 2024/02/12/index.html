@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>be that as it may</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: white;
+      }
+
+      .half {
+        width: 100vw;
+        height: 50vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+      }
+
+      img {
+        max-width: 500px;
+        object-fit: scale-down;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="canvas" class="half"></div>
+    <div class="half">
+      <img src="./bishin_jumonji_untitled.jpeg">
+    </div>
+    <script type="module">
+      // found here: https://www.moma.org/collection/works/45864
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const circles = 75
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // the canvas is the full size of the window
+        // but the image is only half the size
+        h = h * 0.5
+
+        for (let i = 0; i < circles; i++) {
+          const ox = oscillate({
+            frequency: 0.005,
+            // use the i here so that the wiggle is limited at the bottom
+            // where the shape meets the photo
+            min: -500 * 0.04 * i * 0.025,
+            max: 500 * 0.04 * i * 0.025,
+            offset: i * 0.1
+          })
+
+          // 0.51 bc slightly off center
+          const x = w * 0.51 + ox
+          const y = h - (i / circles) * h * 0.66
+          const radius = (1 - (i / circles)) * h * 0.075
+          const alpha = 1 - i / circles
+
+          ctx.beginPath()
+          ctx.arc(x, y, radius, 0, Math.PI * 2)
+          // lavender rgb 230, 230, 250
+
+          ctx.strokeStyle = `rgba(230, 230, 250, ${1})`
+          ctx.lineWidth = 2
+          ctx.stroke()
+          ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`
+          ctx.fill()
+        }
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: document.getElementById('canvas'),
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
