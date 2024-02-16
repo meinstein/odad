@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tropical crop</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      class Triangle {
+        constructor({ x, y, w, h, color }) {
+          this.x = x
+          this.y = y
+          this.w = w
+          this.h = h
+          this.color = color
+        }
+
+        draw({ ctx }) {
+          ctx.fillStyle = this.color
+          ctx.beginPath()
+          ctx.moveTo(this.x, this.y)
+          ctx.lineTo(this.x + this.w, this.y)
+          ctx.lineTo(this.x + this.w / 2, this.y + this.h)
+          ctx.fill()
+          ctx.closePath()
+        }
+      }
+
+      const triangles = 90
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        for (let i = triangles; i > 0; i--) {
+          // every triangle is N pixels smaller than the previous one
+          // all are perfecely centered in middle
+          const step = Math.min(w, h) * 0.6 / triangles
+          // start with the biggest triangle
+          const size = step * i
+          const ox = oscillate({
+            min: size * 0.04 * -1,
+            max: size * 0.04,
+            frequency: 0.0025,
+            offset: i * 0.125
+          })
+
+          const x = w / 2 - size / 2 + ox
+          const oy = oscillate({
+            min: size * 0.02 * -1,
+            max: size * 0.02,
+            frequency: 0.005,
+            offset: i * 0.25
+          })
+
+          const y = h / 2 - size / 2 + oy
+          const color = `hsl(${i}, 100%, 50%)`
+
+          // the smaller, the more opaque
+          ctx.globalAlpha = (1 - i / triangles) * 0.125
+
+          const triangle = new Triangle({
+            x,
+            y,
+            w: size,
+            h: size,
+            color
+          })
+
+          triangle.draw({ ctx })
+
+          // rotate the canvas 0.001 radians in place
+          ctx.translate(w / 2, h / 2)
+          ctx.rotate(0.0002)
+          ctx.translate(-w / 2, -h / 2)
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
