@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>titanium silk</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const lines = 66;
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const ySpacing = h / (lines * 2);
+        const wSpacing = w / 2;
+        // using xor really accentuates the black, which creates the metallic look when animating the lines
+        ctx.globalCompositeOperation = 'xor';
+        const strokeWidth = ySpacing;
+
+        const getData = memoize(() => {
+          const data = [];
+          for (let i = 0; i <= lines; i++) {
+            const line = [];
+            // the second two lines that go back to the beginning
+            // are slightly offset on each iteration
+            const offset = wSpacing * ((i + 1) / lines) * 1.5;
+            const line1 = [[0, ySpacing * i * 2], [w, ySpacing * i * 2]];
+            const line2 = [[w, ySpacing * i * 2], [offset, ySpacing * (i * 2 + 1)]];
+            const line3 = [[offset, ySpacing * (i * 2 + 1)], [0, ySpacing * (i * 1.95)]];
+            line.push(...line1, ...line2, ...line3);
+            data.push(line);
+          }
+          return data;
+        });
+
+        const data = getData();
+
+        for (let i = 0; i < lines; i++) {
+          const line = data[i];
+
+          // use length - 1 bc we're drawing lines between points
+          // not closing the path
+          for (let j = 0; j < line.length - 1; j++) {
+            ctx.beginPath();
+
+            const alpha = 0.75 - Math.abs(i - lines / 2) / lines;
+
+            let oy = oscillate({
+              min: ySpacing * -0.5,
+              max: ySpacing * 0.5,
+              frequency: 0.005,
+              offset: i * 0.1 + j * 0.1,
+            })
+
+            const [x, y] = line[j];
+            const [x2, y2] = line[j + 1];
+
+            const isStartOrEnd = x === 0 || x2 === w;
+            if (isStartOrEnd) {
+              oy = 0;
+            }
+
+            ctx.moveTo(x, y + oy);
+            ctx.lineTo(x2, y2 + oy);
+            // rounded
+            ctx.lineCap = 'round';
+            // white
+            const colors = [
+              [229, 170, 151],
+              [152, 78, 102],
+              [226, 78, 52],
+            ]
+
+            const color = colors[j % colors.length];
+            ctx.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+            ctx.lineWidth = strokeWidth;
+            ctx.stroke();
+          }
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
