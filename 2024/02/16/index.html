@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>else worth</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      // inspired by: https://www.moma.org/collection/works/80528
+      // by: Ellsworth Kelly
+      // title: Colors for a Large Wall
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      // import and add image to the canvas
+      const img = new Image()
+      img.src = './ellsworth_kelly_colors_for_a_large_wall.jpeg'
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // blend mdoe
+        ctx.globalCompositeOperation = 'destination-over'
+        // draw image in the center of the canvas
+        // it is a square, so size to fit
+        const size = Math.min(Math.min(w, h), 800)
+        // add a border of 5% of the size
+        const border = size * 0.1
+        const dx = w / 2 - size / 2
+        const dy = h / 2 - size / 2
+        const dWidth = size
+        const dHeight = size
+        ctx.drawImage(img, dx + border, dy + border, dWidth - border * 2, dHeight - border * 2)
+
+        const boxSize = size * 0.1
+
+        const firstColFourthRow = () => {
+          const ox = oscillate({
+            min: -boxSize * 0.99,
+            max: boxSize * 0.99,
+            frequency: 0.0025,
+            offset: 1 / 4,
+          })
+          ctx.fillStyle = `rgba(145, 59, 54, 1)`
+          ctx.fillRect(dx + border + ox, (dy + border) + (boxSize * 3), boxSize, boxSize)
+        }
+
+        const fourthColEighthRow = () => {
+          const oy = oscillate({
+            min: -boxSize * 0.99,
+            max: boxSize * 0.99,
+            frequency: 0.0025,
+            offset: 1 / 8,
+          })
+          ctx.fillStyle = `rgba(228, 213, 80, 1)`
+          ctx.fillRect((dx + border) + (boxSize * 3), dy + border + (boxSize * 7) + oy, boxSize, boxSize)
+        }
+
+        const eightColFifthRow = () => {
+          const ox = oscillate({
+            min: -boxSize * 0.99,
+            max: boxSize * 0.99,
+            frequency: 0.0025,
+            offset: 1 / 5,
+          })
+          ctx.fillStyle = `rgba(51, 82, 136, 1)`
+          ctx.fillRect(dx + border + (boxSize * 7) + ox, dy + border + (boxSize * 4), boxSize, boxSize)
+        }
+
+        const sixthColFirstRow = () => {
+          const oy = oscillate({
+            min: -boxSize * 0.99,
+            max: boxSize * 0.99,
+            frequency: 0.0025,
+            offset: 1 / 1,
+          })
+          ctx.fillStyle = `rgba(187, 115, 55, 1)`
+          ctx.fillRect((dx + border) + (boxSize * 5), dy + border + oy, boxSize, boxSize)
+        }
+
+        firstColFourthRow()
+        fourthColEighthRow()
+        eightColFifthRow()
+        sixthColFirstRow()
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
