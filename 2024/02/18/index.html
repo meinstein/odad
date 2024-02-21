@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>seismically resilient bitmap</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const trackH = h * 0.01
+        const tracks = Math.floor(h / trackH)
+
+        // for each track, draw a rect from left to right
+        // fill up the entire screen
+        for (let i = 0; i < tracks; i++) {
+          // y is the position of the track, offset by
+          // 0.5 the height of the track so that there is a gap bt each
+          const y = i * trackH + (i * trackH * 0.5)
+          const width = Math.min(w, 500) * 0.8
+          const padding = (w - width) / 2
+
+          const x = oscillate({
+            min: width * -0.05,
+            max: width * 0.05,
+            frequency: 0.0075,
+            offset: i * 0.05
+          })
+
+          // rect outline
+          // steelblue rgb = 70, 130, 180
+          ctx.strokeStyle = `rgba(70, 130, 180, 1)`
+          // stroke width
+          ctx.lineWidth = 2
+
+          // fill every other track with white
+          if (i % 2 === 0) {
+            // lavender rgb = 230, 230, 250
+            ctx.fillStyle = `rgba(230, 230, 250, 0.75)`
+            ctx.fillRect(padding + x, y, width, trackH)
+          } else {
+            // place a circle in the middle of the track
+            // mult by -1 to flip the direction of the oscillation
+            const circleX = padding + width * 0.5 + x * -1.25
+            const circleY = y + trackH * 0.5
+            const circleRadius = trackH * 0.25
+            ctx.beginPath()
+            ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2)
+            // indianred rgb = 205, 92, 92
+            ctx.fillStyle = `rgba(205, 92, 92, 1)`
+            ctx.fill()
+          }
+
+          ctx.strokeRect(padding + x, y, width, trackH)
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
