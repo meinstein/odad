@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>buck off</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // brings out the lavender color
+        ctx.globalCompositeOperation = 'multiply';
+
+        const num = Math.floor(h / 6);
+        for (let i = 0; i < num; i++) {
+          const opacity = (1 - (i / num)) * 0.125;
+          const decrease = h / num * i;
+
+          const oy = oscillate({
+            min: decrease * 0.3 * -1,
+            max: decrease * 0.3,
+            frequency: 0.005,
+            offset: i * 0.0075
+          });
+
+          const ox = oscillate({
+            min: w * -0.1,
+            max: w * 0.1,
+            frequency: 0.0075,
+            offset: i * 0.05
+          });
+
+          if (i % 2 === 0) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+          } else {
+            // lavender
+            ctx.fillStyle = `rgba(230, 230, 250, ${opacity})`;
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(0, h);
+          ctx.bezierCurveTo(
+            w / 2 + ox,
+            h - decrease - oy,
+            w / 2 + ox,
+            h - decrease - oy,
+            w,
+            h
+          );
+          ctx.fill();
+        }
+
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
