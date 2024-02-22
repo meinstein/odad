@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>squared off</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const num = 50
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const stepRaw = Math.min(w, h) / num
+        // round cap so that the joins are smooth
+        ctx.lineCap = 'round'
+        // remove aliasing by rounding the line width
+        ctx.lineWidth = Math.round(stepRaw * 0.55)
+
+
+        for (let i = 0; i < num; i++) {
+          ctx.strokeStyle = i % 2 === 0 ? 'lavender' : 'steelblue'
+          const ox = i === 0 ? 0 : oscillate({
+            min: -stepRaw * 0.075,
+            max: stepRaw * 0.075,
+            frequency: 0.0075,
+            offset: i / num * Math.PI * 2,
+          })
+
+          const oy = i === 0 ? 0 : oscillate({
+            min: -stepRaw * 0.075,
+            max: stepRaw * 0.075,
+            frequency: 0.01,
+            offset: i / num * Math.PI * 2 + Math.PI / 2,
+          })
+
+          const step = (stepRaw * i) + ox
+
+          // this is important - call this at the top of each iteration for perf reasons.
+          ctx.beginPath()
+
+          const topLeft = () => {
+            const startX = w / 2 - step
+            const startY = h / 2 - step - oy
+            const endX1 = w / 2 - step
+            const endY1 = 0
+            const endX2 = 0
+            const endY2 = h / 2 - step
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX1, endY1)
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX2, endY2)
+          }
+
+          const topRight = () => {
+            const startX = w / 2 + step
+            const startY = h / 2 - step - oy
+            const endX1 = w / 2 + step
+            const endY1 = 0
+            const endX2 = w
+            const endY2 = h / 2 - step
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX1, endY1)
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX2, endY2)
+          }
+
+          const bottomRight = () => {
+            const startX = w / 2 + step
+            const startY = h / 2 + step + oy
+            const endX1 = w / 2 + step
+            const endY1 = h
+            const endX2 = w
+            const endY2 = h / 2 + step
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX1, endY1)
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX2, endY2)
+          }
+
+          const bottomLeft = () => {
+            const startX = w / 2 - step
+            const startY = h / 2 + step + oy
+            const endX1 = w / 2 - step
+            const endY1 = h
+            const endX2 = 0
+            const endY2 = h / 2 + step
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX1, endY1)
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX2, endY2)
+
+          }
+
+          topLeft()
+          topRight()
+          bottomRight()
+          bottomLeft()
+          ctx.stroke()
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
