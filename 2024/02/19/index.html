@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nourish the miracle</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      // A reaction to "Nourish The Collapse" by Yutaka Matsuzawa
+      // Found here: https://www.moma.org/collection/works/109633
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const cols = 10
+      const rows = 10
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const minDim = w
+        const squareSize = (minDim * 0.5) / cols
+
+        for (let c = 0; c < cols; c++) {
+          const padding = squareSize / 2
+
+          for (let r = 0; r < rows; r++) {
+            const ox = oscillate({
+              min: -squareSize * 0.25,
+              max: squareSize * 0.25,
+              frequency: 0.005,
+              // most movement in the center
+              offset: r * 0.05 + c * 0.05
+            })
+
+            const x = squareSize + c * squareSize + r * squareSize - padding + ox
+            const y = h / 2 - rows / 2 * squareSize + r * squareSize
+
+
+            const distNorm = 1
+
+            // white stroke
+            ctx.strokeStyle = `rgba(230, 230, 250, ${distNorm})`
+            ctx.lineWidth = 2
+
+            ctx.strokeRect(
+              x,
+              y,
+              squareSize,
+              squareSize
+            )
+
+            // draw a small circle at the center of each square
+            ctx.beginPath()
+            ctx.arc(x + squareSize / 2 + ox, y + squareSize / 2 - ox, squareSize * 0.075, 0, Math.PI * 2)
+
+            // fill color
+            // lavender rgb = 230, 230, 250
+            // steelblue rgb = 70, 130, 180
+            ctx.fillStyle = `rgba(70, 130, 180, ${0.75})`
+            ctx.fill()
+
+            // draw a diagonal line from top left to bottom right
+            ctx.beginPath()
+            ctx.moveTo(x, y)
+            ctx.lineTo(x + squareSize, y + squareSize)
+            // stroke color
+            // lavender rgb = 230, 230, 250
+            ctx.strokeStyle = `rgba(230, 230, 250, ${distNorm})`
+            ctx.stroke()
+
+            // if first col item, draw line from current bottom left to next square bottom left
+            if (c === 0 && r < rows - 1) {
+              ctx.beginPath()
+              ctx.moveTo(x, y + squareSize)
+              ctx.lineTo(x + squareSize, y + squareSize + squareSize)
+              ctx.strokeStyle = `rgba(230, 230, 250, ${distNorm})`
+              ctx.stroke()
+            }
+
+            // if last col item, draw line from current top right to next square top right
+            if (c === cols - 1 && r > 0) {
+              ctx.beginPath()
+              ctx.moveTo(x + squareSize, y)
+              ctx.lineTo(x, y - squareSize)
+              ctx.strokeStyle = `rgba(230, 230, 250, ${distNorm})`
+              ctx.stroke()
+            }
+          }
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
