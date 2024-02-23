@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stringray locomotion</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const stackSize = 100
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        ctx.lineCap = 'round'
+        const paddingX = w * 0.05
+        const paddingY = paddingX
+        const maxW = Math.min(w, 700) - (paddingX * 2)
+        const halfW = maxW / 2
+        const leftPadding = w / 2 - halfW
+        const maxH = h - (paddingY * 2)
+
+        for (let i = 0; i < stackSize; i++) {
+          const step = halfW - halfW / stackSize * i
+          const theta = step * 0.75
+          const ox = oscillate({
+            min: -theta * 0.1,
+            max: theta * 0.1,
+            frequency: 0.005,
+            offset: i * 0.05
+          })
+          const oy = oscillate({
+            min: -theta * 0.1,
+            max: theta * 0.1,
+            frequency: 0.0025,
+            offset: i * 0.1
+          })
+          const startX = halfW + leftPadding
+          const startY = maxH / stackSize * i + paddingY
+          const leftEndX = halfW - step + leftPadding + ox
+          const leftEndY = maxH / stackSize * i + theta + paddingY - oy
+          const rightEndX = halfW + step + leftPadding - ox
+          const rightEndY = maxH / stackSize * i + theta + paddingY + oy
+          const alpha = (1 - i / stackSize) * 0.75
+          // lavender rgb = 230, 230, 250
+          const strokeStyle = i % 2 === 0 ? `rgba(230, 230, 250, ${alpha})` : `rgba(255, 255, 255, ${alpha})`
+          ctx.strokeStyle = strokeStyle
+          ctx.lineWidth = maxH / stackSize * 0.5
+          ctx.beginPath()
+          ctx.moveTo(startX, startY)
+          ctx.lineTo(leftEndX, leftEndY)
+          ctx.moveTo(startX, startY)
+          ctx.lineTo(rightEndX, rightEndY)
+          ctx.stroke()
+        }
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
