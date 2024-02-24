@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>otto's world</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+        font-family: Arial, Helvetica, sans-serif;
+        color: lavenderblush;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      main,
+      canvas {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div>the dog</div>
+      <div>the trash can</div>
+      <div>the fruit bowl</div>
+      <div>the fiddle leaf</div>
+      <div>the light fixture</div>
+      <div>the hole in the wall</div>
+      <div>the polariod picture</div>
+      <div>the window curtain</div>
+      <div>the birds flying by</div>
+      <div>the refrigerator door</div>
+      <div>the airplane in the sky</div>
+      <div>the electrical outlet</div>
+      <div>the earth is a magnet</div>
+      <div>and only Otto knows why</div>
+    </main>
+    <canvas id="canvas"></canvas>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        ctx.globalAlpha = 0.25
+        const main = document.querySelector('main')
+        // get top and bottom of main
+        const { top, bottom, height, right, left } = main.getBoundingClientRect()
+
+
+        const ox = oscillate({
+          min: w * -0.075,
+          max: w * 0.075,
+          frequency: 0.005,
+        })
+
+        const oy = oscillate({
+          min: h * -0.075,
+          max: h * 0.075,
+          frequency: 0.0025,
+        })
+
+        // draw a arc at w/2, h/4
+        ctx.beginPath()
+        ctx.arc(w / 2 + ox, top - oy, height / 3, 0, Math.PI * 2)
+        ctx.fillStyle = 'steelblue'
+        ctx.fill()
+
+        // draw a arc at w/2, h/3
+        ctx.beginPath()
+        ctx.arc(w / 2 - ox, bottom + oy, height / 3, 0, Math.PI * 2)
+        ctx.fillStyle = 'indianred'
+        ctx.fill()
+      }
+
+      const context2d = new Context2D({
+        canvas: document.getElementById('canvas'),
+        draw,
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
