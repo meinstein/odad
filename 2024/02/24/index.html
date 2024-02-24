@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>two dozen plus one</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #03ec01;
+      }
+
+      canvas {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="canvas"></canvas>
+    <script type="module">
+      // inspired by: Kazumasa Nagai
+      // link: https://moma.org/collection/works/8814
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      class ConcentricCircles {
+        constructor(arg) {
+          this.ctx = arg.ctx
+          this.x = arg.x
+          this.y = arg.y
+          this.radius = arg.radius
+          this.colors = arg.colors
+          this.offset = arg.offset
+        }
+
+        draw = () => {
+          this.ctx.globalAlpha = 0.9
+          for (let color of this.colors) {
+            this.ctx.beginPath()
+            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+            this.ctx.fillStyle = color
+            this.ctx.fill()
+            const prevRadius = this.radius
+            // set new radius to 3/4 of the previous radius
+            const nextRadius = prevRadius * 0.75
+            const diff = prevRadius - nextRadius
+            this.radius = nextRadius
+            const prevX = this.x
+            const prevY = this.y
+
+            // use current time stamp to make the new circle
+            // rotate around the permimeter of the previous circle
+            // the speed slows down as the circle gets smaller
+            const angle = performance.now() * 0.5 / prevRadius * 0.4
+            // calculate a new x and y so that the
+            // new circle aligns exactly with the edge of the previous circle
+            // that is what the diff is for
+            const newX = prevX + Math.cos(angle + this.offset) * diff
+            const newY = prevY + Math.sin(angle + this.offset) * diff
+
+            this.x = newX
+            this.y = newY
+          }
+        }
+
+      }
+
+      const colors = ['#45e275', '#e8e4d8', '#febf76', '#ffaf0c']
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const rows = [5, 5, 5, 5, 5]
+        const minDim = Math.min(Math.min(w, h), 500) * 0.8
+
+        for (let row = 0; row < rows.length; row++) {
+          const rowVal = rows[row]
+          const diameter = (minDim / rowVal)
+          for (let col = 0; col < rowVal; col++) {
+            // row is the num of cols - so use it to calculate the diameter
+            const x = col * diameter + diameter / 2 + (w - minDim) / 2
+            const y = row * diameter + diameter / 2 + (h - diameter * rows.length) / 2
+
+            // get offset based on row and col
+
+            const val = row * col
+            // dist to center
+            const distToCenter = Math.sqrt((x - w / 2) ** 2 + (y - h / 2) ** 2)
+            const offset = 1 - (distToCenter / minDim) * 6
+
+            const concentricCircles = new ConcentricCircles({
+              ctx,
+              colors,
+              x,
+              y,
+              offset,
+              radius: diameter / 2,
+            })
+
+            concentricCircles.draw()
+          }
+        }
+      }
+
+      const context2d = new Context2D()
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
