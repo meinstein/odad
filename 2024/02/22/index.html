@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the boring shoelace</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+
+      main {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1rem;
+        display: flex;
+        color: lavenderblush;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div>undeterred house mice</div>
+      <div>broken boiler</div>
+      <div>uncooperative sonos speaker</div>
+      <div>moldy shower gutter</div>
+      <div>leaky window frame</div>
+      <div>interminable construction noise</div>
+      <div>unresponsive roofer</div>
+      <div>filthy stairwell</div>
+      <div>putrid diaper pail</div>
+      <div>yet each broken shoelace</div>
+      <div>bores my soul</div>
+      <div>endlessly</div>
+    </main>
+    <canvas id="canvas"></canvas>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        ctx.beginPath()
+        ctx.strokeStyle = 'lavenderblush'
+        ctx.globalAlpha = 0.25
+        ctx.lineWidth = 2
+        ctx.shadowColor = 'lavenderblush'
+        ctx.shadowBlur = 10
+
+        const ox = oscillate({
+          min: -w * 0.25 * 0.25,
+          max: w * 0.25 * 0.25,
+          frequency: 0.006,
+        })
+
+        const oy = oscillate({
+          min: -h * 0.25 * 0.25,
+          max: h * 0.25 * 0.25,
+          // use slightly different frequency to make the two segments dance around each other
+          frequency: 0.005,
+        })
+
+        const firstSegment = () => {
+          const startX = 0
+          const startY = 0
+          // a quarter of the first half
+          const controlX1 = w * 0.5 * 0.25 + ox
+          const controlY1 = h * 0.5 * 0.25 - oy
+          const controlX2 = w * 0.5 * 0.75 - ox
+          const controlY2 = h * 0.5 * 0.75 + oy
+          const endX = w / 2 + ox * 0.5
+          const endY = h / 2 - oy * 0.5
+          ctx.moveTo(startX, startY)
+          ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, endX, endY)
+        }
+
+        const secondSegment = () => {
+          // transpose the ox and oy values from the endX and endY of the first segment
+          // this makes the connecting point of the two segments "dance" around each other
+          const startX = w / 2 - ox * 0.5
+          const startY = h / 2 + oy * 0.5
+          // a quarter of the second half plus the first half
+          const controlX1 = w * 0.5 + w * 0.5 * 0.25 + ox
+          const controlY1 = h * 0.5 + h * 0.5 * 0.25 - oy
+          const controlX2 = w * 0.5 + w * 0.5 * 0.75 - ox
+          const controlY2 = h * 0.5 + h * 0.5 * 0.75 + oy
+          const endX = w
+          const endY = h
+          ctx.moveTo(startX, startY)
+          ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, endX, endY)
+        }
+
+        firstSegment()
+        secondSegment()
+        ctx.stroke()
+      }
+
+      const context2d = new Context2D({
+        canvas: document.getElementById('canvas'),
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
