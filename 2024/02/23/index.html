@@ -30,7 +30,7 @@
   <body>
     <main>
       <div>the dog</div>
-      <div>the trash can</div>
+      <div>the trash</div>
       <div>the fruit bowl</div>
       <div>the fiddle leaf</div>
       <div>the light fixture</div>
@@ -51,9 +51,7 @@
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
         ctx.globalAlpha = 0.25
         const main = document.querySelector('main')
-        // get top and bottom of main
         const { top, bottom, height, right, left } = main.getBoundingClientRect()
-
 
         const ox = oscillate({
           min: w * -0.075,
