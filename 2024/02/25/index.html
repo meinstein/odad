@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>low orbit</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 1rem;
+      }
+
+      canvas {
+        z-index: 0;
+      }
+
+      #content {
+        color: lavender;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.5;
+        z-index: 1;
+      }
+
+      canvas,
+      #content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <span id="content">
+      <span>Tippy tip toes</span>
+      <span>Scrunched up nose</span>
+      <span>Joker's smile</span>
+      <span>No noise for a while</span>
+      <span>Smells like bolognese</span>
+      <span>Eyes distant, crazed</span>
+      <span>Alas</span>
+      <span>A meteor has come to pass</span>
+    </span>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+
+      const circles = 60;
+      const diameter = 12;
+
+      const shadesOfBrown = [
+        '#8B4513',
+        '#A0522D',
+        '#CD853F',
+        '#D2691E',
+      ]
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // global alpha
+        ctx.globalAlpha = 0.125;
+
+        // draw a ring of circles
+        for (let i = 0; i < circles; i++) {
+          const angle = (i / circles) * Math.PI * 2;
+          const ox = oscillate({
+            min: 0,
+            max: 100,
+            frequency: 0.00001,
+            // offset: i * 0.0001
+          })
+
+          const oy = oscillate({
+            min: 0,
+            max: 100,
+            frequency: 0.00002,
+            // offset: i * 0.0001
+          })
+
+          const x = w / 2 + Math.cos(angle + ox) * 125
+          const y = h / 2 + Math.sin(angle + oy) * 125
+          const radius = diameter / 2;
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+          const color = shadesOfBrown[i % shadesOfBrown.length];
+          ctx.fillStyle = color;
+          ctx.fill();
+        }
+      }
+
+      const context2d = new Context2D()
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
