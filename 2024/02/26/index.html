@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>temptation matrix</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #fb0813;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100dvw;
+        height: 100dvh;
+      }
+
+      #root {
+        width: min(92%, 600px);
+        height: min(95%, 800px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // somewhat inspired by: https://www.moma.org/collection/works/8816
+      // by: Kazumasa Nagai
+      // title: Kazumasa Nagai Exhibition at Imabashi Gallery (1969)
+
+      const cols = 20
+
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.6';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        ctx.globalAlpha = 0.75
+
+        const padding = (w / cols) * 0.125
+        const paddingX = w * 0.02
+        const adjustedW = w - paddingX * 2
+        const diameter = ((adjustedW) / cols) - padding
+        const rowsRaw = h / (diameter + padding)
+        const remainder = rowsRaw % 1
+        const rows = Math.floor(rowsRaw)
+        const radius = diameter / 2
+        const colors = ['#f98a92', '#e7dbd2']
+        // draw circles in grid
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows; j++) {
+            const x = i * (adjustedW / cols) + (adjustedW / cols) / 2 + paddingX
+            const y = j * (diameter + padding) + (h / rows) / 2 + (remainder * (diameter + padding) / 2)
+            const color = colors[0]
+            ctx.beginPath()
+            ctx.arc(x, y, radius, 0, Math.PI * 2)
+            ctx.fillStyle = color
+            ctx.fill()
+            ctx.closePath()
+
+            // draw another circle within the first circle
+            ctx.beginPath()
+
+            const ox = oscillate({
+              min: -0.0125,
+              max: 0.0125,
+              frequency: 0.005,
+              offset: j * 0.15 + i * 0.3,
+            })
+
+            const oy = oscillate({
+              min: -0.0075,
+              max: 0.0075,
+              frequency: 0.0025,
+              offset: j * 0.1 - i * 0.1,
+            })
+
+            ctx.setTransform(1, oy, ox, 1, 0, 0)
+
+            ctx.arc(x, y, radius, 0, Math.PI * 2)
+
+            // reset transform
+            ctx.setTransform(1, 0, 0, 1, 0, 0)
+
+            ctx.fillStyle = colors[1]
+            ctx.fill()
+            ctx.closePath()
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: document.getElementById('root'),
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
