@@ -9,13 +9,16 @@ const document = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>add title here</title>
     <style>
-      /* add styles here */
+      body {
+        margin: 0;
+        padding: 0;
+      }
     </style>
   </head>
 
   <body>
     <script type="module">
-      import { Context2D } from 'https://unpkg.com/context2d@0.0.5';
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.6';
 
       const draw =  ({ ctx, w, h, oscillate, memoize }) => {
         // add code here
