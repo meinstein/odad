@@ -12,9 +12,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        /* use dvh for mobile device reasons */
         height: 100dvh;
-        /* background-color: #0b0d02; */
-        /* make bg back to hide the circles outside the center circle */
         background-color: black;
         overflow: hidden;
       }
@@ -53,7 +52,6 @@
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
         // blend mode
         ctx.globalCompositeOperation = 'overlay'
-
 
         const ox1 = oscillate({
           min: -w * 0.05,
@@ -135,7 +133,7 @@
         ctx.shadowBlur = 0
 
         // white circle in the middle
-        // radius is 1/4 of the width
+        // radius is 3.3 of the width - so slightly smaller than the black circles
         ctx.beginPath()
         ctx.arc(w / 2, h / 2, w / 3.3, 0, Math.PI * 2)
         // ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
