@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ring of 1984 saplings</title>
+    <title>funhouse ring blight</title>
     <style>
       body {
         margin: 0;
@@ -29,30 +29,19 @@
     <script type="module">
       import { Context2D } from 'https://unpkg.com/context2d@0.0.6';
 
-      const num = 95
+      // num of small circles
+      const num = 100
 
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // blend mode
         ctx.globalCompositeOperation = 'multiply'
-        // alpha
         ctx.globalAlpha = 0.75
-
         const r = w * 0.375
-        // draw a lavender circle in the middle
-        // ctx.beginPath()
-        // ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2)
-        // rgb lavender = 230, 230, 250
-        // ctx.fillStyle = `rgba(230, 230, 250, 0.5)`
-        // ctx.fillStyle = `rgba(0, 0, 0, 0.5)`
-        // ctx.fillStyle = 'black'
-        // ctx.fill()
 
-        // glow
-        // ctx.shadowColor = 'lavenderblush'
-        // ctx.shadowBlur = 10
+        // go around the perimeter main cirlce and draw a tiny circle at each point
 
-        // go around the cirlce and draw a tiny circle at each point
-        // on the perimeter of the big circle
+        /**
+         * OUTER RING
+         */
         for (let i = 0; i < num; i++) {
           const smallR = r * 0.075
 
@@ -87,7 +76,11 @@
           ctx.fill()
         }
 
-        for (let i = 0; i < num; i++) {
+        /**
+         * MIDDLE RING
+         */
+        const middleNum = num * 0.9
+        for (let i = 0; i < middleNum; i++) {
           const smallR = r * 0.075
 
           const ox = oscillate({
@@ -112,7 +105,7 @@
             offset: i * 100,
           });
 
-          const angle = (i / num) * Math.PI * 2
+          const angle = (i / middleNum) * Math.PI * 2
           const x = w / 2 + Math.cos(angle) * r * 0.91 + ox
           const y = h / 2 + Math.sin(angle) * r * 0.91 - oy
           ctx.beginPath()
@@ -121,7 +114,11 @@
           ctx.fill()
         }
 
-        for (let i = 0; i < num; i++) {
+        /**
+         * INNER RING
+         */
+        const innerNum = num * 0.8
+        for (let i = 0; i < innerNum; i++) {
           const smallR = r * 0.075
 
           const ox = oscillate({
@@ -146,7 +143,7 @@
             offset: i * 100,
           });
 
-          const angle = (i / num) * Math.PI * 2
+          const angle = (i / innerNum) * Math.PI * 2
           const x = w / 2 + Math.cos(angle) * r * 0.82 - ox
           const y = h / 2 + Math.sin(angle) * r * 0.82 + oy
           ctx.beginPath()
