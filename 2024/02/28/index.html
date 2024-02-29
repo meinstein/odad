@@ -1,28 +1,164 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add title here</title>
+    <title>ring of 1984 saplings</title>
     <style>
       body {
         margin: 0;
         padding: 0;
+        background: black;
+        overflow: hidden;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        width: min(100%, 600px);
+        aspect-ratio: 1 / 1;
       }
     </style>
   </head>
 
   <body>
+    <div id="root"></div>
     <script type="module">
       import { Context2D } from 'https://unpkg.com/context2d@0.0.6';
 
-      const draw =  ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
+      const num = 95
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // blend mode
+        ctx.globalCompositeOperation = 'multiply'
+        // alpha
+        ctx.globalAlpha = 0.75
+
+        const r = w * 0.375
+        // draw a lavender circle in the middle
+        // ctx.beginPath()
+        // ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2)
+        // rgb lavender = 230, 230, 250
+        // ctx.fillStyle = `rgba(230, 230, 250, 0.5)`
+        // ctx.fillStyle = `rgba(0, 0, 0, 0.5)`
+        // ctx.fillStyle = 'black'
+        // ctx.fill()
+
+        // glow
+        // ctx.shadowColor = 'lavenderblush'
+        // ctx.shadowBlur = 10
+
+        // go around the cirlce and draw a tiny circle at each point
+        // on the perimeter of the big circle
+        for (let i = 0; i < num; i++) {
+          const smallR = r * 0.075
+
+          const ox = oscillate({
+            min: -smallR * 0.1,
+            max: smallR * 0.1,
+            frequency: 0.005,
+            offset: i,
+          });
+
+          const oy = oscillate({
+            min: -smallR * 0.1,
+            max: smallR * 0.1,
+            // mult freq by 2 and i by 2 makes the permiter circles go up and down seemingly
+            frequency: 0.005,
+            offset: i * 2,
+          });
+
+          const scale = oscillate({
+            min: 0.8,
+            max: 1.2,
+            frequency: 0.005,
+            offset: i * 100,
+          });
+
+          const angle = (i / num) * Math.PI * 2
+          const x = w / 2 + Math.cos(angle) * r - ox
+          const y = h / 2 + Math.sin(angle) * r + oy
+          ctx.beginPath()
+          ctx.arc(x, y, smallR * scale, 0, Math.PI * 2)
+          ctx.fillStyle = 'lavenderblush'
+          ctx.fill()
+        }
+
+        for (let i = 0; i < num; i++) {
+          const smallR = r * 0.075
+
+          const ox = oscillate({
+            min: -smallR * 0.1,
+            max: smallR * 0.1,
+            frequency: 0.005,
+            offset: i * 2,
+          });
+
+          const oy = oscillate({
+            min: -smallR * 0.1,
+            max: smallR * 0.1,
+            // mult freq by 2 and i by 2 makes the permiter circles go up and down seemingly
+            frequency: 0.0075,
+            offset: i,
+          });
+
+          const scale = oscillate({
+            min: 0.8,
+            max: 1.2,
+            frequency: 0.005,
+            offset: i * 100,
+          });
+
+          const angle = (i / num) * Math.PI * 2
+          const x = w / 2 + Math.cos(angle) * r * 0.91 + ox
+          const y = h / 2 + Math.sin(angle) * r * 0.91 - oy
+          ctx.beginPath()
+          ctx.arc(x, y, smallR * scale, 0, Math.PI * 2)
+          ctx.fillStyle = 'lavender'
+          ctx.fill()
+        }
+
+        for (let i = 0; i < num; i++) {
+          const smallR = r * 0.075
+
+          const ox = oscillate({
+            min: -smallR * 0.1,
+            max: smallR * 0.1,
+            frequency: 0.0075,
+            offset: i,
+          });
+
+          const oy = oscillate({
+            min: -smallR * 0.1,
+            max: smallR * 0.1,
+            // mult freq by 2 and i by 2 makes the permiter circles go up and down seemingly
+            frequency: 0.0025,
+            offset: i * 2,
+          });
+
+          const scale = oscillate({
+            min: 0.8,
+            max: 1.2,
+            frequency: 0.005,
+            offset: i * 100,
+          });
+
+          const angle = (i / num) * Math.PI * 2
+          const x = w / 2 + Math.cos(angle) * r * 0.82 - ox
+          const y = h / 2 + Math.sin(angle) * r * 0.82 + oy
+          ctx.beginPath()
+          ctx.arc(x, y, smallR * scale, 0, Math.PI * 2)
+          ctx.fillStyle = 'lavenderblush'
+          ctx.fill()
+        }
       }
 
-      const context2d = new Context2D()
+      const context2d = new Context2D({
+        rootElement: document.getElementById('root'),
+      })
       context2d.draw(draw)
     </script>
   </body>
