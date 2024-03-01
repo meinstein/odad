@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>leap here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: black;
+      }
+
+      #root {
+        width: min(100%, 600px);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const layers = 120
+      const decay = 0.975
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        ctx.globalCompositeOperation = 'multiply'
+
+        // gist is:
+        // decay the radius of the circle on each layer
+        // store the previous x and y and r
+        // and use the difference between the previous and current radius to calculate the next x and y
+
+        let prevR = w * 0.375
+        let prevX = w * 0.5
+        let prevY = h * 0.5
+
+        for (let i = 0; i < layers; i++) {
+          ctx.beginPath()
+          const r = w * 0.375 * Math.pow(decay, i)
+          const diff = prevR - r
+          prevR = r
+
+          const ox = oscillate({
+            from: -r * 0.01,
+            to: r * 0.01,
+            speed: 1,
+            offset: i * 0.25,
+          })
+
+          const oy = oscillate({
+            from: -r * 0.005,
+            to: r * 0.005,
+            speed: 2,
+            offset: i,
+          })
+
+          const nextX = prevX + ox * diff
+          const nextY = prevX + oy * diff
+
+          prevX = nextX
+          prevY = nextY
+
+          ctx.arc(
+            nextX,
+            nextY,
+            r,
+            0,
+            Math.PI * 2
+          )
+
+          // using the multiply blend mode with these colors creates the beautiful purple center
+          // combined with the fact that the alpha is reduced for each layer
+          ctx.fillStyle = i % 2 === 0 ? 'lavender' : 'lavenderblush'
+          ctx.globalAlpha = 0.25 + (i / layers)
+          ctx.fill()
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
