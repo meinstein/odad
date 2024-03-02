@@ -60,20 +60,20 @@
         const y = h / 2
 
         const ox = oscillate({
-          from: 0.4,
-          to: 0.6,
-          speed: 4
+          from: 0,
+          to: 1,
+          speed: 1
         })
 
         // draw a rect
         ctx.beginPath();
-        const rectX = x - w * 0.1
-        const rectY = y - w * 0.1
-        const rectW = w * 0.425
-        const rectH = w * 0.425
+        const rectX = x - w * 0.125
+        const rectY = y - w * 0.125
+        const rectW = w * 0.45
+        const rectH = w * 0.45
         // rotate the rect
         ctx.translate(x, y);
-        ctx.rotate(0.025);
+        ctx.rotate(0.015);
         ctx.translate(-x, -y);
         ctx.rect(rectX, rectY, rectW, rectH);
         ctx.fillStyle = `rgba(230, 230, 250, ${ox})`;
@@ -81,7 +81,7 @@
 
         // draw circle (after rect, so it's on top of the rect)
         ctx.beginPath();
-        const radius = w * 0.175
+        const radius = w * 0.25
         ctx.arc(
           x + ox,
           y,
