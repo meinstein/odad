@@ -18,7 +18,7 @@ const document = `
 
   <body>
     <script type="module">
-      import { Context2D } from 'https://unpkg.com/context2d@0.0.6';
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
 
       const draw =  ({ ctx, w, h, oscillate, memoize }) => {
         // add code here
@@ -64,8 +64,8 @@ try {
   await Deno.stat(flags.date)
   throw new Error("Directory already exists")
 } catch {
-  // create dir
-  await Deno.mkdir(flags.date)
+  // create dir - recursively
+  await Deno.mkdir(flags.date, { recursive: true })
   await Deno.writeTextFile(`${flags.date}/index.html`, document)
   console.log(`🎉 Created ${flags.date}`)
 }
