@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>boys</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      #text {
+        color: lavenderblush;
+        font-size: 12px;
+        font-family: monospace;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        line-height: 12px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
+      #root {
+        width: min(100%, 500px);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="text">
+      <p>Curdled milk and eggs</p>
+      <p>'Perfect but raised incorrect'</p>
+      <p>Sometimes we project</p>
+    </div>
+    <div id="root"></div>
+    <script type="module">
+      // loosely inspired by: https://www.moma.org/collection/works/71907
+      // artist: Leon Polk Smith
+
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const x = w / 2
+        const y = h / 2
+
+        const ox = oscillate({
+          from: 0.4,
+          to: 0.6,
+          speed: 4
+        })
+
+        // draw a rect
+        ctx.beginPath();
+        const rectX = x - w * 0.1
+        const rectY = y - w * 0.1
+        const rectW = w * 0.425
+        const rectH = w * 0.425
+        // rotate the rect
+        ctx.translate(x, y);
+        ctx.rotate(0.025);
+        ctx.translate(-x, -y);
+        ctx.rect(rectX, rectY, rectW, rectH);
+        ctx.fillStyle = `rgba(230, 230, 250, ${ox})`;
+        ctx.fill();
+
+        // draw circle (after rect, so it's on top of the rect)
+        ctx.beginPath();
+        const radius = w * 0.175
+        ctx.arc(
+          x + ox,
+          y,
+          radius,
+          0,
+          Math.PI * 2
+        );
+        ctx.fillStyle = 'black';
+        ctx.fill();
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
