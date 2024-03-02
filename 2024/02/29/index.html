@@ -17,7 +17,7 @@
       }
 
       #root {
-        width: min(100%, 600px);
+        width: min(100%, 500px);
         aspect-ratio: 1 / 1;
       }
     </style>
@@ -77,8 +77,9 @@
             Math.PI * 2
           )
 
-          // using the multiply blend mode with these colors creates the beautiful purple center
+          // the multiply blend mode with these two colors creates the beautiful purple center
           // combined with the fact that the alpha is reduced for each layer
+          // and that the decay is exponential, so the layers get very dense towards the center
           ctx.fillStyle = i % 2 === 0 ? 'lavender' : 'lavenderblush'
           ctx.globalAlpha = 0.25 + (i / layers)
           ctx.fill()
