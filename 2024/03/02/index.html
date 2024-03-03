@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toothy eyes</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+      }
+
+      #root {
+        width: min(96%, 500px);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // inspired by: https://www.moma.org/collection/works/74666
+      // by: Jorge Guillermo Luna Ercilla
+      // title: Virtual Symbiosis (Simbiosis virtual)
+
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const rows = 9
+      const cols = 20
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const padding = w / 100
+        const toggleW = w / cols - padding
+        const toggleH = h / rows - padding
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const x = col * (toggleW + padding) + padding / 2
+            const y = row * (toggleH + padding) + padding / 2
+            // draw oval
+            ctx.beginPath()
+            ctx.ellipse(
+              x + toggleW / 2,
+              y + toggleH / 2,
+              toggleW / 2,
+              toggleH / 2,
+              0,
+              0,
+              Math.PI * 2
+            )
+            ctx.fillStyle = 'lavender'
+            ctx.fill()
+
+            // draw a circle at the top of the ellipse
+            ctx.beginPath()
+            ctx.fillStyle = 'black'
+            ctx.strokeStyle = 'lightsteelblue'
+            ctx.lineWidth = 2
+
+            const oy = oscillate({
+              from: y + toggleH / 2 - toggleH / 3,
+              to: y + toggleH / 2 + toggleH / 3,
+              speed: 0.75,
+              // interesting offset - kind of a pattern, but hard to tell what it is
+              offset: (col + 1) * (row + 1) * 0.1
+            })
+
+            // if even, 3.2 and 4
+            const val = (col * row) % 2 === 0 ? 3.33 : 4
+
+            ctx.arc(
+              x + toggleW / 2,
+              oy,
+              toggleW / val,
+              0,
+              Math.PI * 2
+            )
+
+            ctx.fill()
+            ctx.stroke()
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
