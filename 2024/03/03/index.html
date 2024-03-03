@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>six times six times six times six</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* background-color: black */
+      }
+
+      #root {
+        width: min(92%, 600px);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // heavily inspired by: Norman Zammitt
+      // link: https://www.moma.org/collection/works/75019
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      class Hexagon {
+        constructor({ ctx, x, y, w, h, color }) {
+          this.ctx = ctx
+          this.x = x
+          this.y = y
+          this.w = w
+          this.h = h
+          this.color = color
+        }
+
+        draw() {
+          this.ctx.beginPath()
+          this.ctx.moveTo(this.x + this.w * 0.5, this.y)
+          this.ctx.lineTo(this.x + this.w, this.y + this.h * 0.25)
+          this.ctx.lineTo(this.x + this.w, this.y + this.h * 0.75)
+          this.ctx.lineTo(this.x + this.w * 0.5, this.y + this.h)
+          this.ctx.lineTo(this.x, this.y + this.h * 0.75)
+          this.ctx.lineTo(this.x, this.y + this.h * 0.25)
+          this.ctx.closePath()
+          this.ctx.fillStyle = this.color
+          this.ctx.fill()
+        }
+      }
+
+      const rows = 6
+      const cols = 6
+      const colors = ['#9BD8D1', '#91A4C2', '#A67595', '#E94D66', '#F76E38', "#FEC626"]
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        ctx.globalAlpha = 0.66
+        const padding = w / rows * 0.51
+        const hexW = w / rows - padding
+        const hexH = h / cols - padding
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const isOddRow = row % 2 === 1
+            const x = col * (hexW + padding) + padding
+            // need to add "padding * 1.5" to vertically center the hexagons in the canvas
+            // that is because we are scrunching the hexagons vertically with less padding than horizontally
+            const y = row * (hexH + padding * 0.5) + padding * 1.5
+            for (let color = 0; color < colors.length; color++) {
+              const colorNormalized = color + 1
+              const ox = oscillate({
+                from: 2,
+                to: colorNormalized / colors.length * 10,
+                speed: 0.9,
+                offset: col * 0.1 + row * 0.1 * colorNormalized * 0.5
+              })
+
+              const oy = oscillate({
+                from: colorNormalized / colors.length * -5,
+                to: colorNormalized / colors.length * 5,
+                speed: 1.8,
+                offset: row * 0.1 + col * 0.1 * colorNormalized * 0.5
+              })
+
+              const modifiedX = x - hexW * 0.21 * color
+              const modifiedY = y + hexH * 0.15 * color
+              const hex = new Hexagon({
+                ctx,
+                x: modifiedX + ox,
+                y: modifiedY + oy,
+                w: hexW,
+                h: hexH,
+                color: colors[color]
+              })
+              hex.draw()
+            }
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
