@@ -1,9 +1,10 @@
-title: null
-language: english | dutch | german | swiss-german
 medium: text | audio | video | image | other
+language: english | dutch | german | swiss-german
+title: null
 author: null
 publisher: null
+published_at: null
 original_url: null
 public_archive_url: null
 private_archive_url: null
-description: null
+comment: null
