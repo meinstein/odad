@@ -2,8 +2,8 @@ medium: text | audio | video | image | other
 language: english | dutch | german | swiss-german
 title: null
 author: null
-publisher: null
-published_at: null
+publisher_by: null
+published_on: 'YYYY-MM-DD'
 original_url: null
 public_archive_url: null
 private_archive_url: null
