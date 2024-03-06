@@ -28,8 +28,10 @@ const addToTree = async (path: string) => {
 await addToTree('2023')
 await addToTree('2024')
 
-// sort by date
-entries.sort((a, b) => a.date.localeCompare(b.date))
+// sort by date, descending
+entries.sort((a, b) => {
+  return a.date > b.date ? -1 : 1
+})
 
 const document = new DOMParser().parseFromString(
   `<!DOCTYPE html>
