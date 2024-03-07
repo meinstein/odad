@@ -1,10 +1,10 @@
-medium: text
+type: article
 language: english
-title: With a New Holocaust Museum, the Netherlands Faces Its Past
 author: Claire Moses
-published_by: New York Times
-published_on: '2024-03-05'
-original_url: https://www.nytimes.com/2024/03/05/arts/design/holocaust-museum-the-netherlands.html
-public_archive_url: https://archive.ph/Wtnbq
-private_archive_url: null
-comment: In the Netherlands, the Nazis deported 75 percent of the country's Jewish population to concentration camps, the highest such percentage in Western Europe. Given that fact, it's taken a surprisingly long time for a museum of this kind to be built in the Netherlands.
+date: '2024-03-05'
+title: With a New Holocaust Museum, the Netherlands Faces Its Past
+website: https://www.nytimes.com/2024/03/05/arts/design/holocaust-museum-the-netherlands.html
+url: https://www.nytimes.com/2024/03/05/arts/design/holocaust-museum-the-netherlands.html
+archive_url: https://archive.ph/Wtnbq
+private_url: null
+notes: In the Netherlands, the Nazis deported 75 percent of the country's Jewish population to concentration camps, the highest such percentage in Western Europe. Given that fact, it's taken a surprisingly long time for a museum of this kind to be built in the Netherlands.

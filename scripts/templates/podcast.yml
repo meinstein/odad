@@ -1,12 +1,10 @@
 type: podcast
 language: english | dutch | german | swiss-german
 host: null
-episode_title: null
-podcast_name: null
-season_number: null
-episode_number: null
+title: null
+podcast: null
 publisher: null
-day_month_year: YYYY-MM-DD
+date: 'YYYY-MM-DD'
 url: null
 private_url: null
 notes: null

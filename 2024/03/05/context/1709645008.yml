@@ -1,10 +1,10 @@
-medium: audio
-language: swiss-german
+type: podcast
+language: german
+host: Antonia Moser (host), Markus Ackeret (guest)
 title: Putins Krieg lässt Wirtschaft wachsen
-author: Antonia Moser (host), Markus Ackeret (guest)
-published_by: Neue Zürcher Zeitung
-published_on: '2024-03-05'
-original_url: https://castbox.fm/episode/Putins-Krieg-l%C3%A4sst-Wirtschaft-wachsen-id2982237-id679827581
-public_archive_url: null
-private_archive_url: null
-comment: The war is leading to growth in parts of the ecnonomy, particularly in rural areas where the Russian arms industry has factories. People in rural areas are also more likely to enlist and go to the front, which brings financial benefits to their families.
+podcast: NZZ Akzent
+publisher: Neue Zürcher Zeitung
+date: '2024-03-05'
+url: https://castbox.fm/episode/Putins-Krieg-l%C3%A4sst-Wirtschaft-wachsen-id2982237-id679827581
+private_url: null
+notes: The war is leading to growth in parts of the ecnonomy, particularly in rural areas where the Russian arms industry has factories. People in rural areas are also more likely to enlist and go to the front, which brings financial benefits to their families.

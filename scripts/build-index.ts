@@ -11,7 +11,7 @@ type Entry = {
 // this is a subset of what the new-context.yml contains
 type Context = {
   title: string
-  original_url: string
+  url: string
 }
 
 const entries: Entry[] = []
@@ -39,13 +39,13 @@ const addToTree = async (path: string) => {
       // parse yml
       const data = parse(file) as Partial<Context>
 
-      if (!data?.title || !data?.original_url) {
+      if (!data?.title || !data?.url) {
         throw new Error(`Invalid context file: ${entry.path}`)
       }
 
       const newContext = {
         title: data.title,
-        original_url: data.original_url
+        url: data.url
       }
 
       // find if the date already exists in the list  of context
@@ -117,11 +117,11 @@ for (const [date, contexts] of context) {
   p.textContent = date
   const ul = document.createElement('ul')
   // add the title and original url as anchor tags
-  for (const { title, original_url } of contexts) {
+  for (const { title, url } of contexts) {
     const li = contextDocument.createElement('li')
     const a = contextDocument.createElement('a')
     a.textContent = title
-    a.setAttribute('href', original_url)
+    a.setAttribute('href', url)
     li.appendChild(a)
     ul.appendChild(li)
   }
