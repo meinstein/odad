@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>step on me</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: black;
+      }
+
+      #root {
+        width: min(96%, 500px);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const cols = 20
+      const rows = 20
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter'
+        // global alpha
+        ctx.globalAlpha = 0.75
+
+        const padding = w * 0.05
+
+        const getData = memoize(() => {
+          const data = []
+          for (let col = 0; col < cols; col++) {
+            const colData = []
+            for (let row = 0; row < rows; row++) {
+              colData.push({
+                x: col * (w - padding * 2) / cols,
+                y: row * (h - padding * 2) / rows,
+                w: (w - padding * 2) / cols,
+                h: (h - padding * 2) / rows,
+                color: `hsl(${row * 5}, 30%, 50%)`,
+              })
+            }
+            data.push(colData)
+          }
+          return data
+        })
+
+        const data = getData()
+
+
+        for (let col = 0; col < cols; col++) {
+          for (let row = 0; row < rows; row++) {
+            const { x, y, w, h, color, nextCenterPoint } = data[col][row]
+            ctx.fillStyle = color
+            const ox = oscillate({
+              from: -w * 0.1,
+              to: w * 0.1,
+              speed: 1.25,
+              offset: col * 0.5 + row * 0.1
+            })
+
+            const oy = oscillate({
+              from: -h * 0.1,
+              to: h * 0.1,
+              speed: 2,
+              offset: col * 0.1 + row * 0.1
+            })
+
+            // if even number, circle, else rect
+            ctx.beginPath()
+            ctx.arc(
+              x + w / 2 + ox + padding,
+              y + h / 2 + oy + padding,
+              w / 2,
+              0,
+              Math.PI * 2
+            )
+            ctx.fill()
+
+            ctx.beginPath()
+            // get the color of the equivalent point starting from the opposite end
+            const color2 = data[cols - col - 1][rows - row - 1].color
+            ctx.fillStyle = color2
+            ctx.arc(
+              x + w / 2 - ox + padding,
+              y + h / 2 - oy + padding,
+              w / 3,
+              0,
+              Math.PI * 2
+            )
+            ctx.fill()
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
