@@ -34,9 +34,8 @@
 
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
         // blend mode
-        ctx.globalCompositeOperation = 'lighter'
+        // ctx.globalCompositeOperation = 'difference'
         // global alpha
-        ctx.globalAlpha = 0.75
 
         const padding = w * 0.05
 
@@ -68,18 +67,20 @@
             const ox = oscillate({
               from: -w * 0.1,
               to: w * 0.1,
-              speed: 1.25,
-              offset: col * 0.5 + row * 0.1
+              speed: 1,
+              offset: col * 0.125 + row * 0.125
             })
 
             const oy = oscillate({
               from: -h * 0.1,
               to: h * 0.1,
-              speed: 2,
+              speed: 0.75,
               offset: col * 0.1 + row * 0.1
             })
 
-            // if even number, circle, else rect
+            // the further to the edges of the grid, the more transparent the circle
+            const alpha1 = (1 - (col / cols)) * 0.75
+            ctx.globalAlpha = alpha1
             ctx.beginPath()
             ctx.arc(
               x + w / 2 + ox + padding,
@@ -90,14 +91,17 @@
             )
             ctx.fill()
 
+            // inverse of alpha1
+            const alpha2 = 1 - alpha1
+            ctx.globalAlpha = alpha2 * 0.5
             ctx.beginPath()
             // get the color of the equivalent point starting from the opposite end
             const color2 = data[cols - col - 1][rows - row - 1].color
-            ctx.fillStyle = color2
+            ctx.fillStyle = 'lavenderblush'
             ctx.arc(
               x + w / 2 - ox + padding,
               y + h / 2 - oy + padding,
-              w / 3,
+              w / 3.25,
               0,
               Math.PI * 2
             )
