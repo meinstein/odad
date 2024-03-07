@@ -10,7 +10,7 @@ npx live-server --port=1234
 deno run --allow-read --allow-write scripts/new-document.ts --date=YYYY/MM/DD
 
 # make a new piece of context
-deno run --allow-read --allow-write scripts/new-context.ts --date=YYYY/MM/DD
+deno run --allow-read --allow-write scripts/new-context.ts --date=YYYY/MM/DD --type=article
 
 # build root index.html
 deno run --allow-read --allow-write scripts/build-index.ts

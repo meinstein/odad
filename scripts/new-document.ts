@@ -20,7 +20,7 @@ try {
   console.log(`🚨 ${flags.date} already exists`)
 } catch {
   await Deno.mkdir(path, { recursive: true })
-  const template = await Deno.readTextFile("./scripts/new-document-template.html")
+  const template = await Deno.readTextFile("./scripts/templates/new-document.html")
   await Deno.writeTextFile(filePath, template)
   console.log(`🎉 Created ${flags.date}`)
 }

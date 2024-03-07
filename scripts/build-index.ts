@@ -8,7 +8,7 @@ type Entry = {
   date: string
 }
 
-// this is a subset of what the new-context-template.yml contains
+// this is a subset of what the new-context.yml contains
 type Context = {
   title: string
   original_url: string
@@ -72,8 +72,8 @@ context.sort((a, b) => {
   return a[0] > b[0] ? -1 : 1
 })
 
-const document = new DOMParser().parseFromString(await Deno.readTextFile("./scripts/index-document-template.html"), "text/html")
-const contextDocument = new DOMParser().parseFromString(await Deno.readTextFile("./scripts/context-document-template.html"), "text/html")
+const document = new DOMParser().parseFromString(await Deno.readTextFile("./scripts/templates/index-document.html"), "text/html")
+const contextDocument = new DOMParser().parseFromString(await Deno.readTextFile("./scripts/templates/context-document.html"), "text/html")
 
 if (!document || !contextDocument) {
   throw new Error('Could not create document')
