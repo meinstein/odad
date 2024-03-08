@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>man child</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        /* eggshell to capture the fragility of a man child */
+        background-color: #f0ead6;
+        overflow: hidden;
+      }
+
+      #root {
+        width: min(500px, 100%);
+        aspect-ratio: 1 / 1;
+      }
+
+      #haiku {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: monospace;
+        font-size: 12px;
+        text-align: center;
+        line-height: 2.125;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <div id="haiku">
+      <div>can't do anything</div>
+      <div>complains about everything</div>
+      <div>happy with nothing</div>
+    </div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const tentacles = 120;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // round tip
+        ctx.lineCap = 'round';
+        // alpha
+        ctx.globalAlpha = 0.9;
+        // draw tentacles in a circle around the center.
+        // use geometry to place each tentacle evenly at radius from center.
+        const r = w / 4;
+        for (let i = 0; i < tentacles; i++) {
+          ctx.beginPath();
+          const angle = (i / tentacles) * Math.PI * 2;
+
+          const startX = w / 2 + Math.cos(angle) * r;
+          const startY = h / 2 + Math.sin(angle) * r;
+
+          const ox1 = oscillate({
+            from: 1.1,
+            to: 1.2,
+            speed: 2,
+            offset: i / tentacles
+          })
+
+          const oy1 = oscillate({
+            from: 1.1,
+            to: 1.2,
+            speed: 1.75,
+            offset: 1 - i / tentacles,
+          })
+
+          const cp1x = w / 2 + Math.cos(angle) * r * ox1;
+          const cp1y = h / 2 + Math.sin(angle) * r * oy1;
+
+          const ox2 = oscillate({
+            from: 1.2,
+            to: 1.4,
+            speed: 1.75,
+            offset: 1 + i / tentacles
+          })
+
+          const oy2 = oscillate({
+            from: 1.2,
+            to: 1.4,
+            speed: 2,
+            offset: i / tentacles
+          })
+
+          const cp2x = w / 2 + Math.cos(angle) * r * ox2;
+          const cp2y = h / 2 + Math.sin(angle) * r * oy2;
+
+          const ox3 = oscillate({
+            from: 1.5,
+            to: 1.75,
+            speed: 0.7,
+          })
+
+          const oy3 = oscillate({
+            from: 1.5,
+            to: 1.75,
+            speed: 0.85,
+            offset: i,
+          })
+
+          const endX = w / 2 + Math.cos(angle) * r * ox3;
+          const endY = h / 2 + Math.sin(angle) * r * oy3;
+
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+
+          ctx.lineWidth = i % 2 === 0 ? 3 : 2;
+          ctx.strokeStyle = 'goldenrod'
+          ctx.stroke();
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
