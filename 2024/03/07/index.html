@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the heart of the maggot</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: lavender;
+      }
+
+      #root {
+        width: min(600px, 90%);
+        height: min(900px, 90%);
+        aspect-ratio: 2 / 3;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const rows = 21;
+      const cols = 14;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, w, h);
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const size = Math.min(w / cols, h / rows);
+            const x = col * w / cols;
+            const y = row * h / rows + (col % 2) * size / 2;
+            // match the body background
+            ctx.fillStyle = 'lavender';
+            ctx.beginPath();
+            // rotate the oval so that it faces towards the center of the canvas
+            const angle = Math.atan2(h / 2 - y - size / 2, w / 2 - x - size / 2);
+            const oa = oscillate({
+              from: angle - Math.PI / 8,
+              to: angle + Math.PI / 8,
+              // based on proximity to the center of the canvas
+              speed: Math.sqrt((x + size / 2 - w / 2) ** 2 + (y + size / 2 - h / 2) ** 2) / 250,
+              offset: row * 0.5
+            })
+            ctx.translate(x + size / 2, y + size / 2);
+            ctx.rotate(oa);
+            ctx.translate(-(x + size / 2), -(y + size / 2));
+            // draw an oblong oval.
+            ctx.ellipse(
+              x + size / 2,
+              y + size / 2,
+              // the oval gets more oblong as it gets further from the center of the canvas.
+              size / 3 + Math.sqrt((x + size / 2 - w / 2) ** 2 + (y + size / 2 - h / 2) ** 2) / 25,
+              size / 3,
+              0,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+            // Reset the transformation matrix
+            // this prevents the ovals from rotating across render calls.
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
