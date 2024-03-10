@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uncanny nexus</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background: black;
+      }
+
+      #root {
+        width: min(600px, 90%);
+        aspect-ratio: 2 / 3;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const bars = 101;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        for (let i = 0; i < bars; i++) {
+          const ox = oscillate({
+            from: (w / bars) * -5,
+            to: (w / bars) * 5,
+            speed: 1,
+            offset: i * 0.1
+          })
+
+          const oy = oscillate({
+            from: (h / bars) * -3,
+            to: (h / bars) * 3,
+            speed: 1,
+            // mak one offset _slightly_ different to make movement less uniform (relationship between bar width and y displacement is too obvious otherwise)
+            offset: i * 0.125
+          })
+
+          const x = i * (w / bars) + ox;
+          const y = i * (h / bars) + oy;
+          // width is smallest at the center and largest at the edges
+          const width = w - (2 * x);
+          // the spacing between bars is the same as the height of a bar
+          const height = (h / bars) * 0.5;
+
+          // alpha changes depending on the dist from center (use y)
+          // try to make edges look like the seamlessly disappear
+          let alpha = Math.abs(y - h / 2) / (h / 2.2);
+          ctx.fillStyle = `rgba(230, 230, 250, ${(1 - alpha) * 0.75})`;
+          ctx.fillRect(x, y, width, height);
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
