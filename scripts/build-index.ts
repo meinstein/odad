@@ -12,6 +12,7 @@ type Entry = {
 type Context = {
   title: string
   url: string
+  type: string
 }
 
 const entries: Entry[] = []
@@ -39,13 +40,14 @@ const addToTree = async (path: string) => {
       // parse yml
       const data = parse(file) as Partial<Context>
 
-      if (!data?.title || !data?.url) {
+      if (!data?.title || !data?.url || !data?.type) {
         throw new Error(`Invalid context file: ${entry.path}`)
       }
 
       const newContext = {
         title: data.title,
-        url: data.url
+        url: data.url,
+        type: data.type
       }
 
       // find if the date already exists in the list  of context
@@ -117,10 +119,10 @@ for (const [date, contexts] of context) {
   p.textContent = date
   const ul = document.createElement('ul')
   // add the title and original url as anchor tags
-  for (const { title, url } of contexts) {
+  for (const { title, url, type } of contexts) {
     const li = contextDocument.createElement('li')
     const a = contextDocument.createElement('a')
-    a.textContent = title
+    a.textContent = `${title} [${type}]`
     a.setAttribute('href', url)
     li.appendChild(a)
     ul.appendChild(li)

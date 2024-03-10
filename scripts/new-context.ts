@@ -1,7 +1,7 @@
 import { parseArgs } from "https://deno.land/std@0.207.0/cli/parse_args.ts";
 import { validateDate } from "./common.ts";
 
-const validTypes = ["article", "podcast"]
+const validTypes = ["article", "podcast", "video"]
 
 const flags = parseArgs(Deno.args, {
   string: ["date", "type"],
