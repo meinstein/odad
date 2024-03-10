@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dueling nexus</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        overflow: hidden;
+      }
+
+      #root {
+        width: min(600px, 90%);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // loosely inspired by: https://www.moma.org/collection/works/98637
+      // artist: Julian Stanczak
+      // title: The Duel
+      // date: 1963
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const bars = 100;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        for (let bar = 0; bar <= bars; bar++) {
+          const isOdd = bar % 2 === 1;
+
+          // start on left side and draw vertical bars
+          const x = (w / bars) * bar;
+          const y = 0
+          const width = (w / bars) * 0.5;
+          const height = h;
+          const alpha = 0.55
+          ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+          ctx.fillRect(x, y, width, height);
+
+          const oy = oscillate({
+            from: (h / bars) * -3,
+            to: (h / bars) * 3,
+            speed: 1,
+            offset: bar * 0.2
+          })
+
+          const x2 = (w / bars) * bar + width
+
+          const siny = Math.sin(Math.PI * bar / bars);
+          const height2 = h - siny * h;
+
+          const y2 = siny * h * 0.5 + oy;
+
+          // rgb indianred = 205, 92, 92
+          ctx.fillStyle = `rgba(205, 92, 92, ${0.85})`;
+          ctx.fillRect(x2, y2, width, height2);
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
