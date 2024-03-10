@@ -38,7 +38,7 @@
         for (let bar = 0; bar <= bars; bar++) {
           const isOdd = bar % 2 === 1;
 
-          // start on left side and draw vertical bars
+          // Draw vertical black bars first
           const x = (w / bars) * bar;
           const y = 0
           const width = (w / bars) * 0.5;
@@ -54,12 +54,13 @@
             offset: bar * 0.2
           })
 
+          // Draw horizontal red bars between the black bars
           const x2 = (w / bars) * bar + width
-
+          // draw one full sin wave across the width of the canvas
           const siny = Math.sin(Math.PI * bar / bars);
-          const height2 = h - siny * h;
-
+          // invert the sin wave
           const y2 = siny * h * 0.5 + oy;
+          const height2 = h - siny * h;
 
           // rgb indianred = 205, 92, 92
           ctx.fillStyle = `rgba(205, 92, 92, ${0.85})`;
@@ -70,6 +71,7 @@
       const context2d = new Context2D({
         rootElement: 'root'
       })
+
       context2d.draw(draw)
     </script>
   </body>

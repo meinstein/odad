@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vacuumizing</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: lavender;
+      }
+
+      #root {
+        width: min(600px, 90%);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // loosely inspired by: https://www.moma.org/collection/works/60768
+      // artist: Julian Stanczak
+      // title: Fluctuation
+      // year: 1964
+
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const rows = 50;
+      const cols = 50;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+
+        for (let row = 0; row <= rows; row++) {
+
+          for (let col = 0; col <= cols; col++) {
+            const x = (w / cols) * col;
+            const y = (h / rows) * row;
+
+            // Mult by 0.25 so that the cell swells to 0.75 of the cell container width.
+            // In other words, will not quite touch/combine with neighboring cells.
+            const ox = oscillate({
+              from: (w / cols) * -0.25,
+              to: (w / cols) * 0.25,
+              speed: 0.85,
+              offset: (row + 1) * 0.1 * (col + 1) * 0.125
+            });
+
+            const oy = oscillate({
+              from: (h / rows) * -0.25,
+              to: (h / rows) * 0.25,
+              speed: 0.85,
+              offset: (row + 1) * 0.1 * (col + 1) * 0.125
+            });
+
+            // Mult by 0.5 so that each cell has the same amount in padding
+            const baselineW = (w / cols) * 0.5;
+            const baselineH = (h / rows) * 0.5;
+
+            const width = baselineW + ox;
+            const height = baselineH + oy;
+
+            if (width > baselineW * 1.4 && height > baselineH * 1.45) {
+              ctx.fillStyle = 'indianred'
+            } else {
+              ctx.fillStyle = 'black';
+            }
+
+            ctx.fillRect(x, y, width, height);
+          }
+        }
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
