@@ -1,8 +1,8 @@
 type: video
 language: english | dutch | german | swiss-german
-author: null
 title: null
-container: YouTube
+channel: null
+platform: YouTube
 date: 'YYYY-MM-DD'
 url: null
 private_url: null
