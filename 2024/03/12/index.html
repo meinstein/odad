@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>venn diaphragm</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        width: min(90%, 600px);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 50
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // global alpha
+        ctx.globalAlpha = 0.0125
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter'
+
+        for (let i = 0; i < num; i++) {
+          const radius = Math.min(h / 4, w / 4) * (i / num)
+          const y = h / 2.5
+          const x = w / 2
+
+          const oRadiusY = oscillate({
+            from: radius / 2,
+            to: radius,
+            speed: 1.5,
+          })
+
+          ctx.beginPath()
+          // oval
+          ctx.ellipse(
+            x,
+            y,
+            radius,
+            radius / 2 + oRadiusY,
+            0,
+            0,
+            Math.PI * 2
+          )
+          ctx.fillStyle = 'lavender'
+          ctx.fill()
+
+          ctx.beginPath()
+          // oval
+          ctx.ellipse(
+            x,
+            y * 1.5,
+            radius,
+            radius / 2 + oRadiusY,
+            0,
+            0,
+            Math.PI * 2
+          )
+          ctx.fillStyle = 'lavender'
+          ctx.fill()
+        }
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
