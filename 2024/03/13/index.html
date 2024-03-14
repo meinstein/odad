@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unidentified</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        width: min(100%, 600px);
+        aspect-ratio: 1/1
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const curves = 120
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // blend mode
+
+        const padding = w * 0.05
+
+
+        // slowly rotate the canvas
+        ctx.translate(w * 0.5, h * 0.5)
+        const rotationSpeed = 0.01; // Adjust the rotation speed as needed
+        const rotationAngle = Math.sin(Date.now() * 0.0001) * rotationSpeed;
+        ctx.rotate(rotationAngle);
+        ctx.translate(-w * 0.5, -h * 0.5)
+
+        ctx.globalCompositeOperation = 'multiply'
+        // on each iteration, draw two bezier curves
+        // the curve starts on the left and ends on the right
+        // the first curve goes up, the second goes down
+        // as the iteration increases, the curves get smaller
+        for (let i = 0; i < curves; i++) {
+          const t = i / curves
+          const y = h * (0.5 + 0.5 * Math.sin(t * 2 * Math.PI))
+          ctx.beginPath()
+
+
+          ctx.moveTo(padding, h * 0.5)
+
+
+          const ox = oscillate({
+            from: 0.25,
+            to: 0.75,
+            speed: 1.125,
+            offset: i * 0.075
+          })
+
+          ctx.bezierCurveTo(
+            w * ox, y,
+            w * (1 - ox),
+            y,
+            w - padding,
+            h * 0.5
+          )
+
+          // lavender rgb = 230, 230, 250
+          ctx.fillStyle = `rgba(230, 230, 250, ${t * 0.05})`
+          ctx.fill()
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
