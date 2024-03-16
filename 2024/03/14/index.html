@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add title here</title>
+    <title>kaleidoscopic triangulation</title>
     <style>
       body {
         margin: 0;
@@ -17,7 +17,7 @@
       }
 
       #root {
-        width: min(100%, 500px);
+        width: min(90%, 650px);
         aspect-ratio: 1 / 1;
       }
     </style>
@@ -26,7 +26,7 @@
   <body>
     <div id="root"></div>
     <script type="module">
-      // inspired by: https://www.moma.org/collection/works/79553
+      // loosely inspired by: https://www.moma.org/collection/works/79553
       import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
 
       class Triangle {
@@ -41,40 +41,77 @@
         draw({ ctx }) {
           ctx.fillStyle = this.color
           ctx.beginPath()
-          ctx.moveTo(this.x, this.y)
-          ctx.lineTo(this.x + this.w, this.y)
-          ctx.lineTo(this.x + this.w / 2, this.y + this.h)
+          // center the triangle on the x, y position
+          ctx.moveTo(this.x - this.w / 2, this.y - this.h / 2)
+          ctx.lineTo(this.x + this.w / 2, this.y - this.h / 2)
+          ctx.lineTo(this.x, this.y + this.h / 2)
           ctx.closePath()
           ctx.fill()
         }
       }
 
+      const steps = 17
 
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // blend mode to make the triangles look like they're glowing
+        ctx.globalCompositeOperation = 'lighter'
 
-      const draw = ({ ctx, w: _w, h: _h }) => {
-        // draw a spiral of triangles, alternating black and white, slightly rotated
-        const n = 360
-        const angle = Math.PI / 360
-        const step = 5
-        const colors = ['black', 'white']
-        for (let i = 0; i < n; i++) {
-          const color = colors[i % 2]
-          const x = _w / 2 - i * step / 2 * 0.5 * Math.cos(angle * i)
-          const y = _h / 2 - i * step / 2 * 0.5 * Math.sin(angle * i)
-          const w = i * step * 0.5
-          const h = i * step * 0.1
-          const triangle = new Triangle({
-            x,
-            y,
-            w,
-            h,
-            color
-          })
-          triangle.draw({ ctx })
+        // anything more than this would exceed the canvas size
+        const stepSize = w / steps * 0.55
+
+        // start at i = 4 so that the core remains empty
+        for (let i = 4; i < steps; i++) {
+          // draw a triangle at each degree, but go by stepSize so that the triangles are spaced out reasonably
+          for (let deg = 0; deg < 360; deg += stepSize * 0.75) {
+            const rad = deg * Math.PI / 180
+
+            const x = w / 2 - Math.cos(rad) * i * stepSize * 0.75
+            const y = h / 2 - Math.sin(rad) * i * stepSize * 0.75
+
+            // use o to update the rotation
+            const o = oscillate({
+              from: 0.125,
+              to: 1.125,
+              speed: 0.25 + i * 0.0125,
+              offset: i * stepSize
+            })
+
+            // rotate the triangle based on the degree
+            // save the context on each render so that the rotation doesn't compound!
+            ctx.save()
+            ctx.translate(x, y)
+            ctx.rotate(rad + Math.PI / 2 * o)
+            ctx.translate(-x, -y)
+
+            const isOdd = i % 2 === 0
+
+            // lavender rgb = 230, 230, 250
+            let color = `rgba(230, 230, 250, ${i / steps * 0.35})`
+
+            if (isOdd) {
+              // light blue rgb = 173, 216, 230
+              color = `rgba(173, 216, 230, ${i / steps * 0.35
+                })`
+            }
+
+            const triangle = new Triangle({
+              x,
+              y,
+              w: stepSize * i * 0.275,
+              h: stepSize * i * 0.275,
+              color
+            })
+            triangle.draw({ ctx })
+
+            ctx.restore()
+          }
         }
       }
 
-      const context2d = new Context2D()
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
       context2d.draw(draw)
     </script>
   </body>
