@@ -53,9 +53,6 @@
       const steps = 17
 
       const draw = ({ ctx, w, h, oscillate }) => {
-        // blend mode to make the triangles look like they're glowing
-        ctx.globalCompositeOperation = 'lighter'
-
         // anything more than this would exceed the canvas size
         const stepSize = w / steps * 0.55
 
@@ -86,11 +83,11 @@
             const isOdd = i % 2 === 0
 
             // lavender rgb = 230, 230, 250
-            let color = `rgba(230, 230, 250, ${i / steps * 0.25})`
+            let color = `rgba(230, 230, 250, ${i / steps * 0.2})`
 
             if (isOdd) {
               // light blue rgb = 173, 216, 230
-              color = `rgba(173, 216, 230, ${i / steps * 0.25
+              color = `rgba(173, 216, 230, ${i / steps * 0.2
                 })`
             }
 
