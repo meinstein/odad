@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>churning and burning</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: black;
+      }
+
+      #root {
+        width: min(500px, 90%);
+        aspect-ratio: 1/1;
+      }
+
+      canvas {
+        border: 5px solid white;
+        border-radius: 50%;
+        background-color: steelblue;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // inspired by: cake "the distance"
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const cols = 25
+      const rows = 25
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // meh, don't want to deal with padding after all
+        const padding = 0
+
+        // alternating balck and white grid
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            ctx.fillStyle = (row + col) % 2 === 0 ? 'black' : 'white'
+
+            ctx.save()
+
+            const ox = oscillate({
+              from: -Math.PI / 16,
+              to: Math.PI / 16,
+              speed: 0.333,
+              offset: (row + 1) * 0.125 + (col + 1) * 0.125
+            })
+
+            ctx.rotate(ox)
+
+            const x = col * w / cols + padding
+            const y = row * h / rows + padding
+            const width = (w - padding * 2) / cols
+            const height = (h - padding * 2) / rows
+
+            ctx.fillRect(
+              x,
+              y,
+              width,
+              height
+            )
+
+            ctx.restore()
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
