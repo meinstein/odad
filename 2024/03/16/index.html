@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reify or deify?</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: black;
+        ;
+      }
+
+      #root {
+        width: min(500px, 90%);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const dots = 333
+
+      const draw = ({ ctx, w, h, memoize, oscillate }) => {
+        // blend mode
+        ctx.globalCompositeOperation = 'saturation'
+
+        const getData = memoize(() => {
+          const red = []
+          const blue = []
+          const black = []
+
+          for (let i = 0; i < dots; i++) {
+            // red dots - randomly place anywhere on the h and w
+            red.push([
+              w / 2 + Math.cos(i) * w / 2.2 * Math.random(),
+              h / 2 + Math.sin(i) * h / 2.2 * Math.random(),
+              Math.random() * w * 0.05
+            ])
+            // blue dots - randomly place anywhere within 2/3 radius of the w and h (use sin and cos and math.random)
+            blue.push([
+              w / 2 + Math.cos(i) * w / 3 * Math.random(),
+              h / 2 + Math.sin(i) * h / 3 * Math.random(),
+              Math.random() * w * 0.04
+            ])
+            // black dots - randomly place anywhere within 1/3 radius of the w and h (use sin and cos)
+            black.push([
+              w / 2 + Math.cos(i) * w / 6 * Math.random(),
+              h / 2 + Math.sin(i) * h / 6 * Math.random(),
+              Math.random() * w * 0.03
+            ])
+          }
+
+          return {
+            red,
+            blue,
+            black
+          }
+        })
+
+
+        const { red, blue, black } = getData()
+
+        for (let i = 0; i < dots; i++) {
+          const o = oscillate({
+            from: w * 0.02 * -1,
+            to: w * 0.02,
+            speed: i / 600 + 0.1,
+            offset: i
+          })
+
+          ctx.beginPath()
+          ctx.arc(
+            red[i][0] + o / 3,
+            red[i][1] - o / 3,
+            red[i][2],
+            0,
+            Math.PI * 2
+          )
+          // the closer to the center, the more transparent
+          const rAlpha = 0.5 - Math.abs(w / 2 - red[i][0]) / w
+          // rgb indianred = 205, 92, 92
+          ctx.fillStyle = `rgba(205, 92, 92, ${rAlpha})`
+          ctx.fill()
+          ctx.closePath()
+
+          ctx.beginPath()
+          ctx.arc(
+            blue[i][0] - o / 2,
+            blue[i][1] + o / 2,
+            blue[i][2],
+            0,
+            Math.PI * 2
+          )
+          const bAlpha = 0.5 - Math.abs(w / 2 - blue[i][0]) / w
+          // rgb steelblue = 70, 130, 180
+          ctx.fillStyle = `rgba(70, 130, 180, ${bAlpha})`
+          ctx.fill()
+          ctx.closePath()
+
+          ctx.beginPath()
+          ctx.arc(
+            black[i][0] + o,
+            black[i][1] - o,
+            black[i][2],
+            0,
+            Math.PI * 2
+          )
+          const blAlpha = 0.5 - Math.abs(w / 2 - black[i][0]) / w
+          ctx.fillStyle = `rgba(0, 0, 0, ${blAlpha})`
+          ctx.fill()
+          ctx.closePath()
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
