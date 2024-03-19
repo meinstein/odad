@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1 / 1;
+        width: min(500px, 90%);
+      }
+
+      canvas {
+        box-sizing: border-box;
+        border-radius: 50%;
+        border: 5px solid indianred;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+
+      // go from red to orange to blue to green to red in 20 steps
+      const colors = [
+        'indianred',
+        'steelblue',
+        'indianred',
+        'steelblue',
+        'indianred',
+        'steelblue',
+        'indianred',
+        'steelblue',
+      ]
+
+      const evolutions = colors.length;
+      const rows = 10;
+      const cols = 10;
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+
+        // this memoization is not necessary after all...
+        const getData = memoize(() => {
+          const data = [];
+
+          for (let evolution = 0; evolution < evolutions; evolution++) {
+            const evolutionData = [];
+            for (let row = 0; row < rows; row++) {
+              const rowData = [];
+              for (let col = 0; col < cols; col++) {
+                rowData.push({
+                  x: col * w / cols,
+                  y: row * h / rows,
+                  r: (w / cols / 2) * (1 - evolution / evolutions),
+                  color: colors[evolution],
+                });
+              }
+              evolutionData.push(rowData);
+            }
+            data.push(evolutionData);
+          }
+
+          return data;
+        });
+
+        const data = getData();
+
+        for (let evolution = 0; evolution < evolutions; evolution++) {
+          for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+              const { x, y, r, color } = data[evolution][row][col];
+              ctx.beginPath();
+
+              const ox = oscillate({
+                from: r * 0.875,
+                to: r * 1.125,
+                speed: 1.25,
+                offset: col * 2.5 + row * 2,
+              })
+
+              ctx.arc(
+                x + w / cols / 2,
+                y + h / rows / 2,
+                r + ox,
+                0,
+                Math.PI * 2
+              );
+              ctx.fillStyle = color;
+              ctx.fill();
+            }
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
