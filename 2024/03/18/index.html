@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>death by a thousand ruts</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        overflow: hidden;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1 / 1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // loosely inspired by: https://www.moma.org/collection/works/205930
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const evolutions = 25
+
+      const draw = ({ ctx, w, h, memoize, oscillate }) => {
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter'
+
+        const barWidth = w * 0.01
+
+        const getData = memoize(() => {
+          const data = []
+
+          for (let evolution = 0; evolution < evolutions; evolution++) {
+            // get random range between 0 and 0.4
+            const random = Math.random() * 0.2 + 0.07
+            // get random range between 0.6 and 1
+            const random2 = 0.75 + Math.random() * 0.18
+
+            let start = Math.floor(random * w)
+            // make sure start is even
+            start = start % 2 === 1 ? start : start + 1
+
+            let end = Math.round(random2 * w)
+
+            // get random between 0 and 0.25
+            const height = Math.random() * 0.2 + 0.05
+            // get random between 0.75 and 1
+            const height2 = 0.75 + Math.random() * 0.2
+
+            const startH = Math.round(h * height)
+            const endH = Math.floor(h * height2)
+
+            for (let i = start; i < end; i += barWidth * 2) {
+              data.push({
+                // make sure x is even
+                x: i,
+                y: startH,
+                w: barWidth,
+                h: endH - startH,
+                color: i % 2 === 0 ? 'coral' : 'indianred',
+                opacity: evolution / evolutions
+              })
+            }
+          }
+
+          return data
+        })
+
+        const data = getData()
+
+        data.forEach(({ x, y, w, h }, idx) => {
+          const ox = oscillate({
+            from: -1,
+            to: 1,
+            speed: 0.33,
+            offset: idx * 0.5
+          })
+          ctx.fillStyle = data[idx].color
+          ctx.globalAlpha = data[idx].opacity * 0.25
+          ctx.fillRect(
+            x,
+            y + ox * 10,
+            w,
+            h
+          )
+        })
+
+        // draw the white bars in the in between
+        for (let i = 0; i < w; i += barWidth * 2) {
+          ctx.fillStyle = 'lavender'
+          ctx.globalAlpha = 0.25
+          ctx.fillRect(
+            i,
+            0,
+            barWidth,
+            h
+          )
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
