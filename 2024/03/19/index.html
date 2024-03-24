@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NL x PT</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: black;
+        overflow: hidden;
+      }
+
+      #root {
+        width: min(600px, 90%);
+        aspect-ratio: 1 / 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      // load the image
+      const dutchTile = new Image();
+      dutchTile.src = './dutch_tile.jpg'
+
+      const portugueseTile = new Image();
+      portugueseTile.src = './tuga_tile.jpeg'
+
+
+      const cols = 7
+      const rows = 7
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // alpha
+        ctx.globalAlpha = 0.5
+        // blend
+        ctx.globalCompositeOperation = 'multiply'
+
+        const padding = w * 0.175
+        const tileWidth = (w - padding * 2) / cols
+        const tileHeight = (h - padding * 2) / rows
+
+        // rotate the entire canvas 45 degrees
+        // save
+        ctx.save()
+        ctx.translate(w / 2, h / 2)
+        ctx.rotate(Math.PI / 4)
+        ctx.translate(-w / 2, -h / 2)
+
+        for (let i = 1; i <= cols; i++) {
+          for (let j = 1; j <= rows; j++) {
+
+            const ox = oscillate({
+              from: -padding / 8,
+              to: padding / 8,
+              speed: 0.75,
+              offset: i * 0.125 + j * 0.125
+            })
+
+            const oy = oscillate({
+              from: -padding / 6,
+              to: padding / 6,
+              speed: 0.75,
+              offset: i * 0.125 + j * 0.125
+            })
+
+            const x = padding + i * tileWidth + ox - tileWidth
+            const y = padding + j * tileHeight + oy - tileHeight
+
+            // alternate between the two images
+            const image = (i + j) % 2 === 0 ? dutchTile : portugueseTile
+
+            ctx.drawImage(image, x, y, tileWidth, tileHeight)
+          }
+        }
+
+
+        ctx.restore()
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
