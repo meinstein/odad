@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dribble jump fly</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: black;
+        height: 100dvh;
+      }
+
+      #root {
+        width: min(550px, 90%);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const cols = 20;
+      const balls = 20;
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // global alpha
+        ctx.globalAlpha = 0.5
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter'
+
+
+        const padding = w * 0.01
+        const d = w / (cols * 1.5)
+        for (let col = 1; col <= cols; col++) {
+          const x = col * d * 1.5 - d * 0.75
+
+          for (let ball = 0; ball < balls; ball++) {
+
+
+            const oy = oscillate({
+              from: -d * 0.5,
+              // to function is relative to the ball index and the center col
+              to: Math.abs(col - cols * 0.5) * d * 1.25 + d * 0.5,
+              // to: ball * d * 0.25 * col,
+              speed: 0.65,
+              offset: ball * 0.125
+            })
+
+            const y = h - d - ball * d * 0.75 - oy
+            // fill
+            ctx.fillStyle = 'lavenderblush'
+            // the last ball is indian red
+            if (ball === balls - 1) {
+              // yellow ish color
+              ctx.fillStyle = '#FF5733'
+            }
+            // first ball is steel blue
+            if (ball === 0) {
+              ctx.fillStyle = '#4682B4'
+            }
+
+            const r = d * 0.5 * (ball + 1) / balls * 0.65 + padding
+
+            // draw arc
+            ctx.beginPath()
+            ctx.arc(
+              x,
+              y,
+              r,
+              0,
+              Math.PI * 2
+            )
+            ctx.fill()
+          }
+
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
