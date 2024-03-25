@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kind and blue</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        height: 100dvh;
+      }
+
+      #root {
+        width: min(550px, 90%);
+        aspect-ratio: 1/1;
+      }
+
+      canvas {
+        border-radius: 12.5%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // inspired by: Hélio Oiticica
+      // title: Metaesquema No. 348, 1958
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const rows = 15;
+      const cols = 15;
+
+      const rowW = [
+        0.05,
+        0.1,
+        0.075,
+        0.05,
+        0.025,
+        0.075,
+        0.05,
+        0.025,
+        0.1,
+        0.15,
+        0.1,
+        0.025,
+        0.05,
+        0.1,
+        0.025,
+      ]
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // global alpha
+        ctx.globalAlpha = 1
+        // blend mode
+        ctx.globalCompositeOperation = 'multiply'
+
+        const rowH = h / rows
+
+        for (let row = 0; row < rows; row++) {
+          const y = row * rowH
+
+
+          for (let col = 0; col < cols; col++) {
+            // get the cumulative width before the current col and mult by the width of the current col
+            let x = rowW.slice(0, col).reduce((acc, curr) => acc + curr, 0) * w
+
+
+
+
+            // get the width of the current col, factor in padding
+            const width = rowW[col] * w + w * 0.02
+
+            // to re-center after adding w * 0.02 above, subtract w * 0.01
+            x = x - w * 0.01
+
+            // get the height of the current row
+            const height = rowH
+
+            // fill
+            ctx.fillStyle = `royalblue`
+
+            // ctx save
+            ctx.save()
+
+            const or = oscillate({
+              from: Math.PI * -0.125,
+              to: Math.PI * 0.125,
+              speed: 0.65,
+              offset: col * 0.5 + row * 0.75
+            })
+
+            // rotate slightly
+
+            ctx.translate(x + width * 0.5, y + height * 0.5)
+            ctx.rotate(or)
+            ctx.translate(-x - width * 0.5, -y - height * 0.5)
+
+
+            // fill
+            ctx.fillRect(x, y, width, height)
+
+            // ctx restore
+            ctx.restore()
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
