@@ -30,14 +30,12 @@
       import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
 
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // global alpha
-        ctx.globalAlpha = 0.75
         // blend mode
-        ctx.globalCompositeOperation = 'lighter'
+        // ctx.globalCompositeOperation = 'lighten'
 
-        const rows = 12;
-        const cols = 12;
-        const strokeWidth = w * 0.01;
+        const rows = 17;
+        const cols = 17;
+        const strokeWidth = w * 0.0075;
 
         const getData = memoize(() => {
           const data = []
@@ -94,7 +92,8 @@
 
             ctx.fillStyle = 'black'
             ctx.fill()
-            ctx.strokeStyle = 'indianred'
+            // indianred rgb = 205, 92, 92
+            ctx.strokeStyle = `rgba(205, 92, 92, 1)`
             ctx.lineWidth = strokeWidth
             ctx.stroke()
 
@@ -108,14 +107,14 @@
             const ox = oscillate({
               from: fromX,
               to: toX,
-              speed: 0.66,
+              speed: 0.6,
               offset: rowIdx * 0.125 + colIdx * 0.125
             })
 
             const oy = oscillate({
               from: y - strokeWidth * 0.5,
               to: y + strokeWidth * 0.5,
-              speed: 0.5,
+              speed: 1.2,
               offset: rowIdx * 0.125 + colIdx * 0.125
             })
 
@@ -127,7 +126,8 @@
               Math.PI * 2
             )
 
-            ctx.fillStyle = 'steelblue'
+            // steelblue rgb = 70, 130, 180
+            ctx.fillStyle = `rgba(70, 130, 180, 0.85)`
             ctx.fill()
           })
         })
