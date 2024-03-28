@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ghastly optionality</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: black;
+        height: 100dvh;
+      }
+
+      #root {
+        width: min(500px, 90%);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const r = w * 0.1
+
+        // centered in the top left quadrant
+        const topLeft = {
+          x: w / 2 - w / 4 + r,
+          y: h / 2 - h / 4 + r,
+        }
+
+        const topRight = {
+          x: w / 2 + w / 4 - r,
+          y: h / 2 - h / 4 + r,
+        }
+
+        const bottomLeft = {
+          x: w / 2 - w / 4 + r,
+          y: h / 2 + h / 4 - r,
+        }
+
+        const bottomRight = {
+          x: w / 2 + w / 4 - r,
+          y: h / 2 + h / 4 - r,
+        }
+
+        ctx.beginPath()
+        ctx.arc(topLeft.x, topLeft.y, r, 0, Math.PI * 2)
+        ctx.strokeStyle = 'white'
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.arc(topRight.x, topRight.y, r, 0, Math.PI * 2)
+        ctx.strokeStyle = 'white'
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.arc(bottomLeft.x, bottomLeft.y, r, 0, Math.PI * 2)
+        ctx.strokeStyle = 'white'
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.arc(bottomRight.x, bottomRight.y, r, 0, Math.PI * 2)
+        ctx.strokeStyle = 'white'
+        ctx.stroke()
+
+        const CIRCLES = 100
+
+        for (let i = 0; i < CIRCLES; i++) {
+          const x = oscillate({
+            from: topLeft.x,
+            to: topRight.x,
+            speed: 0.50,
+            offset: i / CIRCLES * 4
+          })
+
+          const y = oscillate({
+            from: topLeft.y,
+            to: bottomLeft.y,
+            speed: 0.5,
+            offset: i / CIRCLES * 12
+          })
+
+          ctx.beginPath()
+          ctx.arc(x, y, r, 0, Math.PI * 2)
+          // alpha is
+          const alpha = (i / CIRCLES) * 0.05
+          ctx.fillStyle = `rgba(255, 92, 92, ${alpha})`
+          ctx.fill()
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
