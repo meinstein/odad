@@ -67,7 +67,10 @@
           ctx.strokeStyle = 'lavender'
           ctx.stroke()
 
-          const ox = oscillate({
+          // draw the wavy circles
+          const threshold = r * 0.25
+
+          const ox1 = oscillate({
             from: x1,
             to: x2,
             speed: 0.375,
@@ -76,7 +79,7 @@
 
           ctx.beginPath()
           ctx.arc(
-            ox,
+            ox1,
             y1,
             r - padding,
             0,
@@ -84,25 +87,30 @@
           )
 
 
-          const threshold = r * 0.1
+          const ox2 = oscillate({
+            from: x2,
+            to: x1,
+            speed: 0.375,
+            offset: y * 0.0125,
+          })
+
+          ctx.arc(
+            ox2,
+            y1,
+            r - padding,
+            0,
+            Math.PI * 2
+          )
 
           // Change the fill color based on the distance from the edge!
-          if (Math.abs(ox - x1) < threshold || Math.abs(ox - x2) < threshold) {
+          if (Math.abs(ox1 - x1) < threshold || Math.abs(ox1 - x2) < threshold) {
             ctx.fillStyle = 'indianred'
-            ctx.fill()
           } else {
             ctx.fillStyle = 'steelblue'
-            ctx.fill()
           }
 
-          // ctx.fillStyle = 'white'
           ctx.fill()
         }
-
-        // translate and mirror
-        ctx.translate(w / 2, h / 2)
-        ctx.scale(-1, 1)
-        ctx.translate(-w / 2, -h / 2)
 
       }
 
