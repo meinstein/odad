@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the hot button swirl</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: black;
+        height: 100dvh;
+      }
+
+      #root {
+        width: min(500px, 90%);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 25
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // Need to mult num by 2, as r is the radius of the circle (ie half)
+        const r = h / (num * 2)
+        const padding = r * 0.25
+
+        for (let y = 0; y < h; y = y + r * 2) {
+          // LEFT SIDe
+          ctx.beginPath()
+          const x1 = w / 4 - r
+          const y1 = y + r
+          ctx.arc(
+            x1,
+            y1,
+            // The trick is to subtract the padding from the radius
+            r - padding,
+            0,
+            Math.PI * 2
+          )
+          ctx.strokeStyle = 'lavender'
+          ctx.stroke()
+
+
+          // RIGHT SIDE
+          ctx.beginPath()
+          const x2 = w / 4 * 3 + r
+          const y2 = y + r
+          ctx.arc(
+            x2,
+            y2,
+            r - padding,
+            0,
+            Math.PI * 2
+          )
+          ctx.strokeStyle = 'lavender'
+          ctx.stroke()
+
+          const ox = oscillate({
+            from: x1,
+            to: x2,
+            speed: 0.375,
+            offset: y * 0.0125,
+          })
+
+          ctx.beginPath()
+          ctx.arc(
+            ox,
+            y1,
+            r - padding,
+            0,
+            Math.PI * 2
+          )
+
+
+          const threshold = r * 0.1
+
+          // Change the fill color based on the distance from the edge!
+          if (Math.abs(ox - x1) < threshold || Math.abs(ox - x2) < threshold) {
+            ctx.fillStyle = 'indianred'
+            ctx.fill()
+          } else {
+            ctx.fillStyle = 'steelblue'
+            ctx.fill()
+          }
+
+          // ctx.fillStyle = 'white'
+          ctx.fill()
+        }
+
+        // translate and mirror
+        ctx.translate(w / 2, h / 2)
+        ctx.scale(-1, 1)
+        ctx.translate(-w / 2, -h / 2)
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
