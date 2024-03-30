@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multicontextual</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: #F0EAD6;
+        height: 100dvh;
+      }
+
+      /* make a grid out of the roots */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        /* gap: 0; */
+        /* aspect-ratio: 1/1; */
+        width: min(400px, 90%);
+      }
+
+      .grid div {
+        aspect-ratio: 1/1;
+        /* background: #fff; */
+        width: 100%;
+      }
+
+      /* the below hack is unfortunate - need to do it so that the parent div does not add unwanted space between the adjoining canvases */
+      #root_1 {
+        /* align children right*/
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      #root_2 {
+        /* align children left */
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      #root_3 {
+        /* align children start */
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      #root_4 {
+        /* align children end */
+        display: flex;
+        justify-content: flex-end;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grid">
+      <div id="root_1"></div>
+      <div id="root_2"></div>
+      <div id="root_3"></div>
+      <div id="root_4"></div>
+    </div>
+    <script type="module">
+      // inspired by: https://www.moma.org/collection/works/84757
+      // artist: Victor Vasarely
+      // title: Umbriel from the portfolio Cinétique III
+      // year: 1959
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw_1 = ({ ctx, w, h, oscillate }) => {
+        const or = oscillate({
+          from: w / 2,
+          to: w / 3,
+          speed: 0.35,
+        })
+
+        ctx.beginPath()
+        const centerX = w / 2
+        const centerY = h / 2
+        const radius = or
+
+        const angle = oscillate({
+          from: Math.PI * 2,
+          to: 0,
+          speed: 0.35,
+        })
+
+        const x = centerX + Math.cos(angle) * radius
+        const y = centerY + Math.sin(angle) * radius
+
+        ctx.arc(
+          x,
+          y,
+          w / 4,
+          0,
+          Math.PI * 2
+        )
+        ctx.fill()
+      }
+
+      // root_1
+      const context2d_1 = new Context2D({
+        rootElement: 'root_1',
+      })
+      context2d_1.draw(draw_1)
+
+      const draw_2 = ({ ctx, w, h, oscillate }) => {
+        const or = oscillate({
+          from: w / 2,
+          to: w / 3,
+          speed: 0.35,
+        })
+
+        ctx.beginPath()
+        const centerX = w / 2
+        const centerY = h / 2
+        const radius = or
+
+        const angle = oscillate({
+          from: -Math.PI,
+          to: Math.PI,
+          speed: 0.35,
+        })
+
+        const x = centerX + Math.cos(angle) * radius
+        const y = centerY + Math.sin(angle) * radius
+
+        ctx.arc(
+          x,
+          y,
+          w / 4,
+          0,
+          Math.PI * 2
+        )
+        ctx.fill()
+      }
+
+      // root_2
+      const context2d_2 = new Context2D({
+        rootElement: 'root_2',
+      })
+      context2d_2.draw(draw_2)
+
+
+      const draw_3 = ({ ctx, w, h, oscillate }) => {
+        const or = oscillate({
+          from: w / 4,
+          to: w / 2,
+          speed: 0.5,
+        })
+
+        ctx.beginPath()
+        const centerX = w / 2
+        const centerY = h / 2
+        const radius = or
+
+        const angle = oscillate({
+          from: -Math.PI,
+          to: Math.PI,
+          speed: 0.35,
+        })
+
+        const x = centerX + Math.cos(angle) * radius
+        const y = centerY + Math.sin(angle) * radius
+
+        ctx.arc(
+          x,
+          y,
+          w / 4,
+          0,
+          Math.PI * 2
+        )
+        ctx.fill()
+      }
+
+      // root_3
+      const context2d_3 = new Context2D({
+        rootElement: 'root_3',
+      })
+      context2d_3.draw(draw_3)
+
+      const draw_4 = ({ ctx, w, h, oscillate }) => {
+        const or = oscillate({
+          from: w / 4,
+          to: w / 2,
+          speed: 0.5,
+        })
+
+        ctx.beginPath()
+        const centerX = w / 2
+        const centerY = h / 2
+        const radius = or
+
+        const angle = oscillate({
+          from: Math.PI * 2,
+          to: 0,
+          speed: 0.35,
+        })
+
+        const x = centerX + Math.cos(angle) * radius
+        const y = centerY + Math.sin(angle) * radius
+
+        ctx.arc(
+          x,
+          y,
+          w / 4,
+          0,
+          Math.PI * 2
+        )
+        ctx.fill()
+      }
+
+      // root_4
+      const context2d_4 = new Context2D({
+        rootElement: 'root_4',
+      })
+      context2d_4.draw(draw_4)
+    </script>
+  </body>
+
+</html>
