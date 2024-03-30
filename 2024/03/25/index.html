@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>have fun up there</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: #F0EAD6, ;
+        height: 100dvh;
+      }
+
+      #root {
+        width: min(500px, 90%);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const data = [
+        [50, 10, 40],
+        [45, 10, 45],
+        [40, 10, 50],
+        [35, 10, 55],
+        [40, 10, 50],
+        [45, 10, 45],
+        [50, 10, 40]
+      ]
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        for (let i = 0; i < data.length; i++) {
+          // const padding = oscillate({
+          //   from: w * 0.01,
+          //   to: w * 0.02,
+          //   speed: 2,
+          // })
+
+          const padding = w * 0.015
+
+          const barWidth = w / data.length - padding
+          const [start, middle, end] = data[i]
+
+          const x = i * (barWidth + padding)
+
+          const y1Start = 0
+          const y1End = h * (start / 100) - padding
+
+          // draw a bar from top to bottom
+          ctx.fillStyle = 'black'
+          ctx.fillRect(
+            x,
+            y1Start,
+            barWidth,
+            y1End
+          )
+
+          const y2Start = y1End + padding
+          const y2End = h * (middle / 100) - padding
+
+          // middle index is the fastest (data.length / 2)
+          const speed = i === Math.floor(data.length / 2) ? 2 : 1
+
+          // rotate
+          const or = oscillate({
+            from: -Math.PI / padding / 4,
+            to: Math.PI / padding / 4,
+            speed: speed * 5,
+            offset: i
+          })
+
+          // make the middle bar rotate back and forth
+          ctx.save()
+          ctx.translate(x + barWidth / 2, y2Start + y2End / 2)
+          ctx.rotate(or)
+          ctx.translate(-(x + barWidth / 2), -(y2Start + y2End / 2))
+
+          // draw a bar from bottom to middle
+          ctx.fillStyle = 'indianred'
+          ctx.fillRect(
+            x,
+            y2Start,
+            barWidth,
+            y2End
+          )
+          ctx.restore()
+
+          const y3Start = y1End + y2End + padding * 2
+
+          // draw a bar from middle to bottom
+          ctx.fillStyle = 'black'
+          ctx.fillRect(
+            x,
+            y3Start,
+            barWidth,
+            h
+          )
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
