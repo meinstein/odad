@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>down, deep down, tief, diep down</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        /* align-items: center; */
+        overflow: hidden;
+        background: #F0EAD6;
+        height: 100dvh;
+      }
+
+      #root {
+        width: min(500px, 90%);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      // inspired by: https://www.moma.org/collection/works/205937
+      // artist: Willys de Castro
+      // title: Poster - poem
+      // year: 1958
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const text = [
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'deep',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'down',
+        'deep',
+        'down',
+        'diep',
+        'down',
+        'down',
+        'down',
+        'deep',
+        'diep',
+        'tief',
+        'deep',
+        'diep',
+        'tief',
+        'deep',
+        'diep',
+        'tief',
+        'deep',
+        'diep',
+        'tief',
+        'deep',
+        'diep',
+        'tief',
+        'deep',
+        'deep',
+        'diep',
+      ]
+
+      const lines = text.length
+
+      for (let i = 0; i < lines; i++) {
+        text.push(`line ${i + 1}`)
+      }
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        for (let i = 0; i < text.length; i++) {
+          const fontSize = oscillate({
+            from: h / lines * 0.85,
+            to: h / lines * 1.2,
+            speed: 0.5,
+            offset: i / lines * Math.PI,
+          })
+
+          const opacity = oscillate({
+            from: 0.25,
+            to: 1,
+            speed: 0.5,
+            offset: i / lines * Math.PI * 2,
+          })
+
+          ctx.font = `${fontSize}px monospace`
+          ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`
+          const lineHeight = fontSize * 1.25
+          const y = i * lineHeight + lineHeight
+          const x = w / 2 - ctx.measureText(text[i]).width / 2
+          ctx.fillText(text[i], x, y)
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
