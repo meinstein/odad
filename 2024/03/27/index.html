@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>square pegs in and around holes</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #F0EAD6;
+        height: 100dvh;
+      }
+
+      /* overlay the grid containers */
+      .container {
+        position: absolute;
+        /* center in middle of the viewport */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container" id="root_1"></div>
+    <div class="container" id="root_2"></div>
+    <script type="module">
+      // inspired by: https://www.moma.org/collection/works/84760
+      // artist: Victor Vasarely
+      // title: Procion from the portfolio Cinétique III
+      // year: 1959
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      // interestingly, 6x6 grid works well for this composition
+      // anything higher and the squares start to miss the circles
+      const rows = 6
+      const cols = 6
+
+      // DRAW 1
+      const draw_1 = ({ ctx, w, h, oscillate, memoize }) => {
+        const padding = w * 0.01
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            // draw circle at center of each cell
+            // spaced between each other by padding
+            const x = col * (w / cols) + w / cols / 2
+            const y = row * (h / rows) + h / rows / 2
+            const r = w / cols / 2 - padding
+
+            ctx.beginPath()
+            ctx.arc(
+              x,
+              y,
+              r,
+              0,
+              Math.PI * 2)
+            ctx.fill()
+          }
+        }
+      }
+
+      // DRAW 2
+      const draw_2 = ({ ctx, w, h, oscillate, memoize }) => {
+        // padding needs to be double the size of the padding in draw_1
+        // that's what makes the squares overlap the circles, which use
+        // padding of w * 0.01
+        const padding = w * 0.02
+
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const ro = oscillate({
+              from: Math.PI / 2,
+              to: -Math.PI / 2,
+              speed: 0.25,
+            })
+
+            // ctx save
+            ctx.save()
+            // ctx translate
+            ctx.translate(
+              col * (w / cols) + w / cols / 2,
+              row * (h / rows) + h / rows / 2
+            )
+            // rotate
+            ctx.rotate(ro)
+            // ctx translate
+            ctx.translate(
+              -(col * (w / cols) + w / cols / 2),
+              -(row * (h / rows) + h / rows / 2)
+            )
+
+            // draw a square at center of each cell
+
+            const x = col * (w / cols) + w / cols / 2
+            const y = row * (h / rows) + h / rows / 2
+
+            const r = w / cols / 2 - padding
+
+            const side = w / cols / 4
+
+            // note: must declare fill style before first fillRect
+            ctx.fillStyle = '#F0EAD6'
+
+            ctx.fillRect(
+              x - side / 2,
+              y - side / 2,
+              side,
+              side
+            )
+
+            // fill
+            ctx.fill()
+
+            // draw a square half way past the edge of the cell
+            const offset = w / cols / 2
+
+            ctx.fillRect(
+              x + r,
+              y - side / 2,
+              side,
+              side
+            )
+
+            // fill
+            ctx.fill()
+
+            // if it's the first col, draw a square half way past the edge of the cell on the left side
+            // if (col === 0) {
+            ctx.fillRect(
+              x - r - side,
+              y - side / 2,
+              side,
+              side
+            )
+
+            // fill
+            ctx.fill()
+            // }
+
+            // draw a square at the bottom of the cell, too
+            ctx.fillRect(
+              x - side / 2,
+              y + r,
+              side,
+              side
+            )
+
+            // fill
+            ctx.fill()
+
+            // if it's the first row, draw a square at the top of the cell
+            // if (row === 0) {
+            ctx.fillRect(
+              x - side / 2,
+              y - r - side,
+              side,
+              side
+            )
+
+            // fill
+            ctx.fill()
+            // }
+
+            // ctx restore
+            ctx.restore()
+          }
+        }
+      }
+
+      // 1
+      const context2d_1 = new Context2D({
+        rootElement: 'root_1'
+      })
+      context2d_1.draw(draw_1)
+
+      // 2
+      const context2d_2 = new Context2D({
+        rootElement: 'root_2'
+      })
+      context2d_2.draw(draw_2)
+    </script>
+  </body>
+
+</html>
