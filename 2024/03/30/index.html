@@ -4,12 +4,21 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nederland</title>
+    <title>piled high</title>
     <style>
       body,
       p {
         margin: 0;
         padding: 0;
+      }
+
+      body {
+        overflow: hidden;
+        background: #F0EAD6;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
       }
 
       /* center #text */
@@ -32,19 +41,44 @@
       <p>The foundation of capitalism rests on wooden piles</p>
       <p>in a swampland</p>
       <p>on wane.</p>
-      <p>Though long spells of drought are making them rot</p>
-      <p>the stench is masked by free capital gain.</p>
+      <p>Long spells of drought are making them rot</p>
+      <p>but the stench is masked by free capital gain.</p>
       <p>Makelaars and wijnhandelaars keep their noses to the ground.</p>
-      <p>To the enjoyment of the few, the rest will have to drown.</p>
+      <p>To the enjoyment of the few, the rest must drown.</p>
     </div>
+    <div id="root"></div>
     <script type="module">
       import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
 
+
       const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
+        const pylonW = 4
+        const pylons = w / pylonW
+        // for each pylon, draw a rect that is oscillating from the bottom of the screen to the half of the screen
+        for (let i = 0; i < pylons; i++) {
+          const x = w / pylons * i
+          const y = h
+          const width = pylonW
+          const height = h / 2
+          const oscillatingHeight = oscillate({
+            from: h / 5,
+            to: height / 2,
+            speed: 0.5 * Math.sin(i / 10),
+            offset: i
+          })
+          ctx.fillStyle = `rgba(139, 69, 19, 0.25)`
+          ctx.fillRect(
+            x,
+            y - oscillatingHeight,
+            width,
+            oscillatingHeight
+          )
+        }
       }
 
-      const context2d = new Context2D()
+      const context2d = new Context2D({
+        // rootElement: 'root'
+      })
       context2d.draw(draw)
     </script>
   </body>
