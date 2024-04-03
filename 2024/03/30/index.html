@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nederland</title>
+    <style>
+      body,
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* center #text */
+      #text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: monospace;
+        font-size: 1em;
+        line-height: 2em;
+        text-align: left;
+        color: #000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="text">
+      <p>The foundation of capitalism rests on wooden piles</p>
+      <p>in a swampland</p>
+      <p>on wane.</p>
+      <p>Though long spells of drought are making them rot</p>
+      <p>the stench is masked by free capital gain.</p>
+      <p>Makelaars and wijnhandelaars keep their noses to the ground.</p>
+      <p>To the enjoyment of the few, the rest will have to drown.</p>
+    </div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // add code here
+      }
+
+      const context2d = new Context2D()
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
