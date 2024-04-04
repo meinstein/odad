@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>staircase in violation</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: black;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // round the line
+        ctx.lineCap = 'round'
+        ctx.strokeStyle = 'lavender'
+        const lineWidth = 3
+        ctx.lineWidth = lineWidth
+        const spacing = lineWidth * 2.5
+        const rows = h / spacing
+        const skipNum = 8
+
+        for (let row = 0; row < rows; row++) {
+          if (row < skipNum || row > rows - skipNum) {
+            continue
+          }
+
+          // get the row distance to the middle
+          const distToMid = 1 - (Math.abs(row - rows / 2) / (rows / 2))
+
+          const oy = oscillate({
+            from: row * spacing + spacing / 2,
+            to: row * spacing + spacing / 2 + (spacing * distToMid),
+            offset: row * 0.125,
+            speed: 1.25
+          })
+
+          const getFirstLine = () => {
+            const x1 = 0
+            const y1 = row * spacing + spacing / 2
+            // get a value between 0 and 1 based on row index
+            const val = row / rows
+            const x2 = w * val
+            const y2 = y1
+
+            const cp1x = x1 + (x2 - x1) / 2
+            const cp1y = oy
+            const cp2x = x1 + (x2 - x1) / 3
+            const cp2y = oy
+
+            // draw it
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            // ctx.lineTo(x2, y2)
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              x2,
+              y2
+            )
+            ctx.stroke()
+
+            return { x1, y1, x2, y2 }
+          }
+
+
+          const getSecondLine = () => {
+            const firstLine = getFirstLine()
+            const startX = firstLine.x2
+            const startY = firstLine.y2
+            const endX = firstLine.x2 + (w * 0.025)
+            const endY = startY - h * 0.125
+
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.lineTo(endX, endY)
+            ctx.stroke()
+
+            return { x1: startX, y1: startY, x2: endX, y2: endY }
+          }
+
+          const getThirdLine = () => {
+            const secondLine = getSecondLine()
+
+            const x1 = secondLine.x2
+            const y1 = secondLine.y2
+            const x2 = w
+            const y2 = secondLine.y2
+
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            ctx.lineTo(x2, y2)
+            ctx.stroke()
+            return { x1, y1, x2, y2 }
+          }
+
+          // only need to call the last one, the rest are called within
+          getThirdLine()
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
