@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>patchwork</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        width: min(500px, 90%);
+        aspect-ratio: 1/1;
+      }
+
+      /* canvas { */
+      /* border: 2px solid red; */
+      /* } */
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const COLS = 29;
+      const ROWS = 29;
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const PADDING = w * 0.0035;
+
+        for (let row = 0; row < ROWS; row++) {
+          for (let col = 0; col < COLS; col++) {
+            // add padding to first column and row and last column and row
+            const x = col * w / COLS;
+            const y = row * h / ROWS;
+
+            const ox = oscillate({
+              from: 0,
+              to: PADDING * 2,
+              speed: 1.125,
+              offset: col * 0.25 - row * 0.125
+            })
+
+            const oy = oscillate({
+              from: 0,
+              to: PADDING * 2,
+              speed: 1.125,
+              offset: col * 0.125 - row * 0.25
+            })
+
+            const isFoo = col * row % 2 === 0;
+
+            // rotate
+            ctx.save();
+            ctx.translate(x + w / COLS / 2, y + h / ROWS / 2);
+            ctx.rotate(ox / Math.PI);
+            ctx.translate(-(x + w / COLS / 2), -(y + h / ROWS / 2));
+
+
+
+            ctx.beginPath();
+            ctx.rect(
+              x + ox,
+              y + oy,
+              w / COLS - PADDING * 2,
+              h / ROWS - PADDING * 2
+            );
+
+            ctx.restore();
+
+            ctx.fillStyle = isFoo ? 'goldenrod' : 'indianred';
+
+            ctx.fill();
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
