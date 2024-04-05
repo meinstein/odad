@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stroom</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+      }
+
+      /* overlap roots + center them */
+      #root_1,
+      #root_2 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(500px, 90%);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root_1"></div>
+    <div id="root_2"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const ROWS = 20;
+      const COLS = 20;
+
+      /**
+       * ONE
+       */
+
+      const draw_1 = ({ ctx, w, h, oscillate, memoize }) => {
+        // opacity
+        ctx.globalAlpha = 0.75;
+        for (let row = 0; row < ROWS; row++) {
+          for (let col = 0; col < COLS; col++) {
+            const x = col * w / COLS;
+            const y = row * h / ROWS;
+
+            const ox = oscillate({
+              from: w / COLS / 2 * 0.25,
+              to: w / COLS / 2 * 1.25,
+              speed: 1,
+              // The combo of half of the column and quarter of the row creates the sideways => down effect
+              offset: col * 0.125 - row * 0.25
+            })
+
+            // draw a circle
+            ctx.beginPath();
+            ctx.arc(
+              x + w / COLS / 2,
+              y + h / ROWS / 2,
+              ox,
+              0,
+              Math.PI * 2
+            );
+            ctx.fillStyle = 'lavender';
+            ctx.fill();
+          }
+        }
+      }
+
+      const context2d_1 = new Context2D({ rootElement: 'root_1' })
+      context2d_1.draw(draw_1)
+
+      /**
+       * TWO
+       */
+
+      const draw_2 = ({ ctx, w, h, oscillate, memoize }) => {
+        // add slight opacity so that the smaller circle in the background is still visible
+        ctx.globalAlpha = 0.75;
+        for (let row = 0; row < ROWS; row++) {
+          for (let col = 0; col < COLS; col++) {
+            const x = col * w / COLS;
+            const y = row * h / ROWS;
+
+            ctx.beginPath();
+            ctx.rect(
+              x + w / COLS / 2 - w / COLS / 2 / 2,
+              y + h / ROWS / 2 - w / COLS / 2 / 2,
+              w / COLS / 2,
+              w / COLS / 2
+            );
+            ctx.fillStyle = 'coral';
+            ctx.fill();
+          }
+        }
+      }
+
+      const context2d_2 = new Context2D({ rootElement: 'root_2' })
+      context2d_2.draw(draw_2)
+
+
+    </script>
+  </body>
+
+</html>
