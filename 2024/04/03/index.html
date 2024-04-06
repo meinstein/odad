@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>quadfish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const curves = 13;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // draw square outline in the middle
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
+          w / 3,
+          h / 3,
+          w / 3,
+          h / 3
+        );
+
+        const topBezier = () => {
+
+          // draw 10 bezier curves starting from top left corner and ending at top right corner - make the curves go towards the top left corner
+          for (let i = 0; i < curves; i++) {
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / 10
+            });
+
+            ctx.beginPath();
+            ctx.moveTo(w / 3 * 2, h / 3);
+            ctx.bezierCurveTo(
+              w / 3 * 2 - i * w / 30,
+              h / 3 - i * oy,
+              w / 3 * 2 - i * w / 30,
+              h / 3 - i * oy,
+              w / 3,
+              h / 3
+            );
+            ctx.stroke();
+          }
+        }
+
+        const bottomBezier = () => {
+          // draw 10 bezier curves starting from bottom left corner and ending at bottom right corner
+          for (let i = 0; i < curves; i++) {
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / 10
+            });
+
+            ctx.beginPath();
+            ctx.moveTo(w / 3, h / 3 * 2);
+            ctx.bezierCurveTo(
+              w / 3 + i * w / 30,
+              h / 3 * 2 + i * oy,
+              w / 3 + i * w / 30 + w / 30,
+              h / 3 * 2 + i * oy,
+              w / 3 + w / 3,
+              h / 3 * 2
+            );
+            ctx.stroke();
+          }
+        }
+
+        const leftBezier = () => {
+          // draw 10 bezier curves starting from top left corner and ending at bottom left corner
+          for (let i = 0; i < curves; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / 10
+            });
+
+            ctx.beginPath();
+            ctx.moveTo(w / 3, h / 3);
+            ctx.bezierCurveTo(
+              w / 3 - i * ox,
+              h / 3 + i * h / 30,
+              w / 3 - i * ox,
+              h / 3 + i * h / 30 + h / 30,
+              w / 3,
+              h / 3 * 2
+            );
+            ctx.stroke();
+          }
+
+        }
+
+        const rightBezier = () => {
+          // draw 10 bezier curves starting from top right corner and ending at bottom right corner. make the curves go towards the top right corner
+          for (let i = 0; i < curves; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / 10
+            });
+
+            ctx.beginPath();
+            ctx.moveTo(
+              w / 3 * 2,
+              h / 3 * 2
+            );
+            ctx.bezierCurveTo(
+              w / 3 * 2 + i * ox,
+              h / 3 * 2 - i * h / 30,
+              w / 3 * 2 + i * ox,
+              h / 3 * 2 - i * h / 30 - h / 30,
+              w / 3 * 2,
+              h / 3
+            );
+            ctx.stroke();
+          }
+        }
+
+        topBezier();
+        bottomBezier();
+        leftBezier();
+        rightBezier();
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root',
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
