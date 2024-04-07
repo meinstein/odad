@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>goadfish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 13;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // use alpha so that lines are not too harsh and add dimension to overlapping lines
+        ctx.globalAlpha = 0.75;
+
+        const r = oscillate({
+          from: w / 6,
+          to: w / 5,
+          speed: 1,
+        })
+
+        // draw a circle in the middle
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(
+          w / 2,
+          h / 2,
+          r,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'lavender';
+        ctx.stroke();
+        // ctx.fill();
+
+
+        const bottomRight = () => {
+          for (let i = 0; i < num; i++) {
+            if (i < 1) continue
+
+            const o = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / 10
+            })
+
+            const startX = w / 2 + Math.cos(0) * r;
+            const startY = h / 2 + Math.sin(0) * r;
+            const endX = w / 2 + Math.cos(Math.PI * 0.5) * r;
+            const endY = h / 2 + Math.sin(Math.PI * 0.5) * r;
+
+            const cp1x = w / 2 + Math.cos(Math.PI * 0.166) * r + i * o;
+            const cp1y = h / 2 + Math.sin(Math.PI * 0.166) * r + i * o;
+            const cp2x = w / 2 + Math.cos(Math.PI * 0.332) * r + i * o;
+            const cp2y = h / 2 + Math.sin(Math.PI * 0.332) * r + i * o;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+            ctx.stroke();
+          }
+        }
+
+        const bottomLeft = () => {
+          for (let i = 0; i < num; i++) {
+            if (i < 1) continue
+            const o = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / 10
+            })
+
+            const startX = w / 2 + Math.cos(Math.PI * 0.5) * r;
+            const startY = h / 2 + Math.sin(Math.PI * 0.5) * r;
+            const endX = w / 2 + Math.cos(Math.PI) * r;
+            const endY = h / 2 + Math.sin(Math.PI) * r;
+
+            const cp1x = w / 2 + Math.cos(Math.PI * 0.666) * r - i * o;
+            const cp1y = h / 2 + Math.sin(Math.PI * 0.666) * r + i * o;
+            const cp2x = w / 2 + Math.cos(Math.PI * 0.832) * r - i * o;
+            const cp2y = h / 2 + Math.sin(Math.PI * 0.832) * r + i * o;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+          }
+        }
+
+        const topLeft = () => {
+          for (let i = 0; i < num; i++) {
+            if (i < 1) continue
+            const o = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / 10
+            })
+
+            const startX = w / 2 + Math.cos(Math.PI) * r;
+            const startY = h / 2 + Math.sin(Math.PI) * r;
+            const endX = w / 2 + Math.cos(Math.PI * 1.5) * r;
+            const endY = h / 2 + Math.sin(Math.PI * 1.5) * r;
+
+            const cp1x = w / 2 + Math.cos(Math.PI * 1.166) * r - i * o;
+            const cp1y = h / 2 + Math.sin(Math.PI * 1.166) * r - i * o;
+            const cp2x = w / 2 + Math.cos(Math.PI * 1.332) * r - i * o;
+            const cp2y = h / 2 + Math.sin(Math.PI * 1.332) * r - i * o;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+
+            ctx.strokeStyle = 'lavender';
+            ctx.stroke();
+          }
+        }
+
+        const topRight = () => {
+          for (let i = 0; i < num; i++) {
+            if (i < 1) continue
+
+            const o = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / 10
+            })
+
+            const startX = w / 2 + Math.cos(Math.PI * 1.5) * r;
+            const startY = h / 2 + Math.sin(Math.PI * 1.5) * r;
+            const endX = w / 2 + Math.cos(0) * r;
+            const endY = h / 2 + Math.sin(0) * r;
+
+            const cp1x = w / 2 + Math.cos(Math.PI * 1.666) * r + i * o;
+            const cp1y = h / 2 + Math.sin(Math.PI * 1.666) * r - i * o;
+            const cp2x = w / 2 + Math.cos(Math.PI * 1.832) * r + i * o;
+            const cp2y = h / 2 + Math.sin(Math.PI * 1.832) * r - i * o;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+          }
+        }
+
+        bottomRight();
+        bottomLeft();
+        topLeft();
+        topRight();
+      }
+
+
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
