@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>parafish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 13;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // use alpha so that lines are not too harsh and add dimension to overlapping lines
+        ctx.globalAlpha = 0.75;
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+
+        const leftSide = () => {
+          // draw bezier curves starting from top of the triangle and ending at the bottom left corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / num
+            });
+
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 0.75,
+              offset: i / num
+            });
+
+            ctx.beginPath();
+
+            const startX = w / 2;
+            const startY = h / 3;
+            const endX = w / 3;
+            const endY = h / 3 * 2;
+
+            const cp1x = w * 0.5 - i * ox;
+            const cp1y = h * 0.33 - i * oy;
+            const cp2x = w * 0.33 - i * ox;
+            const cp2y = h * 0.66 - i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+            ctx.stroke();
+          }
+        }
+
+        const rightSide = () => {
+          // draw bezier curves starting from top of the triangle and ending at the bottom right corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 0.75,
+              offset: i / num
+            });
+
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / num
+            });
+
+            ctx.beginPath();
+
+            const startX = w / 2;
+            const startY = h / 3;
+            const endX = w / 3 * 2;
+            const endY = h / 3 * 2;
+
+            const cp1x = w * 0.5 + i * ox;
+            const cp1y = h * 0.33 - i * oy;
+            const cp2x = w * 0.66 + i * ox;
+            const cp2y = h * 0.66 - i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+            ctx.stroke();
+          }
+        }
+
+        const bottomSide = () => {
+          for (let i = 0; i < num; i++) {
+
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / num
+            });
+
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / num
+            });
+
+            ctx.beginPath();
+
+            const startX = w / 3;
+            const startY = h / 3 * 2;
+            const endX = w / 3 * 2;
+            const endY = h / 3 * 2;
+
+            const cp1x = w * 0.33 - i * ox;
+            const cp1y = h * 0.66 + i * oy;
+            const cp2x = w * 0.66 + i * ox;
+            const cp2y = h * 0.66 + i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+            ctx.stroke();
+          }
+        }
+
+        leftSide();
+        rightSide();
+        bottomSide();
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+
+    </script>
+  </body>
+
+</html>
