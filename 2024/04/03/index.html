@@ -32,6 +32,9 @@
       const curves = 13;
 
       const draw = ({ ctx, w, h, oscillate }) => {
+        // use alpha so that lines are not too harsh and add dimension to overlapping lines
+        ctx.globalAlpha = 0.85;
+
         // draw square outline in the middle
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
