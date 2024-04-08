@@ -40,26 +40,11 @@
           speed: 1,
         })
 
-        // draw a circle in the middle
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(
-          w / 2,
-          h / 2,
-          r,
-          0,
-          Math.PI * 2
-        );
-
         ctx.lineWidth = 2;
         ctx.strokeStyle = 'lavender';
-        ctx.stroke();
-        // ctx.fill();
-
 
         const bottomRight = () => {
           for (let i = 0; i < num; i++) {
-            if (i < 1) continue
 
             const o = oscillate({
               from: w / 35,
@@ -94,7 +79,6 @@
 
         const bottomLeft = () => {
           for (let i = 0; i < num; i++) {
-            if (i < 1) continue
             const o = oscillate({
               from: w / 35,
               to: w / 30,
@@ -123,14 +107,13 @@
               endY
             );
 
-            ctx.strokeStyle = 'white';
+            ctx.strokeStyle = 'lavender';
             ctx.stroke();
           }
         }
 
         const topLeft = () => {
           for (let i = 0; i < num; i++) {
-            if (i < 1) continue
             const o = oscillate({
               from: w / 35,
               to: w / 30,
@@ -166,7 +149,6 @@
 
         const topRight = () => {
           for (let i = 0; i < num; i++) {
-            if (i < 1) continue
 
             const o = oscillate({
               from: w / 35,
@@ -196,7 +178,7 @@
               endY
             );
 
-            ctx.strokeStyle = 'white';
+            ctx.strokeStyle = 'lavender';
             ctx.stroke();
           }
         }
