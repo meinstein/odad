@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>monofish</title>
+    <title>octofish</title>
     <style>
       body {
         margin: 0;
@@ -21,10 +21,6 @@
         aspect-ratio: 1/1;
         width: min(500px, 90%);
       }
-
-      canvas {
-        border: 2px solid red;
-      }
     </style>
   </head>
 
@@ -36,15 +32,15 @@
       const draw = ({ ctx, w, h, oscillate }) => {
         // use alpha so that lines are not too harsh and add dimension to overlapping lines
         ctx.globalAlpha = 0.85;
-        const num = 8
+        const num = 12
 
         ctx.strokeStyle = 'lavender';
         ctx.lineWidth = 2;
 
         const drawHexagonInCenter = () => {
-          const side = w / 3;
-          const x = (w - side) / 2;
-          const y = (h - side) / 2;
+          const side = w / 5;
+          const x = (w - side) / 2.5;
+          const y = (h - side) / 2.5;
 
           ctx.beginPath();
 
@@ -79,27 +75,23 @@
             const ox = oscillate({
               from: w / 35,
               to: w / 30,
-              speed: 1,
+              speed: 1.1,
               offset: i / num
             })
             const oy = oscillate({
               from: h / 35,
               to: h / 30,
-              speed: 0.75,
+              speed: 0.85,
               offset: i / num
             })
             ctx.beginPath();
 
-            // calc point between startX,startY and endX,endY
-            const middlePoint = [
-              startX + (endX - startX) / 2,
-              startY + (endY - startY) / 2
-            ]
-            // create control points based on the middle point
-            const cp1x = middlePoint[0] - i * ox;
-            const cp1y = middlePoint[1] - i * oy;
-            const cp2x = startX - i * ox;
-            const cp2y = startY - i * oy;
+            // draw control points between 0 and Math.PI / 4
+            const cp1x = startX + i * ox;
+            const cp1y = startY + i * oy;
+            const cp2x = startX + i * ox;
+            const cp2y = startY + i * oy;
+
             ctx.moveTo(startX, startY);
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
             ctx.stroke();
@@ -117,22 +109,192 @@
             })
             const oy = oscillate({
               from: h / 35,
+              to: h / 27,
+              speed: 0.9,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // draw control points between Math.PI / 4 and Math.PI / 2
+            const cp1x = startX + i * ox;
+            const cp1y = startY + i * oy;
+            const cp2x = startX - i * ox;
+            const cp2y = startY + i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawThirdSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from bottom left corner and ending at the bottom right corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
               to: h / 30,
               speed: 1,
               offset: i / num
             })
             ctx.beginPath();
 
-            // calc point between startX,startY and endX,endY
-            const middlePoint = [
-              startX + (endX - startX) / 2,
-              startY + (endY - startY) / 2
-            ]
-            // create control points based on the middle point
-            const cp1x = middlePoint[0] + i * ox;
-            const cp1y = middlePoint[1] - i * oy;
-            const cp2x = endX - i * ox;
-            const cp2y = endY - i * oy;
+            // draw control points between Math.PI / 2 and 3 * Math.PI / 4
+            const cp1x = startX - i * ox;
+            const cp1y = startY + i * oy;
+            const cp2x = startX - i * ox;
+            const cp2y = startY + i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawFourthSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from bottom right corner and ending at the bottom left corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 27,
+              speed: 0.65,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1.1,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // draw control points between 3 * Math.PI / 4 and Math.PI
+            const cp1x = startX - i * ox;
+            const cp1y = startY + i * oy;
+            const cp2x = startX - i * ox;
+            const cp2y = startY - i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawFifthSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from bottom right corner and ending at the bottom left corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 0.95,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1.1,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // draw control points between 3 * Math.PI / 4 and Math.PI
+            const cp1x = startX - i * ox;
+            const cp1y = startY - i * oy;
+            const cp2x = startX - i * ox;
+            const cp2y = startY - i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawSixthSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from bottom right corner and ending at the bottom left corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 0.75,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 27,
+              speed: 0.88,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // draw control points between 3 * Math.PI / 4 and Math.PI
+            const cp1x = startX - i * ox;
+            const cp1y = startY - i * oy;
+            const cp2x = startX + i * ox;
+            const cp2y = startY - i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawSeventhSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from bottom right corner and ending at the bottom left corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 0.5,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // draw control points between 3 * Math.PI / 4 and Math.PI
+            const cp1x = startX + i * ox;
+            const cp1y = startY - i * oy;
+            const cp2x = startX + i * ox;
+            const cp2y = startY - i * oy;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawEighthSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from bottom right corner and ending at the bottom left corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 27,
+              speed: 0.75,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // draw control points between 3 * Math.PI / 4 and Math.PI
+            const cp1x = startX + i * ox;
+            const cp1y = startY - i * oy;
+            const cp2x = startX + i * ox;
+            const cp2y = startY + i * oy;
+
             ctx.moveTo(startX, startY);
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
             ctx.stroke();
@@ -142,6 +304,12 @@
         const res = drawHexagonInCenter();
         drawFirstSide(res[0], res[1]);
         drawSecondSide(res[1], res[2]);
+        drawThirdSide(res[2], res[3]);
+        drawFourthSide(res[3], res[4]);
+        drawFifthSide(res[4], res[5]);
+        drawSixthSide(res[5], res[6]);
+        drawSeventhSide(res[6], res[7]);
+        drawEighthSide(res[7], res[0]);
       }
 
       const context2d = new Context2D({ rootElement: 'root' })
