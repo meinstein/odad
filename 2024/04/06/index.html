@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>monofish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+
+      canvas {
+        border: 2px solid red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // use alpha so that lines are not too harsh and add dimension to overlapping lines
+        ctx.globalAlpha = 0.85;
+        const num = 8
+
+        ctx.strokeStyle = 'lavender';
+        ctx.lineWidth = 2;
+
+        const drawHexagonInCenter = () => {
+          const side = w / 3;
+          const x = (w - side) / 2;
+          const y = (h - side) / 2;
+
+          ctx.beginPath();
+
+          const startX = x + side * Math.cos(0) + x / 2;
+          const startY = y + side * Math.sin(0) + y / 2;
+
+          ctx.moveTo(startX, startY)
+
+          const res = [
+            [
+              startX,
+              startY
+            ]
+          ]
+
+          for (let i = 1; i <= 8; i++) {
+            const toX = x + side * Math.cos(i * 2 * Math.PI / 8) + x / 2
+            const toY = y + side * Math.sin(i * 2 * Math.PI / 8) + y / 2
+            ctx.lineTo(toX, toY);
+            res.push([toX, toY])
+          }
+
+          ctx.closePath();
+          ctx.stroke();
+
+          return res
+        }
+
+        const drawFirstSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from top of the triangle and ending at the bottom left corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 0.75,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // calc point between startX,startY and endX,endY
+            const middlePoint = [
+              startX + (endX - startX) / 2,
+              startY + (endY - startY) / 2
+            ]
+            // create control points based on the middle point
+            const cp1x = middlePoint[0] - i * ox;
+            const cp1y = middlePoint[1] - i * oy;
+            const cp2x = startX - i * ox;
+            const cp2y = startY - i * oy;
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawSecondSide = ([startX, startY], [endX, endY]) => {
+          // draw bezier curves starting from top of the triangle and ending at the bottom right corner
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 0.75,
+              offset: i / num
+            })
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / num
+            })
+            ctx.beginPath();
+
+            // calc point between startX,startY and endX,endY
+            const middlePoint = [
+              startX + (endX - startX) / 2,
+              startY + (endY - startY) / 2
+            ]
+            // create control points based on the middle point
+            const cp1x = middlePoint[0] + i * ox;
+            const cp1y = middlePoint[1] - i * oy;
+            const cp2x = endX - i * ox;
+            const cp2y = endY - i * oy;
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const res = drawHexagonInCenter();
+        drawFirstSide(res[0], res[1]);
+        drawSecondSide(res[1], res[2]);
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
