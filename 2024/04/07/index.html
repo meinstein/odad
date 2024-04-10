@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hexafish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // use alpha so that lines are not too harsh and add dimension to overlapping lines
+        ctx.globalAlpha = 0.75;
+        const num = 12
+
+        ctx.strokeStyle = 'lavender';
+        ctx.lineWidth = 3;
+
+        // draw a hexagon
+        const getData = (x, y, side) => {
+          ctx.beginPath();
+
+          const startX = x + side * Math.cos(0);
+          const startY = y + side * Math.sin(0);
+
+          ctx.moveTo(
+            startX,
+            startY
+          );
+
+          const data = [
+            [startX, startY]
+          ]
+
+          for (let i = 1; i < 6; i++) {
+            const endX = x + side * Math.cos(i * 2 * Math.PI / 6);
+            const endY = y + side * Math.sin(i * 2 * Math.PI / 6);
+
+            ctx.lineTo(
+              endX,
+              endY
+            );
+
+            data.push([endX, endY])
+          }
+
+          ctx.closePath();
+          ctx.stroke();
+
+          return data
+        }
+
+        const ox = oscillate({
+          from: w / 2 * 0.95,
+          to: w / 2 * 1.05,
+          speed: 0.85
+        })
+
+        const oy = oscillate({
+          from: h / 2 * 1.05,
+          to: h / 2 * 0.95,
+          speed: 1
+        })
+
+        const data = getData(ox, oy, w / 5);
+
+        data.forEach(([startX, startY], i) => {
+          const [endX, endY] = i === data.length - 1 ? data[0] : data[i + 1];
+
+          // draw num bezier curves between two points
+          for (let i = 0; i < num; i++) {
+            const ox = oscillate({
+              from: w / 35,
+              to: w / 30,
+              speed: 1,
+              offset: i / num
+            })
+
+            const oy = oscillate({
+              from: h / 35,
+              to: h / 30,
+              speed: 1,
+              offset: i / num
+            })
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+
+            const middleX = (startX + endX) / 2;
+            const middleY = (startY + endY) / 2;
+            const distance = Math.sqrt((middleX - w / 2) ** 2 + (middleY - h / 2) ** 2);
+            const directionX = (middleX - w / 2) / distance;
+            const directionY = (middleY - h / 2) / distance;
+            const cp1x = middleX + directionX * (i + 1) * ox;
+            const cp1y = middleY + directionY * (i + 1) * oy;
+            const cp2x = middleX + directionX * (i + 1) * ox;
+            const cp2y = middleY + directionY * (i + 1) * oy;
+
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            );
+
+            ctx.stroke();
+          }
+        })
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
