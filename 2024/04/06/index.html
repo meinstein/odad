@@ -39,15 +39,16 @@
 
         const drawHexagonInCenter = () => {
           const side = w / 5;
-          const x = (w - side) / 2.5;
-          const y = (h - side) / 2.5;
+          // Don't know why, but this is the magic number to center the hexagon
+          const x = (w - side) / 2.42;
+          const y = (h - side) / 2.42;
 
           ctx.beginPath();
 
           const startX = x + side * Math.cos(0) + x / 2;
           const startY = y + side * Math.sin(0) + y / 2;
 
-          ctx.moveTo(startX, startY)
+          // ctx.moveTo(startX, startY)
 
           const res = [
             [
@@ -59,7 +60,7 @@
           for (let i = 1; i <= 8; i++) {
             const toX = x + side * Math.cos(i * 2 * Math.PI / 8) + x / 2
             const toY = y + side * Math.sin(i * 2 * Math.PI / 8) + y / 2
-            ctx.lineTo(toX, toY);
+            // ctx.lineTo(toX, toY);
             res.push([toX, toY])
           }
 
