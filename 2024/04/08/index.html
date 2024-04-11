@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rectfish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 15
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        // use alpha so that lines are not too harsh and add dimension to overlapping lines
+        ctx.globalAlpha = 0.75;
+
+        // round end
+        ctx.lineCap = 'round';
+
+        ctx.strokeStyle = 'lavender';
+        ctx.lineWidth = 2;
+
+        // For num = 12, draw 12 increasing bezier curves
+        const drawLeftSide = () => {
+          for (let i = 0; i < num; i++) {
+            const stepChange = oscillate({
+              from: 2,
+              to: 3,
+              speed: 1,
+              offset: i / num
+            })
+
+            const step = w / num / stepChange;
+
+            ctx.beginPath();
+
+            const startX = w / 2 - w / 8;
+            const startY = h / 2 - h / 4;
+
+            const endX = w / 2 - w / 8;
+            const endY = h / 2 + h / 4;
+
+            const cp1x = w / 2 - w / 8 - step * i;
+            const cp1y = h / 2 - h / 4;
+
+            const cp2x = w / 2 - w / 8 - step * i;
+            const cp2y = h / 2 + h / 4;
+
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        // draw right side
+        const drawRightSide = () => {
+          for (let i = 0; i < num; i++) {
+            const stepChange = oscillate({
+              from: 2,
+              to: 3,
+              speed: 1,
+              offset: (i / num) + 3
+            })
+
+            const step = w / num / stepChange;
+
+            ctx.beginPath();
+
+            const startX = w / 2 + w / 8;
+            const startY = h / 2 - h / 4;
+
+            const endX = w / 2 + w / 8;
+            const endY = h / 2 + h / 4;
+
+            const cp1x = w / 2 + w / 8 + step * i;
+            const cp1y = h / 2 - h / 4;
+
+            const cp2x = w / 2 + w / 8 + step * i;
+            const cp2y = h / 2 + h / 4;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawTop = () => {
+          for (let i = 0; i < num; i++) {
+            const stepChange = oscillate({
+              from: 3,
+              to: 4,
+              speed: 1.25,
+              offset: (i / num) + 6
+            })
+
+            const step = h / num / stepChange;
+
+            ctx.beginPath();
+
+            const startX = w / 2 - w / 8;
+            const startY = h / 2 - h / 4;
+
+            const endX = w / 2 + w / 8;
+            const endY = h / 2 - h / 4;
+
+            const cp1x = w / 2 - w / 8;
+            const cp1y = h / 2 - h / 4 - step * i;
+
+            const cp2x = w / 2 + w / 8;
+            const cp2y = h / 2 - h / 4 - step * i;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        const drawBottom = () => {
+          for (let i = 0; i < num; i++) {
+            const stepChange = oscillate({
+              from: 3,
+              to: 4,
+              speed: 1.25,
+              offset: (i / num) + 9
+            })
+
+            const step = h / num / stepChange;
+
+            ctx.beginPath();
+
+            const startX = w / 2 - w / 8;
+            const startY = h / 2 + h / 4;
+
+            const endX = w / 2 + w / 8;
+            const endY = h / 2 + h / 4;
+
+            const cp1x = w / 2 - w / 8;
+            const cp1y = h / 2 + h / 4 + step * i;
+
+            const cp2x = w / 2 + w / 8;
+            const cp2y = h / 2 + h / 4 + step * i;
+
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.stroke();
+          }
+        }
+
+        drawLeftSide();
+        drawRightSide();
+        drawTop();
+        drawBottom();
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
