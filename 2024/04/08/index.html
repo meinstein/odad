@@ -53,6 +53,13 @@
 
             const step = w / num / stepChange;
 
+            const oy = oscillate({
+              from: step * -i / 3,
+              to: step * i / 3,
+              speed: 1,
+              offset: i / num
+            })
+
             ctx.beginPath();
 
             const startX = w / 2 - w / 8;
@@ -62,10 +69,10 @@
             const endY = h / 2 + h / 4;
 
             const cp1x = w / 2 - w / 8 - step * i;
-            const cp1y = h / 2 - h / 4;
+            const cp1y = h / 2 - h / 4 + oy;
 
             const cp2x = w / 2 - w / 8 - step * i;
-            const cp2y = h / 2 + h / 4;
+            const cp2y = h / 2 + h / 4 - oy;
 
 
             ctx.moveTo(startX, startY);
@@ -81,10 +88,18 @@
               from: 2,
               to: 3,
               speed: 1,
-              offset: (i / num) + 3
+              // adding 2 creates the see-saw effect between left and right
+              offset: (i / num) + 2
             })
 
             const step = w / num / stepChange;
+
+            const oy = oscillate({
+              from: step * -i / 3,
+              to: step * i / 3,
+              speed: 1,
+              offset: (i / num) + 3
+            })
 
             ctx.beginPath();
 
@@ -95,10 +110,10 @@
             const endY = h / 2 + h / 4;
 
             const cp1x = w / 2 + w / 8 + step * i;
-            const cp1y = h / 2 - h / 4;
+            const cp1y = h / 2 - h / 4 + oy;
 
             const cp2x = w / 2 + w / 8 + step * i;
-            const cp2y = h / 2 + h / 4;
+            const cp2y = h / 2 + h / 4 - oy;
 
             ctx.moveTo(startX, startY);
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
@@ -111,11 +126,19 @@
             const stepChange = oscillate({
               from: 3,
               to: 4,
-              speed: 1.25,
+              speed: 1,
               offset: (i / num) + 6
             })
 
+
             const step = h / num / stepChange;
+
+            const ox = oscillate({
+              from: step * -i / 3,
+              to: step * i / 3,
+              speed: 1,
+              offset: (i / num) + 6
+            })
 
             ctx.beginPath();
 
@@ -125,10 +148,10 @@
             const endX = w / 2 + w / 8;
             const endY = h / 2 - h / 4;
 
-            const cp1x = w / 2 - w / 8;
+            const cp1x = w / 2 - w / 8 + ox;
             const cp1y = h / 2 - h / 4 - step * i;
 
-            const cp2x = w / 2 + w / 8;
+            const cp2x = w / 2 + w / 8 - ox;
             const cp2y = h / 2 - h / 4 - step * i;
 
             ctx.moveTo(startX, startY);
@@ -142,11 +165,18 @@
             const stepChange = oscillate({
               from: 3,
               to: 4,
-              speed: 1.25,
+              speed: 1,
               offset: (i / num) + 9
             })
 
             const step = h / num / stepChange;
+
+            const ox = oscillate({
+              from: step * -i / 3,
+              to: step * i / 3,
+              speed: 1,
+              offset: (i / num) + 9
+            })
 
             ctx.beginPath();
 
@@ -156,10 +186,10 @@
             const endX = w / 2 + w / 8;
             const endY = h / 2 + h / 4;
 
-            const cp1x = w / 2 - w / 8;
+            const cp1x = w / 2 - w / 8 + ox;
             const cp1y = h / 2 + h / 4 + step * i;
 
-            const cp2x = w / 2 + w / 8;
+            const cp2x = w / 2 + w / 8 - ox;
             const cp2y = h / 2 + h / 4 + step * i;
 
             ctx.moveTo(startX, startY);
