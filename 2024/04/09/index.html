@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>foldfish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // use alpha so that lines are not too harsh and add dimension to overlapping lines
+        ctx.globalAlpha = 1;
+
+        // round end
+        ctx.lineCap = 'round';
+
+        // draw a cross with lines in the center of the canvas
+        ctx.strokeStyle = 'lavender';
+        ctx.lineWidth = 3;
+
+        // padding
+        const p = w * 0.01
+
+        const num = 25
+
+        const topLeft = () => {
+          for (let i = 1; i < num; i++) {
+
+            const step = w / 2 / num
+
+            const ox = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 0.5,
+              offset: i / num
+            })
+
+            const oy = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 0.5,
+              offset: i / num
+            })
+
+            ctx.beginPath()
+
+            const startX = w / 2
+            const startY = step * i
+
+            const endX = step * i
+            const endY = h / 2
+
+            const cp1x = startX + (endX - startX) * (0.33 + ox);
+            const cp1y = startY + (endY - startY) * (0.33 - oy);
+
+            const cp2x = startX + (endX - startX) * (0.66 + ox);
+            const cp2y = startY + (endY - startY) * (0.66 - oy);
+
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+        }
+
+        const bottomRight = () => {
+          for (let i = 1; i < num; i++) {
+
+            const step = w / 2 / num
+
+            const ox = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 0.5,
+              offset: i / num
+            })
+
+            const oy = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 0.5,
+              offset: i / num
+            })
+
+            ctx.beginPath()
+
+            const startX = w / 2
+            const startY = h - step * i
+
+            const endX = w - step * i
+            const endY = h / 2
+
+            const cp1x = startX + (endX - startX) * (0.33 + ox);
+            const cp1y = startY + (endY - startY) * (0.33 - oy);
+
+            const cp2x = startX + (endX - startX) * (0.66 + ox);
+            const cp2y = startY + (endY - startY) * (0.66 - oy);
+
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+        }
+
+        const topRight = () => {
+          for (let i = 1; i < num; i++) {
+
+            const step = w / 2 / num
+
+            const ox = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 1,
+              offset: i / num
+            })
+
+            const oy = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 1,
+              offset: i / num
+            })
+
+            ctx.beginPath()
+
+            const startX = w / 2
+            const startY = step * i
+
+            const endX = w - step * i
+            const endY = h / 2
+
+            const cp1x = startX + (endX - startX) * (0.33 + ox);
+            const cp1y = startY + (endY - startY) * (0.33 - oy);
+
+            const cp2x = startX + (endX - startX) * (0.66 + ox);
+            const cp2y = startY + (endY - startY) * (0.66 - oy);
+
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+        }
+
+        const bottomLeft = () => {
+          for (let i = 1; i < num; i++) {
+
+            const step = w / 2 / num
+
+            const ox = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 1,
+              offset: i / num
+            })
+
+            const oy = oscillate({
+              from: 0,
+              to: 0.33,
+              speed: 1,
+              offset: i / num
+            })
+
+            ctx.beginPath()
+
+            const startX = w / 2
+            const startY = h - step * i
+
+            const endX = step * i
+            const endY = h / 2
+
+            const cp1x = startX + (endX - startX) * (0.33 + ox);
+            const cp1y = startY + (endY - startY) * (0.33 - oy);
+
+            const cp2x = startX + (endX - startX) * (0.66 + ox);
+            const cp2y = startY + (endY - startY) * (0.66 - oy);
+
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+        }
+
+        topLeft()
+        bottomRight()
+        topRight()
+        bottomLeft()
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
