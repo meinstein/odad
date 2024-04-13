@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>spinfish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 720
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter'
+        // alpha
+        ctx.globalAlpha = 0.025
+        // rounded to avoid aliasing
+        ctx.lineCap = 'round'
+        // line width
+        ctx.lineWidth = 3
+        // padding
+        const p = w * 0.025
+
+        // draw num lines, all overlaying each other, starting from the center of the canvas and going to the noon position
+        for (let i = 0; i < num; i++) {
+          ctx.strokeStyle = 'lavender'
+          ctx.beginPath()
+
+          const startX = w / 2
+          const startY = h / 2
+
+          const ox = oscillate({
+            from: -num,
+            to: num,
+            speed: 0.15,
+            offset: i / (num * 2)
+          })
+
+          const oy = oscillate({
+            from: -num,
+            to: num,
+            speed: 0.125,
+            offset: i / (num * 1.5)
+          })
+
+          const endX = w / 2 + Math.cos(ox / num * Math.PI * 2) * (w / 2 - p)
+          const endY = h / 2 + Math.sin(oy / num * Math.PI * 2) * (h / 2 - p)
+
+          ctx.moveTo(
+            startX,
+            startY
+          )
+          ctx.lineTo(
+            endX,
+            endY
+          )
+          ctx.stroke()
+        }
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
