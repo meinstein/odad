@@ -29,23 +29,25 @@
     <script type="module">
       import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
 
-      const num = 720
+      const num = 360
 
       const draw = ({ ctx, w, h, oscillate }) => {
         // blend mode
-        ctx.globalCompositeOperation = 'lighter'
+        // ctx.globalCompositeOperation = 'lighter'
         // alpha
-        ctx.globalAlpha = 0.025
+        // ctx.globalAlpha = 0.05
         // rounded to avoid aliasing
         ctx.lineCap = 'round'
         // line width
-        ctx.lineWidth = 2
+        ctx.lineWidth = 1
         // padding
-        const p = w * 0.0125
+        const p = w * 0.01
 
         // draw num lines, all overlaying each other, starting from the center of the canvas and going to the noon position
         for (let i = 0; i < num; i++) {
           ctx.strokeStyle = 'lavender'
+          // alpha is based on how far the line is from the center
+          ctx.globalAlpha = (1 - Math.abs(i - num / 2) / num) * 0.05
           ctx.beginPath()
 
           const startX = w / 2
