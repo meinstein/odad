@@ -39,9 +39,9 @@
         // rounded to avoid aliasing
         ctx.lineCap = 'round'
         // line width
-        ctx.lineWidth = 3
+        ctx.lineWidth = 2
         // padding
-        const p = w * 0.025
+        const p = w * 0.0125
 
         // draw num lines, all overlaying each other, starting from the center of the canvas and going to the noon position
         for (let i = 0; i < num; i++) {
@@ -54,14 +54,14 @@
           const ox = oscillate({
             from: -num,
             to: num,
-            speed: 0.15,
+            speed: 0.075,
             offset: i / (num * 2)
           })
 
           const oy = oscillate({
             from: -num,
             to: num,
-            speed: 0.125,
+            speed: 0.065,
             offset: i / (num * 1.5)
           })
 
@@ -78,6 +78,14 @@
           )
           ctx.stroke()
         }
+
+        // draw a small circle (d = p) with fill
+        ctx.beginPath()
+        ctx.fillStyle = 'lavender'
+        // alpha is 1
+        ctx.globalAlpha = 1
+        ctx.arc(w / 2, h / 2, p / 2, 0, Math.PI * 2)
+        ctx.fill()
       }
 
       const context2d = new Context2D({ rootElement: 'root' })
