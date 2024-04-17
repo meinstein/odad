@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eyes on the guise</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const NUM = 50
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // ctx.globalAlpha = 0.33
+        ctx.lineCap = 'round'
+        ctx.strokeStyle = 'lavender'
+        ctx.lineWidth = Math.ceil(w / (NUM * 4))
+
+        for (let i = 2; i < NUM; i++) {
+          // start in center and move outwards
+          const leftHemisphere = () => {
+            const step = (h / NUM) * i
+
+            const ox = oscillate({
+              from: step * 0.125,
+              to: -step * 0.125,
+              speed: 0.66,
+              offset: i * 0.075
+            })
+
+            const startX = w / 2
+            const startY = h / 2 + step
+
+            const endX = w / 2
+            const endY = h / 2 - step
+
+            const cp1x = w / 2 - step + ox
+            const cp1y = h / 2 + step
+
+            const cp2x = w / 2 - step + ox
+            const cp2y = h / 2 - step
+
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+          const rightHemisphere = () => {
+            const step = (h / NUM) * i
+
+            const ox = oscillate({
+              from: step * 0.125,
+              to: -step * 0.125,
+              speed: 0.66,
+              offset: i * 0.075
+            })
+
+            const startX = w / 2
+            const startY = h / 2 + step
+
+            const endX = w / 2
+            const endY = h / 2 - step
+
+            const cp1x = w / 2 + step + ox
+            const cp1y = h / 2 + step
+
+            const cp2x = w / 2 + step + ox
+            const cp2y = h / 2 - step
+
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+
+          leftHemisphere()
+          rightHemisphere()
+        }
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
