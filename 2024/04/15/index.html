@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lakeside</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #poem {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: max(0.75rem, 1vw);
+        line-height: 1.5;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        /* matches canvas */
+        max-width: 500px;
+        text-align: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        /* center root and give same max with as poem container */
+        width: min(500px, 90%);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <div id="poem">
+      <p>
+        Sitting lakeside in Zurich on a warm spring day.
+      </p>
+      <p>
+        An older woman in Prada sunglasses and a menacing diamond ring takes stock of our baby.
+      </p>
+      <p>
+        Small talk quickly ensues.
+      </p>
+      <p>
+        She tells us she is from Germany.
+      </p>
+      <p>
+        She tells us she does not feel safe anymore walking about in her own country.
+      </p>
+      <p>
+        She tells us that there are horribly dangerous immigrants everywhere.
+      </p>
+      <p>
+        We excuse ourselves and leave.
+      </p>
+      <p>
+        She takes a puff of her cigarette and wishes us a nice life.
+      </p>
+      <p>
+        Our baby waves goodbye.
+      </p>
+      <p>
+        Sometimes history is not so far away, even in the most peaceful of places.
+      </p>
+    </div>
+
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      // 79 rings, as that's how long it's been since the war ended in 1945
+      const num = 79;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // set global styles
+        ctx.globalAlpha = 0.75;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'aqua';
+        // stroke width
+        ctx.lineWidth = (w / num) * 0.125;
+
+        // make concentric rings from center outwards.
+        // the rings are not full circles and rotate.
+        for (let i = 1; i < num; i++) {
+          const step = (w / num) * i * 0.5;
+
+          // rotate the arcs
+          const angle = oscillate({
+            from: 0,
+            to: Math.PI * 2,
+            speed: 0.1,
+            offset: i,
+          })
+
+          // save the current state
+          ctx.save();
+          // translate to center
+          ctx.translate(w / 2, h / 2);
+          ctx.rotate(angle);
+          ctx.translate(-w / 2, -h / 2);
+
+          // draw a circle that is not filled in
+          ctx.beginPath();
+          const x = w / 2;
+          const y = h / 2;
+          const startAngle = Math.PI / 4;
+          const endAngle = Math.PI * 2 - Math.PI / 4;
+          ctx.arc(x, y, step, startAngle, endAngle);
+          ctx.stroke();
+
+          // restore the state
+          ctx.restore();
+        }
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
