@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>unseemly</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const num = 50
+        ctx.lineWidth = Math.round(w / (num * 3))
+        ctx.strokeStyle = 'lavender'
+        ctx.lineCap = 'round'
+        ctx.globalAlpha = 0.75
+        ctx.globalCompositeOperation = 'lighten'
+
+
+        const getStep = (i) => {
+          return oscillate({
+            from: (w / num) * i * 0.25,
+            to: (w / num) * i * 0.45,
+            speed: 0.66,
+            offset: (i / num) * 2
+          })
+        }
+
+        const topHemisphere = () => {
+          for (let i = 10; i <= num; i++) {
+            const step = getStep(i)
+
+            const ox = oscillate({
+              from: step * -0.66,
+              to: step * 0.33,
+              speed: 0.66,
+              offset: i / num
+            })
+
+            const startX = w / 2 - step
+            const startY = h / 2
+
+            const endX = w / 2 + step
+            const endY = h / 2
+
+            const cp1x = w / 2 - step * 0.5
+            const cp1y = h / 2 + step + ox
+
+            const cp2x = w / 2 + step * 0.5
+            const cp2y = h / 2 + step + ox
+
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+        }
+
+        const bottomHemisphere = () => {
+          for (let i = 10; i <= num; i++) {
+            const step = getStep(i)
+
+            const ox = oscillate({
+              from: step * 0.66,
+              to: step * -0.33,
+              speed: 0.66,
+              offset: i / num
+            })
+
+            const startX = w / 2 - step
+            const startY = h / 2
+
+            const endX = w / 2 + step
+            const endY = h / 2
+
+            const cp1x = w / 2 - step * 0.5
+            const cp1y = h / 2 - step + ox
+
+            const cp2x = w / 2 + step * 0.5
+            const cp2y = h / 2 - step + ox
+
+            ctx.beginPath()
+            ctx.moveTo(startX, startY)
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.stroke()
+          }
+        }
+
+        // rotate infinitely, slowly
+
+        ctx.translate(w / 2, h / 2)
+        ctx.rotate(Math.PI / 540)
+        ctx.translate(-w / 2, -h / 2)
+
+        topHemisphere()
+        bottomHemisphere()
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
