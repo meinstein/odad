@@ -34,7 +34,7 @@
         ctx.lineWidth = Math.round(w / (num * 3))
         ctx.strokeStyle = 'lavender'
         ctx.lineCap = 'round'
-        ctx.globalAlpha = 0.75
+        // ctx.globalAlpha = 0.75
         ctx.globalCompositeOperation = 'lighten'
 
 
@@ -42,7 +42,7 @@
           return oscillate({
             from: (w / num) * i * 0.25,
             to: (w / num) * i * 0.45,
-            speed: 0.66,
+            speed: 0.55,
             offset: (i / num) * 2
           })
         }
@@ -54,7 +54,7 @@
             const ox = oscillate({
               from: step * -0.66,
               to: step * 0.33,
-              speed: 0.66,
+              speed: 0.55,
               offset: i / num
             })
 
@@ -73,6 +73,7 @@
             ctx.beginPath()
             ctx.moveTo(startX, startY)
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.strokeStyle = `rgba(230, 230, 250, ${1 - (i / num)})`
             ctx.stroke()
           }
         }
@@ -84,7 +85,7 @@
             const ox = oscillate({
               from: step * 0.66,
               to: step * -0.33,
-              speed: 0.66,
+              speed: 0.55,
               offset: i / num
             })
 
@@ -103,6 +104,7 @@
             ctx.beginPath()
             ctx.moveTo(startX, startY)
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+            ctx.strokeStyle = `rgba(230, 230, 250, ${1 - (i / num)})`
             ctx.stroke()
           }
         }
