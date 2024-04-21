@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>more machine</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 100
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        ctx.globalCompositeOperation = 'lighter'
+        ctx.globalAlpha = 0.65
+        ctx.lineCap = 'round'
+        const p = h * 0.075
+        const step = (w - (p * 2)) / (num - 1)
+
+        for (let i = 0; i < num; i++) {
+          const oy = oscillate({
+            from: -p,
+            to: p,
+            speed: 1,
+            offset: i * 0.1
+          })
+
+          const ox = oscillate({
+            from: -p * 2,
+            to: p * 2,
+            speed: 0.5,
+            offset: i
+          })
+
+          const os = oscillate({
+            from: 3,
+            to: 4,
+            speed: 0.75,
+            offset: i / num
+          })
+
+          const foo = w / os
+
+          // line is thicker towards teh center (h/2) and thinner towards the edges
+          ctx.lineWidth = Math.abs(Math.sin(i / num * Math.PI)) * 5 + 1
+          // odd is lavender even is white
+          ctx.strokeStyle = i % 2 === 0 ? 'steelblue' : 'lavender'
+          ctx.beginPath()
+          const startX = p * 0.5
+          const startY = i * step + p
+          const endX = w - (p * 0.5)
+          const endY = i * step + p
+          const cp1x = foo + ox
+          const cp1y = i * step + p + oy
+          const cp2x = w - foo - ox
+          const cp2y = i * step + p - oy
+          ctx.moveTo(startX, startY)
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+          ctx.stroke()
+        }
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
