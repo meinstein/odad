@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>orbifish</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 120
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        ctx.strokeStyle = 'lavender'
+        ctx.lineWidth = 4
+        ctx.globalAlpha = 0.125
+
+        for (let i = 0; i < num; i++) {
+          const step = w
+
+          const ox = oscillate({
+            from: -w / 2,
+            to: w / 2,
+            speed: 0.12,
+            offset: (i / num) * Math.PI * 2
+          })
+
+          const oy = oscillate({
+            from: -h / 2,
+            to: h / 2,
+            speed: 0.18,
+            offset: (i / num) * Math.PI * 2
+          })
+
+          const startX = w / 2
+          const startY = h / 2
+          const endX = ox + Math.cos(i / num * Math.PI * 2) * step
+          const endY = oy + Math.sin(i / num * Math.PI * 2) * step
+
+          ctx.beginPath()
+          ctx.moveTo(startX, startY)
+          ctx.lineTo(endX, endY)
+          ctx.stroke()
+          // add arc to end
+          ctx.arc(endX, endY, 8, 0, Math.PI * 2)
+          ctx.fillStyle = 'steelblue'
+          ctx.fill()
+          ctx.closePath()
+        }
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
