@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>arrhythmic twist</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const num = 50;
+
+        // ctx.strokeStyle = 'lavender'
+        ctx.lineWidth = 3
+        ctx.lineCap = 'round'
+        const p = w * 0.01
+        ctx.globalAlpha = 0.33
+        ctx.globalCompositeOperation = 'lighter'
+
+        for (let i = 5; i < num; i++) {
+          const step = (h * 0.5) / num
+
+          const startX = p
+
+          // const startY = h * 0.5 - step * i
+          const startY = oscillate({
+            from: h * 0.65 - step * i,
+            to: h * 0.5 - step * i,
+            // different speeds to create a wave effect
+            speed: 0.85,
+            offset: i * 0.1
+          })
+
+          const endX = w - p
+          // const endY = h * 0.5 + step * i
+          const endY = oscillate({
+            from: h * 0.35 + step * i,
+            to: h * 0.5 + step * i,
+            speed: 0.70,
+            offset: i * 0.1
+          })
+
+          const cp1x = w * 0.4
+          const cp1y = startY
+          const cp2x = w * 0.6
+          const cp2y = endY
+
+          ctx.beginPath()
+          ctx.moveTo(startX, startY)
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+          // stroke style
+          // different shade of blue based on index
+          ctx.strokeStyle = `hsl(${i}, 100%, 50%)`
+          ctx.stroke()
+        }
+
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
