@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>and so it goes</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+        overflow: hidden;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const rows = 9
+      const cols = 9
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+
+        const fontSize = w / cols * 0.375
+
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const sequenceNum = row * cols + col + 1
+
+            const num = oscillate({
+              from: 0,
+              to: 365,
+              // time goes faster as sequence number increases
+              speed: Math.pow(sequenceNum, 1.125) * 0.00215,
+            });
+
+
+            ctx.font = `${fontSize}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'black';
+            const x = col * w / cols + w / cols / 2
+            const y = row * h / rows + h / rows / 2
+            ctx.fillText(Math.round(num), x, y);
+          }
+        }
+
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
