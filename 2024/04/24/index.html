@@ -51,7 +51,6 @@
             ctx.font = `${fontSize}px monospace`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            // alpha is based on how high the number is
             const alpha = Math.max(0.25, num / 365);
             ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
             const x = col * w / cols + w / cols / 2
