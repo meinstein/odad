@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rough ease</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const LINES = 75
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        ctx.lineCap = 'round'
+        ctx.strokeStyle = 'lavender'
+        ctx.globalAlpha = 0.5
+        //blend mode
+        // ctx.globalCompositeOperation = 'lighten'
+        // get distance from top left to bottom right corner.
+        // 1.4142 is the square root of 2.
+        const diagonal = Math.sqrt(w ** 2 + h ** 2) * Math.SQRT2 * 0.66
+        const step = diagonal / LINES
+
+        for (let i = 0; i < LINES; i++) {
+          ctx.beginPath()
+          // start in top left corner, and on each iteration
+          // move towards the bottom right corner.
+          // const startX = i * step
+          const startX = oscillate({
+            from: i * step,
+            to: i * step * 1.1,
+            speed: 0.25,
+            offset: i * 0.25
+          })
+
+          // const startY = 0
+          const startY = oscillate({
+            from: 0,
+            to: i * 3,
+            speed: 0.5,
+            offset: i * 0.1
+          })
+
+          // const endX = 0
+          const endX = oscillate({
+            from: 0,
+            to: i * -2,
+            speed: 0.25,
+            offset: i * 0.1
+          })
+
+          // const endY = i * step
+          const endY = oscillate({
+            from: i * step,
+            to: i * step * 2,
+            speed: 0.25,
+            offset: i * 0.1
+          })
+
+          // const cp1x = startX + (endX - startX) / 3
+          const cp1x = oscillate({
+            from: startX + (endX - startX) / 3,
+            to: startX + (endX - startX) * 2 / 3 * 0.75,
+            speed: 0.5,
+            offset: i * 0.075
+          })
+
+          // const cp1y = startY + (endY - startY) / 3
+          const cp1y = oscillate({
+            from: startY + (endY - startY) / 3,
+            to: startY + (endY - startY) * 2 / 3 * 0.75,
+            speed: 0.25,
+            offset: i * 0.1
+          })
+
+          // const cp2x = startX + (endX - startX) * 2 / 3
+          const cp2x = oscillate({
+            from: startX + (endX - startX) * 2 / 3,
+            to: startX + (endX - startX) / 3 * -1.1,
+            speed: 0.25,
+            offset: i * 0.1
+          })
+
+          // const cp2y = startY + (endY - startY) * 2 / 3
+          const cp2y = oscillate({
+            from: startY + (endY - startY) * 2 / 3,
+            to: startY + (endY - startY) / 3 * 1.1,
+            speed: 0.25,
+            offset: i * 0.075
+          })
+
+
+          ctx.moveTo(startX, startY)
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+
+          // the closer to the center, the thicker the line.
+          // so i = 50 is the thickest line.
+          ctx.lineWidth = Math.ceil(step * 0.25)
+          // color
+
+          ctx.stroke()
+
+          // fill
+          // ctx.fillStyle = `indianred`
+          // ctx.fill()
+        }
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
