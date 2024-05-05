@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sensor</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const NUM = 180
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // blend
+        ctx.globalCompositeOperation = 'lighter'
+        // alpha
+        // ctx.globalAlpha = 0.25
+        // line width
+        ctx.lineWidth = 3
+        // round tip
+        ctx.lineCap = 'round'
+        const p = w * 0.1
+
+        for (let i = 0; i < NUM; i++) {
+          const o = oscillate({
+            from: 0.05,
+            to: 0.175,
+            speed: 0.66,
+            offset: i * 0.125
+          })
+          ctx.globalAlpha = o
+
+          // for each iteration, draw a new bezier line
+          // rotates by step
+          // intersecting the center of the canvas
+          // and the edge of the canvas
+          const step = (Math.PI * 2) / NUM
+          const angle = i * step
+          // start at one edge
+          const startX = w / 2 + Math.cos(angle) * (w / 2 - p)
+          const startY = h / 2 + Math.sin(angle) * (h / 2 - p)
+          // end at the other edge
+          const endX = w / 2 + Math.cos(angle + Math.PI) * (w / 2 - p)
+          const endY = h / 2 + Math.sin(angle + Math.PI) * (h / 2 - p)
+          // control points
+          const cp1x = w / 2 + Math.cos(angle - Math.PI / 2) * (w / 4 - p)
+          const cp1y = h / 2 + Math.sin(angle + Math.PI / 2) * (h / 4 - p)
+          const cp2x = w / 2 + Math.cos(angle + Math.PI / 2) * (w / 4 - p)
+          const cp2y = h / 2 + Math.sin(angle - Math.PI / 2) * (h / 4 - p)
+          // draw the bezier line
+          ctx.beginPath()
+          ctx.moveTo(startX, startY)
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY)
+          // stroke the line
+          ctx.strokeStyle = 'indianred'
+          ctx.stroke()
+        }
+
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
