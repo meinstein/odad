@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 270
+
+      const SHADES_OF_RED = [
+        'hsl(0, 100%, 50%)',
+        'hsl(1, 100%, 50%)',
+        'hsl(2, 100%, 50%)',
+        'hsl(3, 100%, 50%)',
+        'hsl(4, 100%, 50%)',
+        'hsl(5, 100%, 50%)',
+        'hsl(6, 100%, 50%)',
+        'hsl(7, 100%, 50%)',
+        'hsl(8, 100%, 50%)',
+        'hsl(9, 100%, 50%)',
+        'hsl(10, 100%, 50%)',
+        'hsl(11, 100%, 50%)',
+        'hsl(12, 100%, 50%)',
+        'hsl(13, 100%, 50%)',
+        'hsl(14, 100%, 50%)',
+        'hsl(15, 100%, 50%)',
+        'hsl(16, 100%, 50%)',
+        'hsl(17, 100%, 50%)',
+        'hsl(18, 100%, 50%)',
+        'hsl(19, 100%, 50%)',
+        'hsl(20, 100%, 50%)',
+        'hsl(21, 100%, 50%)',
+        'hsl(22, 100%, 50%)',
+        'hsl(23, 100%, 50%)',
+        'hsl(24, 100%, 50%)',
+        'hsl(25, 100%, 50%)',
+        'hsl(26, 100%, 50%)',
+        'hsl(27, 100%, 50%)',
+        'hsl(28, 100%, 50%)',
+        'hsl(29, 100%, 50%)',
+        'hsl(30, 100%, 50%)',
+        'hsl(31, 100%, 50%)',
+        'hsl(32, 100%, 50%)',
+        'hsl(33, 100%, 50%)',
+        'hsl(34, 100%, 50%)',
+      ]
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // global alpha
+        ctx.globalAlpha = 0.5
+        // blend
+        ctx.globalCompositeOperation = 'lighter'
+
+        const p = w * 0.1
+
+        for (let i = 0; i < num; i++) {
+          const oy = oscillate({
+            from: p,
+            to: h - p,
+            speed: 0.2,
+            offset: i * 0.1
+          })
+
+          const ox = oscillate({
+            from: p,
+            to: w - p,
+            speed: 0.33,
+            offset: i * 0.05
+          })
+
+          // draw overlapping circles at the top center of the canvas
+          const angle = (Math.PI * 2) / num * i
+          const x = ox
+          const y = oy
+          const r = w / 20
+          ctx.beginPath()
+          ctx.arc(x, y, r, 0, Math.PI * 2)
+          ctx.fillStyle = SHADES_OF_RED[i % SHADES_OF_RED.length]
+          ctx.fill()
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
