@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>awkwardly interlocked</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const cols = 10;
+        const rows = 11;
+        const padding = w * 0.02;
+        const width = (w - padding * (cols + 1)) / cols;
+        const height = (h - padding * (rows + 1)) / rows;
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const x = padding + col * (width + padding);
+            const y = padding + row * (height + padding);
+
+            const isOdd = col % 2 === 0;
+
+            const paddingSm = padding * 0.75;
+
+            const oy = oscillate({
+              from: isOdd ? y : y + paddingSm,
+              to: isOdd ? y + paddingSm : y,
+              speed: 1,
+              offset: col * 0.25
+            })
+
+            const isEven = row % 2 === 0;
+
+            const ox = oscillate({
+              from: isEven ? x + paddingSm : x,
+              to: isEven ? x - paddingSm : x,
+              speed: 1,
+              offset: row * 0.125
+            })
+
+            ctx.fillStyle = isEven ? 'indianred' : 'steelblue'
+            ctx.fillRect(ox, oy, width, height);
+            ctx.fill();
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
