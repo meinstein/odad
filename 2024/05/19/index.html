@@ -50,7 +50,7 @@
         const topRightQuadrant = () => {
           for (let i = 0; i < rects; i++) {
             const oy = oscillate({
-              from: padding + i,
+              from: padding,
               to: padding + i * quadrantH / rects + padding / 2,
               speed: 0.25,
               offset: i * 0.01
