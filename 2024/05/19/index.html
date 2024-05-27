@@ -36,9 +36,16 @@
 
         const topLeftQuadrant = () => {
           for (let i = 0; i < rects; i++) {
+            const oy = oscillate({
+              from: padding + i * quadrantH / rects,
+              to: padding + i * quadrantH / rects + padding / 2,
+              speed: 0.25,
+              offset: i * 0.01
+            })
+
             // draw ALL rects in this quadrant from left to right and top to bottom
             const x = padding / 2
-            const y = padding + i * quadrantH / rects
+            const y = oy
             const width = quadrantW
             const height = (quadrantH - padding * 2) / rects;
 
