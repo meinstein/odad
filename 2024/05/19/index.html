@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>off-ramp</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const padding = w * 0.03;
+        const rects = 10;
+        const quadrantW = (w - padding * 2) / 2;
+        const quadrantH = (h - padding * 2) / 2;
+
+        const topLeftQuadrant = () => {
+          for (let i = 0; i < rects; i++) {
+            // draw ALL rects in this quadrant from left to right and top to bottom
+            const x = padding / 2
+            const y = padding + i * quadrantH / rects
+            const width = quadrantW
+            const height = (quadrantH - padding * 2) / rects;
+
+            ctx.fillStyle = 'lavender';
+            ctx.fillRect(x, y, width, height);
+          }
+        }
+
+        const topRightQuadrant = () => {
+          for (let i = 0; i < rects; i++) {
+            const oy = oscillate({
+              from: padding + i,
+              to: padding + i * quadrantH / rects + padding / 2,
+              speed: 0.25,
+              offset: i * 0.01
+            })
+
+            const x = padding / 1.5 + quadrantW + i * quadrantW / rects;
+            const y = oy
+            const width = (quadrantW - padding * 2) / rects;
+            const height = quadrantH;
+            ctx.fillStyle = 'indianred';
+            ctx.fillRect(x, y, width, height);
+          }
+        }
+
+        topLeftQuadrant();
+        topRightQuadrant();
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
