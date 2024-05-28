@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>und so weiter</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate, memoize }) => {
+        const padding = Math.floor(w * 0.02);
+        const rects = 10;
+        const quadrantW = Math.floor((w - padding) / 2)
+        const quadrantH = Math.floor((h - padding) / 2)
+
+        // alpha
+        ctx.globalAlpha = 0.66;
+
+        // blend
+        ctx.globalCompositeOperation = 'overlay';
+
+        const topLeftQuadrant = () => {
+          for (let i = 0; i < rects; i++) {
+            const oy = oscillate({
+              to: padding + quadrantH / 2,
+              from: padding + i * quadrantH / rects - padding,
+              speed: 0.5,
+              offset: i * 0.125
+            })
+
+            const x = padding / 2
+            // const y = padding / 2 + i * (quadrantH - padding / 2) / rects
+            const y = oy
+            const width = quadrantW
+            const height = (quadrantH - padding * 2) / rects;
+
+            ctx.fillStyle = 'lavender';
+            ctx.fillRect(x, y, width, height);
+          }
+        }
+
+        const topRightQuadrant = () => {
+          for (let i = 0; i < rects; i++) {
+            const x = padding + quadrantW + i * (quadrantW - padding / 2) / rects;
+            const y = padding / 2;
+            const width = (quadrantW - padding * 2) / rects;
+            const height = quadrantH - padding / 2;
+            ctx.fillStyle = 'indianred';
+            ctx.fillRect(x, y, width, height);
+          }
+        }
+
+        const bottomLeftQuadrant = () => {
+          for (let i = 0; i < rects * 2; i++) {
+            const ox = oscillate({
+              from: padding / 2 + i * quadrantW / rects / 2,
+              to: padding / 2 + i * quadrantW / rects + quadrantW / rects / 2,
+              speed: 0.33,
+              offset: i * 0.125
+            })
+
+            // const x = padding / 2 + i * quadrantW / rects
+            const x = ox
+            const y = padding / 2 + quadrantH
+            const width = (quadrantW - padding * 2) / rects;
+            const height = quadrantH
+            ctx.fillStyle = 'steelblue';
+            ctx.fillRect(x, y, width, height);
+          }
+        }
+
+
+        topLeftQuadrant();
+        topRightQuadrant();
+        bottomLeftQuadrant();
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
