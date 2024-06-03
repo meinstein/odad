@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fulcrum-ing</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // Clear canvas
+        ctx.clearRect(0, 0, w, h);
+
+        // blend mode
+        ctx.globalCompositeOperation = 'color-dodge'
+
+        // alpha
+        ctx.globalAlpha = 1;
+        const quadrantW = Math.floor(w / 3)
+        const quadrantH = Math.floor(h / 3)
+
+        const width = quadrantW
+        const height = quadrantH
+
+        // draw one square in the bottom right quadrant
+        const x2 = w / 2
+        const y2 = h / 2
+
+        const r1 = oscillate({
+          from: -Math.PI,
+          to: Math.PI,
+          speed: 0.25,
+        })
+
+        // draw the first one
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate(r1);
+        ctx.translate(-w / 2, -h / 2);
+        ctx.fillStyle = 'steelblue';
+        ctx.fillRect(x2, y2, width, height);
+        // reset
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        const r2 = oscillate({
+          from: Math.PI,
+          to: -Math.PI,
+          speed: 0.25,
+          offset: 1
+        })
+
+        // translate to center
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate(r2);
+        ctx.translate(-w / 2, -h / 2);
+        ctx.fillStyle = 'indianred'
+        ctx.fillRect(x2, y2, width, height);
+
+        // reset
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
