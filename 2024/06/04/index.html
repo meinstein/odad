@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>murmuration</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const num = 25;
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+
+        // blend mode
+        ctx.globalCompositeOperation = 'lighter'
+
+
+
+        const p = oscillate({
+          from: 0,
+          to: w * 0.15,
+          speed: 0.125
+        })
+
+        for (let i = 0; i < num; i++) {
+          // for each num, draw two joining bezier curves
+          // rotate the canvas by 360/num degrees on each iteration
+          // this will create a circle of bezier curves
+
+          const a = {
+            startX: w - p,
+            startY: h / 2,
+            control1X: oscillate({
+              from: p,
+              to: w / 2,
+              speed: .125,
+              offset: i * 0.1
+            }),
+            control1Y: oscillate({
+              from: p,
+              to: h / 2,
+              speed: .25,
+              offset: i * 0.1
+            }),
+            control2X: oscillate({
+              from: w / 2,
+              to: w - p,
+              speed: .125,
+              offset: i * 0.1
+            }),
+            control2Y: oscillate({
+              from: h / 2,
+              to: h - p,
+              speed: .25,
+              offset: i * 0.1
+            }),
+            endX: p,
+            endY: h / 2
+          }
+
+          const b = {
+            startX: p,
+            startY: h / 2,
+            control1X: oscillate({
+              from: p,
+              to: w / 2,
+              speed: .5,
+              offset: i * 0.1
+            }),
+            control1Y: oscillate({
+              from: p,
+              to: h / 2,
+              speed: .425,
+              offset: i * 0.1
+            }),
+            control2X: oscillate({
+              from: w / 2,
+              to: w - p,
+              speed: .5,
+              offset: i * 0.1
+            }),
+            control2Y: oscillate({
+              from: h / 2,
+              to: h - p,
+              speed: .425,
+              offset: i * 0.1
+            }),
+            endX: w - p,
+            endY: h / 2
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(
+            a.startX,
+            a.startY
+          );
+          ctx.bezierCurveTo(
+            a.control1X,
+            a.control1Y,
+            a.control2X,
+            a.control2Y,
+            a.endX,
+            a.endY
+          );
+          ctx.bezierCurveTo(
+            b.control1X,
+            b.control1Y,
+            b.control2X,
+            b.control2Y,
+            b.endX,
+            b.endY
+          );
+          ctx.closePath();
+
+          if (i % 2 === 0) {
+            // rgb steelblue = 70, 130, 180
+            ctx.fillStyle = 'rgba(70, 130, 180, 0.08)';
+          } else {
+            // lavender rgb = 230, 230, 250
+            ctx.fillStyle = 'rgba(230, 230, 250, 0.08)';
+          }
+          ctx.fill();
+
+        }
+
+        // slowly rotate the canvas around the center
+        // on each frame
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate(0.0015);
+        ctx.translate(-w / 2, -h / 2);
+      }
+
+      const context2d = new Context2D({ rootElement: 'root' })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
