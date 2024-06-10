@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>for effect</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      #text {
+        width: min(330px, 90%);
+        font-family: monospace;
+        font-size: 0.85rem;
+        line-height: 1.25rem;
+        text-align: left;
+        padding: 2rem 0;
+      }
+
+      p {
+        margin: 0;
+        padding: 0.25rem 0;
+      }
+
+      /* rotate the char */
+      .r {
+        position: relative;
+        display: inline-block;
+        transform: rotate(180deg);
+        transform-origin: 50% 56%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="text">
+      <p>g<span class="r">ee</span>n fietsen pl<span class="r">aa</span>tsen</p>
+      <p>g<span class="r">ee</span>n rijwielen pl<span class="r">aa</span>tsen</p>
+      <p>fietsen worden verwijderd</p>
+      <p>gr<span class="r">aa</span>g g<span class="r">ee</span>n fietsen pl<span
+          class="r">aa</span>tsen</p>
+      <p>g<span class="r">ee</span>n fietsen aan de ketting</p>
+      <p>verboden fietsen te pl<span class="r">aa</span>tsen</p>
+      <p>hier g<span class="r">ee</span>n fietsen te pl<span class="r">aa</span>tsen</p>
+      <p>verboden rijwielen te pl<span class="r">aa</span>tsen</p>
+      <p>fietsen e.d. worden verwijderd</p>
+    </div>
+  </body>
+
+</html>
