@@ -25,7 +25,10 @@ const filePath = `${path}/${id}.yml`
 await Deno.mkdir(path, { recursive: true })
 // load template
 const template = await Deno.readTextFile(`./scripts/templates/${flags.type}.yml`)
+// fill in date field with today's date (YYYY-MM-DD)
+const today = new Date().toISOString().split("T")[0]
+const filledTemplate = template.replace("YYYY-MM-DD", today)
 // write file to path
-await Deno.writeTextFile(filePath, template)
+await Deno.writeTextFile(filePath, filledTemplate)
 console.log(`🎉 Created new ${flags.type} context ${flags.date}`)
 
