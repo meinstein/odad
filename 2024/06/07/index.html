@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mine me</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: whitesmoke;
+      }
+
+      #container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: min(300px, 75%);
+      }
+
+      .text {
+        font-family: monospace;
+        font-size: 0.85rem;
+        line-height: 1.25rem;
+        text-align: left;
+      }
+
+      .indent-1 {
+        margin-left: 5%;
+      }
+
+      .indent-2 {
+        margin-left: 10%;
+      }
+
+      .indent-3 {
+        margin-left: 15%;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(300px, 75%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <span class="text indent-1">{</span>
+      <span class="text indent-2">data: [</span>
+      <div id="root" class="indent-3"></div>
+      <span class="text indent-2">]</span>
+      <span class="text indent-1">}</span>
+    </div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        // 10 rows and 10 cols
+        // fill with goldenrod circles
+        // each row should fill the width
+        const rows = 10;
+        const cols = 10;
+        const p = w * 0.01;
+
+        for (let i = 0; i < rows - 1; i++) {
+          for (let j = 0; j < cols - 1; j++) {
+            ctx.beginPath();
+
+            const or = oscillate({
+              from: w / cols / 2 - p * 3,
+              to: w / cols / 2 + p * 3,
+              speed: 1,
+              offset: i * 0.25 - j * 0.125
+            })
+
+            ctx.arc(
+              p + (w / cols) * j + w / cols / 1.25,
+              p + (h / rows) * i + h / rows,
+              or,
+              0,
+              Math.PI * 2
+            );
+            ctx.fillStyle = 'goldenrod';
+            ctx.fill();
+          }
+        }
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
