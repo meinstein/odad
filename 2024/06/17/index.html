@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ready, unsteady, go</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      class Circle {
+        constructor({
+          ctx,
+          w,
+          h,
+          radius,
+          cx,
+          cy,
+          arcSegments,
+          fillStyle,
+          oscillate,
+        }) {
+          this.ctx = ctx
+          this.cx = cx
+          this.cy = cy
+          this.radius = radius
+          this.arcSegments = arcSegments
+          this.fillStyle = fillStyle
+          this.oscillate = oscillate
+        }
+
+        draw() {
+          const { ctx, cx, cy, fillStyle, arcSegments, radius, oscillate } = this
+          const angle = Math.PI * 2 / arcSegments
+          ctx.fillStyle = fillStyle
+
+          ctx.beginPath()
+          ctx.moveTo(cx + radius, cy)
+
+          for (let i = 0; i < arcSegments; i++) {
+            const ox = oscillate({
+              from: Math.cos(angle * i + angle / 3),
+              to: Math.cos(angle * i + angle * 2 / 3),
+              speed: 1,
+              offset: Math.PI * 0.5 * i,
+            })
+
+            const cp1x = cx + radius * ox
+            const cp1y = cy + radius * Math.sin(angle * i + angle / 3)
+            const cp2x = cx + radius * ox
+            const cp2y = cy + radius * Math.sin(angle * i + angle * 2 / 3)
+            const endX = cx + radius * Math.cos(angle * i + angle)
+            const endY = cy + radius * Math.sin(angle * i + angle)
+            ctx.bezierCurveTo(
+              cp1x,
+              cp1y,
+              cp2x,
+              cp2y,
+              endX,
+              endY
+            )
+          }
+
+          ctx.closePath()
+          ctx.fill()
+        }
+      }
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        ctx.globalCompositeOperation = 'lighten'
+        ctx.globalAlpha = 0.66
+
+        new Circle({
+          ctx,
+          radius: w * 0.32,
+          cx: w * 0.33,
+          cy: h * 0.33,
+          arcSegments: 28,
+          fillStyle: 'steelblue',
+          oscillate,
+        }).draw()
+
+
+        new Circle({
+          ctx,
+          radius: w * 0.32,
+          cx: w * 0.67,
+          cy: h * 0.33,
+          arcSegments: 28,
+          fillStyle: 'seagreen',
+          oscillate,
+        }).draw()
+
+        new Circle({
+          ctx,
+          radius: w * 0.32,
+          cx: w * 0.68,
+          cy: h * 0.68,
+          arcSegments: 28,
+          fillStyle: 'indianred',
+          oscillate,
+        }).draw()
+
+        new Circle({
+          ctx,
+          radius: w * 0.32,
+          cx: w * 0.33,
+          cy: h * 0.68,
+          arcSegments: 28,
+          fillStyle: 'darkorange',
+          oscillate,
+        }).draw()
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
