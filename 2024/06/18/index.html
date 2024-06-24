@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>wobbly intersectionality</title>
+    <title>sprightly intersectionality</title>
     <style>
       body {
         margin: 0;
@@ -82,7 +82,9 @@
           }
 
           ctx.closePath()
-          ctx.fill()
+          ctx.lineWidth = 5
+          ctx.strokeStyle = fillStyle;
+          ctx.stroke()
         }
       }
 
@@ -92,7 +94,7 @@
 
         new Circle({
           ctx,
-          radius: w * 0.32,
+          radius: w * 0.31,
           cx: w * 0.33,
           cy: h * 0.33,
           arcSegments: 28,
@@ -104,7 +106,7 @@
 
         new Circle({
           ctx,
-          radius: w * 0.32,
+          radius: w * 0.31,
           cx: w * 0.67,
           cy: h * 0.33,
           arcSegments: 28,
@@ -115,7 +117,7 @@
 
         new Circle({
           ctx,
-          radius: w * 0.32,
+          radius: w * 0.31,
           cx: w * 0.68,
           cy: h * 0.68,
           arcSegments: 28,
@@ -126,13 +128,36 @@
 
         new Circle({
           ctx,
-          radius: w * 0.32,
+          radius: w * 0.31,
           cx: w * 0.33,
           cy: h * 0.68,
           arcSegments: 28,
           fillStyle: 'darkorange',
           oscillate,
           offsetFn: i => Math.sinh(i / 2)
+        }).draw()
+
+        // draw a circle in the middle
+        new Circle({
+          ctx,
+          radius: w * 0.375,
+          cx: w * 0.5,
+          cy: h * 0.5,
+          arcSegments: 28,
+          fillStyle: 'lavender',
+          oscillate,
+          offsetFn: i => Math.sinh(i)
+        }).draw()
+
+        new Circle({
+          ctx,
+          radius: w * 0.1875,
+          cx: w * 0.5,
+          cy: h * 0.5,
+          arcSegments: 28,
+          fillStyle: 'seafoam',
+          oscillate,
+          offsetFn: i => i * 2
         }).draw()
 
       }
