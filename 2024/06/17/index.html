@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ready, unsteady, go</title>
+    <title>wobble set</title>
     <style>
       body {
         margin: 0;
@@ -31,14 +31,13 @@
       class Circle {
         constructor({
           ctx,
-          w,
-          h,
           radius,
           cx,
           cy,
           arcSegments,
           fillStyle,
           oscillate,
+          offsetFn,
         }) {
           this.ctx = ctx
           this.cx = cx
@@ -47,10 +46,11 @@
           this.arcSegments = arcSegments
           this.fillStyle = fillStyle
           this.oscillate = oscillate
+          this.offsetFn = offsetFn
         }
 
         draw() {
-          const { ctx, cx, cy, fillStyle, arcSegments, radius, oscillate } = this
+          const { ctx, cx, cy, fillStyle, arcSegments, radius, oscillate, offsetFn } = this
           const angle = Math.PI * 2 / arcSegments
           ctx.fillStyle = fillStyle
 
@@ -62,7 +62,7 @@
               from: Math.cos(angle * i + angle / 3),
               to: Math.cos(angle * i + angle * 2 / 3),
               speed: 1,
-              offset: Math.PI * 0.5 * i,
+              offset: offsetFn ? offsetFn(i) : 1,
             })
 
             const cp1x = cx + radius * ox
@@ -98,6 +98,7 @@
           arcSegments: 28,
           fillStyle: 'steelblue',
           oscillate,
+          offsetFn: i => Math.cosh(i / 2)
         }).draw()
 
 
@@ -109,6 +110,7 @@
           arcSegments: 28,
           fillStyle: 'seagreen',
           oscillate,
+          offsetFn: i => Math.cos(i * 2)
         }).draw()
 
         new Circle({
@@ -119,6 +121,7 @@
           arcSegments: 28,
           fillStyle: 'indianred',
           oscillate,
+          offsetFn: i => Math.sin(i / 4)
         }).draw()
 
         new Circle({
@@ -129,6 +132,7 @@
           arcSegments: 28,
           fillStyle: 'darkorange',
           oscillate,
+          offsetFn: i => Math.sinh(i / 2)
         }).draw()
 
       }
