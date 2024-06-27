@@ -29,6 +29,23 @@
         margin: 0;
         padding: 0.25rem 0;
       }
+
+      .rotate {
+        color: firebrick;
+        animation: rotate 1.5s infinite linear;
+        font-size: 1rem;
+        line-height: 2rem;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     </style>
   </head>
 
@@ -36,7 +53,7 @@
     <div id="text">
       <p>fire hoses extinguish fire</p>
       <p>as well as they spray fire</p>
-      <p style="text-align: center;">—</p>
+      <p class="rotate" style="text-align: center;">—</p>
       <p>check the connection point</p>
       <p>before you turn on the tap</p>
     </div>
