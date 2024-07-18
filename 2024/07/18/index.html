@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add title here</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const padding = h * 0.04;
+        const numLines = 50;
+        // calc space between each line
+        const spacing = (h - padding * 2) / numLines;
+
+        // go from top to bottom, drawing a STRAIGHT bezier line from left to write, increment by spacing each time. start at padding and end at padding.
+        ctx.lineCap = 'round';
+
+        const mx = oscillate({
+          from: padding,
+          to: w - padding,
+          speed: 1,
+        })
+
+        for (let i = 0; i < numLines; i++) {
+          ctx.lineWidth = 3;
+
+          ctx.strokeStyle = `hsl(${oscillate({
+            from: 0,
+            to: 50,
+            speed: 0.5,
+            offset: i * 0.125,
+          })}, 100%, 50%)`;
+
+          const o_cp1y = oscillate({
+            from: spacing * -4,
+            to: spacing * 4,
+            speed: 1.25,
+            offset: i * 0.125,
+          })
+
+          const o_cp1x = oscillate({
+            from: 0.25,
+            to: 0.5,
+            speed: 1,
+            offset: i * 0.125,
+          })
+
+          const o_cp2y = oscillate({
+            from: spacing * 4,
+            to: spacing * -4,
+            speed: 1.25,
+            offset: i * 0.125,
+          })
+
+          const o_cp2x = oscillate({
+            from: 0.5,
+            to: 0.75,
+            speed: 1,
+            offset: i * 0.125,
+          })
+
+          const y = padding + i * spacing;
+          ctx.beginPath();
+          const startX = padding;
+          const startY = y;
+          const cp1x = w * o_cp1x;
+          const cp1y = y + o_cp1y;
+          const cp2x = w * o_cp2x;
+          const cp2y = y + o_cp2y;
+          const endX = w - padding;
+          const endY = y;
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(
+            cp1x,
+            cp1y,
+            cp2x,
+            cp2y,
+            endX,
+            endY
+          );
+
+          ctx.stroke();
+        }
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
