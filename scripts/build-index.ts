@@ -6,6 +6,7 @@ type Entry = {
   path: string,
   title: string,
   date: string
+  keywords: string[]
 }
 
 // this is a subset of what the new-context.yml contains
@@ -24,9 +25,11 @@ const addToTree = async (path: string) => {
       // eg: 2023/01/01/index.html
       const [date] = entry.path.split('/index.html')
       const file = await Deno.readTextFile(entry.path)
-      const document = new DOMParser().parseFromString(file, "text/html")
+      const keywords = file.match(/<meta name="keywords" content="(.*?)">/)?.[1]?.split(",") || [];
+      const document = new DOMParser().parseFromString(file, "text/html");
       entries.push({
         date,
+        keywords,
         title: document?.title || 'untitled',
         path: entry.path,
       })
@@ -86,11 +89,12 @@ if (!document || !contextDocument) {
  */
 const ul = document.createElement('ul')
 
-for (const { date, title, path } of entries) {
+for (const { date, title, path, keywords } of entries) {
   const li = document?.createElement('li')
   const a = document?.createElement('a')
+  const type = keywords.includes('poem') ? '[w]' : null
 
-  a.textContent = `${date} - ${title}`
+  a.textContent = [date, '-', title, type].filter(Boolean).join(' ')
   // set attribute - href does not work
   a.setAttribute('href', path)
   li.appendChild(a)
