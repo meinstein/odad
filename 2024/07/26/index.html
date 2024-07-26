@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>alive</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const rings = 11;
+        // globa alpha
+        ctx.globalAlpha = 0.75;
+        // blend
+        ctx.globalCompositeOperation = 'lighter';
+        // stroke cap
+        ctx.lineCap = 'round';
+
+        for (let i = 2; i < rings - 1; i++) {
+          const radius = i * (w / rings / 2);
+
+          const ringSegments = i * 10;
+
+          for (let j = 0; j < ringSegments; j++) {
+            const delta = 0.25;
+            const mult = oscillate({
+              from: 1 - delta,
+              to: 1 + delta,
+              speed: 0.55,
+              offset: i * 0.25
+            })
+
+            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * radius;
+            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * radius;
+
+            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * radius;
+            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * radius;
+
+            const cp1x = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * radius * mult;
+            const cp1y = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * radius * mult;
+
+            const cp2x = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * radius * mult;
+
+            const cp2y = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * radius * mult;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+            ctx.strokeStyle = 'lavender';
+            ctx.lineWidth = i * 0.33 + 1;
+
+            ctx.stroke();
+
+          }
+        }
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
