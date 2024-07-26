@@ -29,46 +29,53 @@
       import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
 
       const draw = ({ ctx, w, h, oscillate }) => {
-        const rings = 11;
+        const rings = 14;
         // globa alpha
-        ctx.globalAlpha = 0.75;
+        ctx.globalAlpha = 0.5;
         // blend
         ctx.globalCompositeOperation = 'lighter';
         // stroke cap
         ctx.lineCap = 'round';
 
-        for (let i = 2; i < rings - 1; i++) {
+        for (let i = 2; i < rings - 2; i++) {
           const radius = i * (w / rings / 2);
 
-          const ringSegments = i * 10;
+          const ringSegments = i * 6;
 
           for (let j = 0; j < ringSegments; j++) {
             const delta = 0.25;
             const mult = oscillate({
               from: 1 - delta,
               to: 1 + delta,
-              speed: 0.55,
+              speed: 0.445,
               offset: i * 0.25
             })
 
-            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * radius;
-            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * radius;
+            const or = oscillate({
+              from: radius * 0.85,
+              to: radius * 1.05,
+              speed: 0.445,
+              offset: i * 0.25
+            })
 
-            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * radius;
-            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * radius;
+            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or;
+            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or;
 
-            const cp1x = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * radius * mult;
-            const cp1y = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * radius * mult;
+            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or;
+            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or;
 
-            const cp2x = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * radius * mult;
+            const cp1x = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or * mult;
+            const cp1y = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or * mult;
 
-            const cp2y = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * radius * mult;
+            const cp2x = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or * mult;
+
+            const cp2y = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or * mult;
 
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
             ctx.strokeStyle = 'lavender';
-            ctx.lineWidth = i * 0.33 + 1;
+            ctx.lineWidth = i * 0.25 + 1;
 
             ctx.stroke();
 
