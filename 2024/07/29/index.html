@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>worlds within worlds</title>
+    <title>sway forest</title>
     <style>
       body {
         margin: 0;
@@ -29,69 +29,52 @@
       import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
 
       const draw = ({ ctx, w, h, oscillate }) => {
-        const rings = 14;
-        ctx.globalAlpha = 0.25;
-        ctx.globalCompositeOperation = 'color-dodge';
+        const rings = 15;
         ctx.lineCap = 'round';
 
-        for (let i = 0; i < rings - 1; i++) {
+        // subtract one to keep the rings within the canvas
+        for (let i = 2; i < rings - 1; i++) {
           const radius = i * (w / rings / 2);
-
-          const ringSegments = i * 6;
+          const ringSegments = i * 10;
 
           for (let j = 0; j < ringSegments; j++) {
-            const delta = 0.25;
+            // skip every other segment to create a gap
+            if (j % 2 === 0) {
+              continue;
+            }
 
-            const mult = oscillate({
-              from: 1 - delta,
-              to: 1 + delta,
-              speed: 0.5,
-              offset: i * 0.125
-            })
-
-            const or = oscillate({
-              from: radius * 0.85,
-              to: radius * 1.05,
-              speed: 0.66,
-              offset: i * 0.125
-            })
-
-            const clump = oscillate({
-              from: 0.66,
-              to: 0.33,
+            const sway_y = oscillate({
+              from: 0.875,
+              to: 1.125,
               speed: 0.33,
+              offset: j * 0.125
+            })
+
+            const sway_x = oscillate({
+              from: 0.875,
+              to: 1.125,
+              speed: 0.445,
               offset: i * 0.125
             })
 
-            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or * clump;
-            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or * clump;
+            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * radius;
+            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * radius;
 
-            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or * clump;
-            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or * clump;
+            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * radius;
+            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * radius;
 
-            const cp1x = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or * mult;
-            const cp1y = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or * mult;
+            const cp1x = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * radius * sway_x;
+            const cp1y = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * radius * sway_y;
 
-            const cp2x = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or * mult;
-            const cp2y = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or * mult;
+            const cp2x = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * radius * sway_x;
+            const cp2y = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * radius * 1.1;
 
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
-
-            const hue = oscillate({
-              from: 175,
-              to: 200,
-              speed: 1,
-              offset: j * 0.125 + i * 0.125
-            })
-
-            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-
-            ctx.lineWidth = i * 0.25 + 1;
-
+            ctx.strokeStyle = `rgba(230, 230, 230, ${0.66})`;
+            ctx.lineWidth = Math.round(i * 0.25 + 1);
             ctx.stroke();
-
           }
         }
 
