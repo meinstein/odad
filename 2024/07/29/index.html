@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>worlds within worlds</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
+
+      const draw = ({ ctx, w, h, oscillate }) => {
+        const rings = 14;
+        ctx.globalAlpha = 0.25;
+        ctx.globalCompositeOperation = 'color-dodge';
+        ctx.lineCap = 'round';
+
+        for (let i = 0; i < rings - 1; i++) {
+          const radius = i * (w / rings / 2);
+
+          const ringSegments = i * 6;
+
+          for (let j = 0; j < ringSegments; j++) {
+            const delta = 0.25;
+
+            const mult = oscillate({
+              from: 1 - delta,
+              to: 1 + delta,
+              speed: 0.5,
+              offset: i * 0.125
+            })
+
+            const or = oscillate({
+              from: radius * 0.85,
+              to: radius * 1.05,
+              speed: 0.66,
+              offset: i * 0.125
+            })
+
+            const clump = oscillate({
+              from: 0.66,
+              to: 0.33,
+              speed: 0.33,
+              offset: i * 0.125
+            })
+
+            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or * clump;
+            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or * clump;
+
+            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or * clump;
+            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or * clump;
+
+            const cp1x = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or * mult;
+            const cp1y = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or * mult;
+
+            const cp2x = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or * mult;
+            const cp2y = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or * mult;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+
+            const hue = oscillate({
+              from: 175,
+              to: 200,
+              speed: 1,
+              offset: j * 0.125 + i * 0.125
+            })
+
+            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
+            ctx.lineWidth = i * 0.25 + 1;
+
+            ctx.stroke();
+
+          }
+        }
+
+      }
+
+      const context2d = new Context2D({
+        rootElement: 'root'
+      })
+      context2d.draw(draw)
+    </script>
+  </body>
+
+</html>
