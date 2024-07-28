@@ -37,7 +37,7 @@
         // stroke cap
         ctx.lineCap = 'round';
 
-        for (let i = 2; i < rings - 2; i++) {
+        for (let i = 2; i < rings - 1; i++) {
           const radius = i * (w / rings / 2);
 
           const ringSegments = i * 6;
@@ -58,17 +58,18 @@
               offset: i * 0.25
             })
 
-            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or;
-            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or;
+            const clump = 0.66;
 
-            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or;
-            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or;
+            const startX = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or * clump;
+            const startY = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or * clump;
+
+            const endX = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or * clump;
+            const endY = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or * clump;
 
             const cp1x = w / 2 + Math.cos(j / ringSegments * Math.PI * 2) * or * mult;
             const cp1y = h / 2 + Math.sin(j / ringSegments * Math.PI * 2) * or * mult;
 
             const cp2x = w / 2 + Math.cos((j + 1) / ringSegments * Math.PI * 2) * or * mult;
-
             const cp2y = h / 2 + Math.sin((j + 1) / ringSegments * Math.PI * 2) * or * mult;
 
             ctx.beginPath();
