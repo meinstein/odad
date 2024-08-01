@@ -2,11 +2,13 @@ import { walk } from "https://deno.land/std/fs/mod.ts";
 import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 import { parse } from "https://deno.land/std@0.207.0/yaml/mod.ts";
 
+type Keyword = 'poem' | 'data'
+
 type Entry = {
   path: string,
   title: string,
   date: string
-  keywords: string[]
+  keywords: Keyword[]
 }
 
 // this is a subset of what the new-context.yml contains
@@ -89,10 +91,15 @@ if (!document || !contextDocument) {
  */
 const ul = document.createElement('ul')
 
+const legendMap: Record<Keyword, string> = {
+  poem: '[w]',
+  data: '[d]'
+}
+
 for (const { date, title, path, keywords } of entries) {
   const li = document?.createElement('li')
   const a = document?.createElement('a')
-  const type = keywords.includes('poem') ? '[w]' : null
+  const type = keywords.map(k => legendMap[k]).join(' ')
 
   a.textContent = [date, '-', title, type].filter(Boolean).join(' ')
   // set attribute - href does not work
