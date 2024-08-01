@@ -31,7 +31,7 @@ const addToTree = async (path: string) => {
       const document = new DOMParser().parseFromString(file, "text/html");
       entries.push({
         date,
-        keywords,
+        keywords: keywords as Keyword[],
         title: document?.title || 'untitled',
         path: entry.path,
       })
@@ -99,7 +99,7 @@ const legendMap: Record<Keyword, string> = {
 for (const { date, title, path, keywords } of entries) {
   const li = document?.createElement('li')
   const a = document?.createElement('a')
-  const type = keywords.map(k => legendMap[k]).join(' ')
+  const type = keywords.map(k => legendMap[k]).join(' ') || '[a]'
 
   a.textContent = [date, '-', title, type].filter(Boolean).join(' ')
   // set attribute - href does not work
