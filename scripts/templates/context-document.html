@@ -6,14 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>context</title>
     <style>
-      body {
+      :root {
+        font-size: 12px;
         font-family: monospace;
+        line-height: 1.5;
+      }
+
+      body {
+        padding: 0;
+        margin: 1rem;
+      }
+
+      :target {
+        background-color: #ffa;
+      }
+
+      table {
+        border-collapse: collapse;
+        max-width: 800px;
+      }
+
+      th,
+      td {
+        border: 1px solid black;
+        padding: 0.5rem;
+        vertical-align: top;
+        font-size: 1rem;
       }
     </style>
   </head>
 
   <body>
-    <h1>context</h1>
+    <h2>context</h2>
   </body>
 
 </html>

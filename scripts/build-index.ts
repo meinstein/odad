@@ -13,9 +13,12 @@ type Entry = {
 
 // this is a subset of what the new-context.yml contains
 type Context = {
+  id: string
   title: string
   url: string
   type: string
+  archive_url: string | null
+  language: string
 }
 
 const entries: Entry[] = []
@@ -39,20 +42,24 @@ const addToTree = async (path: string) => {
 
     if (entry.isFile && entry.name.endsWith('.yml')) {
       // eg: 2024/03/04/context/1709554621.yml
+      const id = entry.path.split('/context/')[1].split('.yml')[0]
       const [date] = entry.path.split('/context')
       // read yml file
       const file = await Deno.readTextFile(entry.path)
       // parse yml
       const data = parse(file) as Partial<Context>
 
-      if (!data?.title || !data?.url || !data?.type) {
+      if (!data?.title || !data?.url || !data?.type || !data?.language) {
         throw new Error(`Invalid context file: ${entry.path}`)
       }
 
       const newContext = {
+        id,
         title: data.title,
         url: data.url,
-        type: data.type
+        type: data.type,
+        language: data.language,
+        archive_url: data.archive_url || null,
       }
 
       // find if the date already exists in the list  of context
@@ -124,24 +131,92 @@ console.log('🎉 Created index.html')
 /**
  * Create the context.html file
  */
-for (const [date, contexts] of context) {
-  const div = contextDocument.createElement('div')
-  const p = contextDocument.createElement('p')
-  p.textContent = date
-  const ul = document.createElement('ul')
-  // add the title and original url as anchor tags
-  for (const { title, url, type } of contexts) {
-    const li = contextDocument.createElement('li')
-    const a = contextDocument.createElement('a')
-    a.textContent = `${title} [${type}]`
-    a.setAttribute('href', url)
-    li.appendChild(a)
-    ul.appendChild(li)
+const table = contextDocument.createElement('table')
+const thead = contextDocument.createElement('thead')
+const tbody = contextDocument.createElement('tbody')
+
+const headers = [
+  {
+    label: 'title',
+    width: '75%'
+  },
+  {
+    label: 'type',
+  },
+  {
+    label: 'url',
+  },
+  {
+    label: 'alt',
   }
-  div.appendChild(p)
-  div.appendChild(ul)
-  contextDocument.body.appendChild(div)
+]
+
+const headerRow = contextDocument.createElement('tr')
+
+for (const header of headers) {
+  const th = contextDocument.createElement('th')
+  th.textContent = header.label
+  if (header.width){
+    th.setAttribute('style', `width: ${header.width}`)
+  }
+  headerRow.appendChild(th)
 }
+
+thead.appendChild(headerRow)
+
+// keep in dom but hide it
+thead.setAttribute('style', 'visibility: collapse;')
+
+const typeMap = {
+  'podcast': '🎧',
+  'video': '📺',
+  'article': '📰',
+} as Record<string, string>
+
+const languageMap = {
+  'english': '🇺🇸',
+  'swiss-german': '🇨🇭',
+  'german': '🇩🇪',
+  'dutch': '🇳🇱',
+} as Record<string, string>
+
+for (const [_date, contexts] of context) {
+  // add the title and original url as anchor tags
+  for (const { title, url, archive_url, type, id, language } of contexts) {
+    const tr = contextDocument.createElement('tr')
+    tr.id = id
+    // TITLE
+    const titleCell = contextDocument.createElement('td')
+    titleCell.textContent = title
+    tr.appendChild(titleCell)
+    // TYPE
+    const typeCell = contextDocument.createElement('td')
+    typeCell.textContent = `${typeMap[type]} ${languageMap[language]}`
+    // add style no wrap
+    typeCell.setAttribute('style', 'white-space: nowrap;')
+    tr.appendChild(typeCell)
+    // LINK
+    const linkCell = contextDocument.createElement('td')
+    const a = contextDocument.createElement('a')
+    a.textContent = 'link'
+    a.setAttribute('href', url)
+    linkCell.appendChild(a)
+    tr.appendChild(linkCell)
+    // ARCHIVE LINK
+    const archiveLinkCell = contextDocument.createElement('td')
+    const altA = contextDocument.createElement('a')
+    altA.textContent = archive_url ? 'alt' : ''
+    altA.setAttribute('href', archive_url || '')
+    archiveLinkCell.appendChild(altA)
+    tr.appendChild(archiveLinkCell)
+    tbody.appendChild(tr)
+  }
+}
+
+table.appendChild(thead)
+table.appendChild(tbody)
+contextDocument.body.appendChild(table)
+
 
 // write the file
 await Deno.writeTextFile('context.html', contextDocument.documentElement?.outerHTML || '')
