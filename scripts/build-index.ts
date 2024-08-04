@@ -154,7 +154,7 @@ const createOdad = async () => {
     // add the title and original url as anchor tags
 
       const tr = odadDocument.createElement('tr')
-      tr.id = date
+      tr.id = `${num}`
       // NUM
       const numCell = odadDocument.createElement('td')
       numCell.textContent = `${num}`
