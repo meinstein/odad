@@ -108,7 +108,7 @@ const createOdad = async () => {
   const headers = [
     {
       label: 'num',
-      width: '8%'
+      width: '10%'
     },
     {
       label: 'date',
@@ -119,8 +119,8 @@ const createOdad = async () => {
       width: '60%'
     },
     {
-      label: 'type',
-      width: '12%'
+      label: 'cat',
+      width: '10%'
     },
   ]
 
