@@ -108,19 +108,19 @@ const createOdad = async () => {
   const headers = [
     {
       label: 'num',
-      // width: '5%'
+      width: '8%'
     },
     {
       label: 'date',
-      // width: '20%'
+      width: '20%'
     },
     {
       label: 'title',
-      width: '50%'
+      width: '60%'
     },
     {
       label: 'type',
-      // width: '10%'
+      width: '12%'
     },
   ]
 
@@ -129,9 +129,11 @@ const createOdad = async () => {
     data: '[d]'
   }
 
+  // ADD HEADERS
   for (const header of headers) {
     const th = odadDocument.createElement('th')
     th.textContent = header.label
+
     const style = {
       'text-align': 'left',
     } as Record<string, string>
@@ -144,15 +146,12 @@ const createOdad = async () => {
     headerRow.appendChild(th)
   }
 
+  // APPEND HEADERS
   thead.appendChild(headerRow)
 
-  // keep in dom but hide it
-  // thead.setAttribute('style', 'visibility: collapse;')
   let num = entries.length;
 
   for (const { date, title, path, keywords } of entries) {
-    // add the title and original url as anchor tags
-
       const tr = odadDocument.createElement('tr')
       tr.id = `${num}`
       // NUM
@@ -161,7 +160,13 @@ const createOdad = async () => {
       tr.appendChild(numCell)
       // DATE
       const dateCell = odadDocument.createElement('td')
-      dateCell.textContent = date
+      const formattedDate = new Date(date)
+      const formattedDateString = formattedDate.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: '2-digit'
+      })
+      dateCell.textContent = formattedDateString
       tr.appendChild(dateCell)
       // TITLE
       const titleCell = odadDocument.createElement('td')
@@ -169,7 +174,6 @@ const createOdad = async () => {
       a.textContent = 'link'
       a.setAttribute('href', path)
       a.textContent = title
-      a.setAttribute('style', 'white-space: nowrap;')
       titleCell.appendChild(a)
       tr.appendChild(titleCell)
       // TYPE
