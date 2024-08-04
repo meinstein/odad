@@ -86,138 +86,212 @@ context.sort((a, b) => {
   return a[0] > b[0] ? -1 : 1
 })
 
-const document = new DOMParser().parseFromString(await Deno.readTextFile("./scripts/templates/index-document.html"), "text/html")
+const odadDocument = new DOMParser().parseFromString(await Deno.readTextFile("./scripts/templates/index-document.html"), "text/html")
 const contextDocument = new DOMParser().parseFromString(await Deno.readTextFile("./scripts/templates/context-document.html"), "text/html")
 
-if (!document || !contextDocument) {
+if (!odadDocument || !contextDocument) {
   throw new Error('Could not create document')
 }
 
 /**
+ * =============
  * Create the index.html file
+ * =============
  */
-const ul = document.createElement('ul')
 
-const legendMap: Record<Keyword, string> = {
-  poem: '[w]',
-  data: '[d]'
+const createOdad = async () => {
+  const table = odadDocument.createElement('table')
+  const thead = odadDocument.createElement('thead')
+  const tbody = odadDocument.createElement('tbody')
+  const headerRow = odadDocument.createElement('tr')
+
+  const headers = [
+    {
+      label: 'num',
+      // width: '5%'
+    },
+    {
+      label: 'date',
+      // width: '20%'
+    },
+    {
+      label: 'title',
+      width: '50%'
+    },
+    {
+      label: 'type',
+      // width: '10%'
+    },
+  ]
+
+  const legendMap: Record<Keyword, string> = {
+    poem: '[w]',
+    data: '[d]'
+  }
+
+  for (const header of headers) {
+    const th = odadDocument.createElement('th')
+    th.textContent = header.label
+    const style = {
+      'text-align': 'left',
+    } as Record<string, string>
+
+    if (header.width){
+      style['width'] = header.width
+    }
+
+    th.setAttribute('style', Object.entries(style).map(([key, value]) => `${key}: ${value}`).join(';'))
+    headerRow.appendChild(th)
+  }
+
+  thead.appendChild(headerRow)
+
+  // keep in dom but hide it
+  // thead.setAttribute('style', 'visibility: collapse;')
+  let num = entries.length;
+
+  for (const { date, title, path, keywords } of entries) {
+    // add the title and original url as anchor tags
+
+      const tr = odadDocument.createElement('tr')
+      tr.id = date
+      // NUM
+      const numCell = odadDocument.createElement('td')
+      numCell.textContent = `${num}`
+      tr.appendChild(numCell)
+      // DATE
+      const dateCell = odadDocument.createElement('td')
+      dateCell.textContent = date
+      tr.appendChild(dateCell)
+      // TITLE
+      const titleCell = odadDocument.createElement('td')
+      const a = odadDocument.createElement('a')
+      a.textContent = 'link'
+      a.setAttribute('href', path)
+      a.textContent = title
+      a.setAttribute('style', 'white-space: nowrap;')
+      titleCell.appendChild(a)
+      tr.appendChild(titleCell)
+      // TYPE
+      const typeCell = odadDocument.createElement('td')
+      typeCell.textContent = keywords.map(k => legendMap[k]).join(' ')
+      tr.appendChild(typeCell)
+      tbody.appendChild(tr)
+      // decrement num
+      num--
+  }
+
+  table.appendChild(thead)
+  table.appendChild(tbody)
+  odadDocument.body.appendChild(table)
+
+  const outerHTML = odadDocument.documentElement?.outerHTML
+
+  if (!outerHTML) {
+    throw new Error('Could not create outerHTML')
+  }
+
+  await Deno.writeTextFile('index.html', outerHTML)
+  console.log('🎉 Created index.html')
 }
 
-for (const { date, title, path, keywords } of entries) {
-  const li = document?.createElement('li')
-  const a = document?.createElement('a')
-  const type = keywords.map(k => legendMap[k]).join(' ') || '[a]'
-
-  a.textContent = [date, '-', title, type].filter(Boolean).join(' ')
-  // set attribute - href does not work
-  a.setAttribute('href', path)
-  li.appendChild(a)
-  ul.appendChild(li)
-}
-
-document.body.appendChild(ul)
-
-const outerHTML = document.documentElement?.outerHTML
-
-if (!outerHTML) {
-  throw new Error('Could not create outerHTML')
-}
-
-// write the file
-await Deno.writeTextFile('index.html', outerHTML)
-console.log('🎉 Created index.html')
 
 
 /**
+ * =============
  * Create the context.html file
+ * =============
  */
-const table = contextDocument.createElement('table')
-const thead = contextDocument.createElement('thead')
-const tbody = contextDocument.createElement('tbody')
+const makeContext = async () => {
+  const table = contextDocument.createElement('table')
+  const thead = contextDocument.createElement('thead')
+  const tbody = contextDocument.createElement('tbody')
+  const headerRow = contextDocument.createElement('tr')
 
-const headers = [
-  {
-    label: 'title',
-    width: '75%'
-  },
-  {
-    label: 'type',
-  },
-  {
-    label: 'url',
-  },
-  {
-    label: 'alt',
+  const headers = [
+    {
+      label: 'title',
+      width: '75%'
+    },
+    {
+      label: 'type',
+    },
+    {
+      label: 'url',
+    },
+    {
+      label: 'alt',
+    }
+  ]
+
+  for (const header of headers) {
+    const th = contextDocument.createElement('th')
+    th.textContent = header.label
+    if (header.width){
+      th.setAttribute('style', `width: ${header.width}`)
+    }
+    headerRow.appendChild(th)
   }
-]
 
-const headerRow = contextDocument.createElement('tr')
+  thead.appendChild(headerRow)
 
-for (const header of headers) {
-  const th = contextDocument.createElement('th')
-  th.textContent = header.label
-  if (header.width){
-    th.setAttribute('style', `width: ${header.width}`)
+  // keep in dom but hide it
+  thead.setAttribute('style', 'visibility: collapse;')
+
+  const typeMap = {
+    'podcast': '🎧',
+    'video': '📺',
+    'article': '📰',
+  } as Record<string, string>
+
+  const languageMap = {
+    'english': '🇺🇸',
+    'swiss-german': '🇨🇭',
+    'german': '🇩🇪',
+    'dutch': '🇳🇱',
+  } as Record<string, string>
+
+  for (const [_date, contexts] of context) {
+    // add the title and original url as anchor tags
+    for (const { title, url, archive_url, type, id, language } of contexts) {
+      const tr = contextDocument.createElement('tr')
+      tr.id = id
+      // TITLE
+      const titleCell = contextDocument.createElement('td')
+      titleCell.textContent = title
+      tr.appendChild(titleCell)
+      // TYPE
+      const typeCell = contextDocument.createElement('td')
+      typeCell.textContent = `${typeMap[type]} ${languageMap[language]}`
+      // add style no wrap
+      typeCell.setAttribute('style', 'white-space: nowrap;')
+      tr.appendChild(typeCell)
+      // LINK
+      const linkCell = contextDocument.createElement('td')
+      const a = contextDocument.createElement('a')
+      a.textContent = 'link'
+      a.setAttribute('href', url)
+      linkCell.appendChild(a)
+      tr.appendChild(linkCell)
+      // ARCHIVE LINK
+      const archiveLinkCell = contextDocument.createElement('td')
+      const altA = contextDocument.createElement('a')
+      altA.textContent = archive_url ? 'alt' : ''
+      altA.setAttribute('href', archive_url || '')
+      archiveLinkCell.appendChild(altA)
+      tr.appendChild(archiveLinkCell)
+      tbody.appendChild(tr)
+    }
   }
-  headerRow.appendChild(th)
+
+  table.appendChild(thead)
+  table.appendChild(tbody)
+  contextDocument.body.appendChild(table)
+
+  await Deno.writeTextFile('context.html', contextDocument.documentElement?.outerHTML || '')
+  console.log('🎉 Created context.html')
 }
 
-thead.appendChild(headerRow)
 
-// keep in dom but hide it
-thead.setAttribute('style', 'visibility: collapse;')
-
-const typeMap = {
-  'podcast': '🎧',
-  'video': '📺',
-  'article': '📰',
-} as Record<string, string>
-
-const languageMap = {
-  'english': '🇺🇸',
-  'swiss-german': '🇨🇭',
-  'german': '🇩🇪',
-  'dutch': '🇳🇱',
-} as Record<string, string>
-
-for (const [_date, contexts] of context) {
-  // add the title and original url as anchor tags
-  for (const { title, url, archive_url, type, id, language } of contexts) {
-    const tr = contextDocument.createElement('tr')
-    tr.id = id
-    // TITLE
-    const titleCell = contextDocument.createElement('td')
-    titleCell.textContent = title
-    tr.appendChild(titleCell)
-    // TYPE
-    const typeCell = contextDocument.createElement('td')
-    typeCell.textContent = `${typeMap[type]} ${languageMap[language]}`
-    // add style no wrap
-    typeCell.setAttribute('style', 'white-space: nowrap;')
-    tr.appendChild(typeCell)
-    // LINK
-    const linkCell = contextDocument.createElement('td')
-    const a = contextDocument.createElement('a')
-    a.textContent = 'link'
-    a.setAttribute('href', url)
-    linkCell.appendChild(a)
-    tr.appendChild(linkCell)
-    // ARCHIVE LINK
-    const archiveLinkCell = contextDocument.createElement('td')
-    const altA = contextDocument.createElement('a')
-    altA.textContent = archive_url ? 'alt' : ''
-    altA.setAttribute('href', archive_url || '')
-    archiveLinkCell.appendChild(altA)
-    tr.appendChild(archiveLinkCell)
-    tbody.appendChild(tr)
-  }
-}
-
-table.appendChild(thead)
-table.appendChild(tbody)
-contextDocument.body.appendChild(table)
-
-
-// write the file
-await Deno.writeTextFile('context.html', contextDocument.documentElement?.outerHTML || '')
-
+await createOdad()
+await makeContext()
