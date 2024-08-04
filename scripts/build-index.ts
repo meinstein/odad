@@ -214,17 +214,15 @@ const makeContext = async () => {
 
   const headers = [
     {
-      label: 'title',
-      width: '75%'
-    },
-    {
       label: 'type',
+      width: '2ch',
     },
     {
-      label: 'url',
+      label: 'title',
     },
     {
       label: 'alt',
+      width: '4ch'
     }
   ]
 
@@ -260,23 +258,19 @@ const makeContext = async () => {
     for (const { title, url, archive_url, type, id, language } of contexts) {
       const tr = contextDocument.createElement('tr')
       tr.id = id
-      // TITLE
-      const titleCell = contextDocument.createElement('td')
-      titleCell.textContent = title
-      tr.appendChild(titleCell)
       // TYPE
       const typeCell = contextDocument.createElement('td')
-      typeCell.textContent = `${typeMap[type]} ${languageMap[language]}`
+      typeCell.textContent = `${typeMap[type]}`
       // add style no wrap
       typeCell.setAttribute('style', 'white-space: nowrap;')
       tr.appendChild(typeCell)
-      // LINK
-      const linkCell = contextDocument.createElement('td')
-      const a = contextDocument.createElement('a')
-      a.textContent = 'link'
-      a.setAttribute('href', url)
-      linkCell.appendChild(a)
-      tr.appendChild(linkCell)
+      // TITLE
+      const titleCell = contextDocument.createElement('td')
+      const titleLink = contextDocument.createElement('a')
+      titleLink.textContent = title
+      titleLink.setAttribute('href', url)
+      titleCell.appendChild(titleLink)
+      tr.appendChild(titleCell)
       // ARCHIVE LINK
       const archiveLinkCell = contextDocument.createElement('td')
       const altA = contextDocument.createElement('a')
