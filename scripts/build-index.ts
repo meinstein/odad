@@ -108,25 +108,24 @@ const createOdad = async () => {
   const headers = [
     {
       label: 'num',
-      width: '10%'
+      width: '3ch'
     },
     {
       label: 'date',
-      width: '20%'
+      width: '8ch'
     },
     {
       label: 'title',
-      width: '60%'
     },
     {
-      label: 'cat',
-      width: '10%'
+      label: 'type',
+      width: '4ch'
     },
   ]
 
   const legendMap: Record<Keyword, string> = {
-    poem: '[w]',
-    data: '[d]'
+    poem: 'poem',
+    data: 'data'
   }
 
   // ADD HEADERS
@@ -134,15 +133,10 @@ const createOdad = async () => {
     const th = odadDocument.createElement('th')
     th.textContent = header.label
 
-    const style = {
-      'text-align': 'left',
-    } as Record<string, string>
-
     if (header.width){
-      style['width'] = header.width
+      th.setAttribute('style', `width: ${header.width}`)
     }
 
-    th.setAttribute('style', Object.entries(style).map(([key, value]) => `${key}: ${value}`).join(';'))
     headerRow.appendChild(th)
   }
 
@@ -167,6 +161,7 @@ const createOdad = async () => {
         year: '2-digit'
       })
       dateCell.textContent = formattedDateString
+      dateCell.setAttribute('style', 'text-align: center;')
       tr.appendChild(dateCell)
       // TITLE
       const titleCell = odadDocument.createElement('td')
@@ -214,15 +209,15 @@ const makeContext = async () => {
 
   const headers = [
     {
-      label: 'type',
+      label: '',
       width: '2ch',
     },
     {
-      label: 'title',
+      label: 'title (link)',
     },
     {
-      label: 'alt',
-      width: '4ch'
+      label: '',
+      width: '3ch'
     }
   ]
 
@@ -236,9 +231,6 @@ const makeContext = async () => {
   }
 
   thead.appendChild(headerRow)
-
-  // keep in dom but hide it
-  thead.setAttribute('style', 'visibility: collapse;')
 
   const typeMap = {
     'podcast': '🎧',
@@ -262,7 +254,7 @@ const makeContext = async () => {
       const typeCell = contextDocument.createElement('td')
       typeCell.textContent = `${typeMap[type]}`
       // add style no wrap
-      typeCell.setAttribute('style', 'white-space: nowrap;')
+      typeCell.setAttribute('style', 'text-align: center;')
       tr.appendChild(typeCell)
       // TITLE
       const titleCell = contextDocument.createElement('td')
@@ -276,6 +268,7 @@ const makeContext = async () => {
       const altA = contextDocument.createElement('a')
       altA.textContent = archive_url ? 'alt' : ''
       altA.setAttribute('href', archive_url || '')
+      archiveLinkCell.setAttribute('style', 'text-align: center;')
       archiveLinkCell.appendChild(altA)
       tr.appendChild(archiveLinkCell)
       tbody.appendChild(tr)
