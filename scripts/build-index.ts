@@ -173,7 +173,7 @@ const createOdad = async () => {
       tr.appendChild(titleCell)
       // TYPE
       const typeCell = odadDocument.createElement('td')
-      typeCell.textContent = keywords.map(k => legendMap[k]).join(' ')
+      typeCell.textContent = keywords.map(k => legendMap[k]).join(' ') || 'vis.'
       tr.appendChild(typeCell)
       tbody.appendChild(tr)
       // decrement num
