@@ -100,7 +100,7 @@ if (!odadDocument || !contextDocument) {
  */
 
 const createOdad = async () => {
-  const table = odadDocument.createElement('table')
+  const table = odadDocument.querySelector('table')
   const thead = odadDocument.createElement('thead')
   const tbody = odadDocument.createElement('tbody')
   const headerRow = odadDocument.createElement('tr')
@@ -180,9 +180,8 @@ const createOdad = async () => {
       num--
   }
 
-  table.appendChild(thead)
-  table.appendChild(tbody)
-  odadDocument.body.appendChild(table)
+  table?.appendChild(thead)
+  table?.appendChild(tbody)
 
   const outerHTML = odadDocument.documentElement?.outerHTML
 
@@ -202,7 +201,7 @@ const createOdad = async () => {
  * =============
  */
 const makeContext = async () => {
-  const table = contextDocument.createElement('table')
+  const table = contextDocument.querySelector('table')
   const thead = contextDocument.createElement('thead')
   const tbody = contextDocument.createElement('tbody')
   const headerRow = contextDocument.createElement('tr')
@@ -275,9 +274,8 @@ const makeContext = async () => {
     }
   }
 
-  table.appendChild(thead)
-  table.appendChild(tbody)
-  contextDocument.body.appendChild(table)
+  table?.appendChild(thead)
+  table?.appendChild(tbody)
 
   await Deno.writeTextFile('context.html', contextDocument.documentElement?.outerHTML || '')
   console.log('🎉 Created context.html')
