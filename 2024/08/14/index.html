@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="poem">
+    <title>dishevel</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: royalblue;
+        overflow: hidden;
+      }
+
+      .ring {
+        animation: rotate infinite linear;
+        animation-duration: 8s;
+        border-style: double;
+        border-width: 8px;
+        overflow: hidden;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+          border-radius: 33%;
+          border-color: rgba(230, 230, 250, 0.5);
+          padding: 2px;
+        }
+
+        50% {
+          transform: rotate(180deg);
+          border-radius: 45%;
+          border-color: rgba(230, 230, 250, 0.95);
+          padding: 0px;
+        }
+
+        100% {
+          transform: rotate(360deg);
+          border-radius: 33%;
+          border-color: rgba(230, 230, 250, 0.5);
+          padding: 2px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ring">
+      <div class="ring">
+        <div class="ring">
+          <div class="ring">
+            <div class="ring">
+              <div class="ring">
+                <div class="ring">
+                  <div class="ring">
+                    <div class="ring">
+                      <div class="ring">
+                        <div class="ring">
+                          <div class="ring">
+                            <div class="ring">
+                              <div class="ring">
+                                <div class="ring" style="padding: 8px;">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
