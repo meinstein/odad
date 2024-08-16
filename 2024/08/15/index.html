@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="visual">
+    <title>turnabout</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: black;
+        overflow: hidden;
+      }
+
+      .ring {
+        border-style: double;
+        border-width: 7px;
+        overflow: hidden;
+        border-radius: 33%;
+        padding: 2px;
+        border-color: rgba(230, 230, 250, 0.75);
+        /* border-color: lavenderblush; */
+      }
+
+      .fwd {
+        animation-name: rotate;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-duration: 10s;
+        animation-direction: reverse;
+      }
+
+      .bwd {
+        animation-name: rotate;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease;
+        animation-duration: 10s;
+        animation-direction: normal;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ring fwd">
+      <div class="ring bwd">
+        <div class="ring fwd">
+          <div class="ring bwd">
+            <div class="ring fwd">
+              <div class="ring bwd">
+                <div class="ring fwd">
+                  <div class="ring bwd">
+                    <div class="ring fwd">
+                      <div class="ring bwd">
+                        <div class="ring fwd">
+                          <div class="ring bwd">
+                            <div class="ring fwd">
+                              <div class="ring bwd" style="padding: 12px;">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
