@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="visual">
+    <title>blackberry current</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100dvh;
+        background-color: black;
+        overflow: hidden;
+      }
+
+      .ring {
+        position: absolute;
+        top: calc(50% - 10px);
+        left: calc(50% - 10px);
+        transform: translate(50%, 50%);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        border-color: black;
+        background: black;
+      }
+
+      @keyframes ring {
+        0% {
+          box-shadow: 0 0 0px rgba(230, 230, 250, 0.75);
+        }
+
+        50% {
+          box-shadow: 0 0 18px rgba(230, 230, 250, 0.5);
+        }
+
+        100% {
+          box-shadow: 0 0 0px rgba(230, 230, 250, 0.75);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      const rings = 360
+
+      for (let i = 90; i < rings; i++) {
+        const ring = document.createElement('div')
+        ring.classList.add('ring')
+
+        // perfect circle based on the rings num above
+        let x = Math.cos(i) * i / 3
+        let y = Math.sin(i) * i / 3
+
+        ring.style.transform = `translate(${x}px, ${y}px)`
+        // duration is related to the rings num above
+        const duration = 1 + (i / 360)
+        ring.style.animationDelay = `${duration}s`
+        ring.style.animation = `ring ${1.33}s ease infinite`
+
+        document.body.appendChild(ring)
+      }
+    </script>
+
+  </body>
+
+</html>
