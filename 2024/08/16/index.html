@@ -51,12 +51,12 @@
         const ring = document.createElement('div')
         ring.classList.add('ring')
 
-        // perfect circle based on the rings num above
+
         let x = Math.cos(i) * i / 3
         let y = Math.sin(i) * i / 3
 
         ring.style.transform = `translate(${x}px, ${y}px)`
-        // duration is related to the rings num above
+
         const duration = 1 + (i / 360)
         ring.style.animationDelay = `${duration}s`
         ring.style.animation = `ring ${1.33}s ease infinite`
