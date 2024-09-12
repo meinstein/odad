@@ -4,26 +4,110 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add title here</title>
+    <meta name="description"
+      content="The sequence of signs seen while walking from Tweede Jan Steenstraat to Waterlooplein.">
+    <meta name="keywords" content="data">
+    <title>signscape: hawthorne bridge</title>
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         margin: 0;
         padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+        font-family: 'Courier New', Courier, monospace;
+        margin: 32px;
+      }
+
+      .sign {
+        border: 1px solid black;
+        padding: 12px;
+        border-radius: 4px;
+        max-width: 290px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .edge {
+        width: 1px;
+        height: 1.5rem;
+        background-color: black;
+      }
+
+      p {
+        margin: 0;
       }
     </style>
   </head>
 
   <body>
-    <script type="module">
-      import { Context2D } from 'https://unpkg.com/context2d@0.0.8';
-
-      const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
-      }
-
-      const context2d = new Context2D()
-      context2d.draw(draw)
-    </script>
+    <div class="sign"
+      style="text-align: center; font-weight: bold; text-transform: uppercase; background: goldenrod;">
+      <p>draw</p>
+      <p>bridge</p>
+    </div>
+    <div class="edge"></div>
+    <div class="sign"
+      style="text-align: center; font-weight: bold; text-transform: uppercase; background: goldenrod;">
+      <p>metal</p>
+      <p>bridge</p>
+      <p>deck</p>
+    </div>
+    <div class="edge"></div>
+    <div class="sign"
+      style="text-align: center; font-weight: bold; text-transform: uppercase; background: goldenrod;">
+      <p>prepare to</p>
+      <p>stop</p>
+      <p style="font-size: 0.75em;">when lights flash</p>
+    </div>
+    <div class="edge"></div>
+    <div class="sign"
+      style="text-align: center; font-weight: bold; text-transform: uppercase; background: darkgreen; color: white;">
+      <p style="font-size: 0.75em;">williamette river</p>
+      <p style="margin-top: 4px;">hawthorne</p>
+      <p style="margin-bottom: 4px;">bridge</p>
+      <p style="font-size: 0.75em;">maintained by</p>
+      <p style="font-size: 0.75em;">multnomah county</p>
+    </div>
+    <div class="edge"></div>
+    <div class="sign" style="font-weight: bold; background: royalblue; color: white;">
+      <p>There</p>
+      <p>is hope.</p>
+      <div
+        style="color: goldenrod; border-top: 1px solid goldenrod; border-bottom: 1px solid goldenrod; margin: 8px 0; padding: 8px 0;">
+        <p style="font-size: 0.75em;">MAKE THE CALL</p>
+        <p>503.988.4888</p>
+        <p style="font-size: 0.75em;">24/7 CRISIS LINE</p>
+      </div>
+      <p>We are</p>
+      <p>here</p>
+      <p>to listen.</p>
+    </div>
+    <div class="edge"></div>
+    <div class="sign" style="font-weight: bold; text-align: center; display: flex; gap: 8px;">
+      <p>CLEAN UP</p>
+      <div
+        style="border-radius: 50%; border: 2px solid red; width: 24px; height: 24px; align-self: center;">
+      </div>
+      <p>AFTER YOUR</p>
+      <p>PETS</p>
+    </div>
+    <div class="edge"></div>
+    <div class="sign"
+      style="font-weight: bold; text-align: center; display: flex; text-transform: uppercase; background: darkgreen; color: white;">
+      <p style="margin-bottom: 4px;">Waiting?</p>
+      <p>Turn your</p>
+      <p>engine off</p>
+      <p style="margin-bottom: 4px;">off!</p>
+      <p style="font-size: 0.75em;">Idling pollutes</p>
+    </div>
   </body>
 
 </html>
