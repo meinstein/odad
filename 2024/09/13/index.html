@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="visual">
+    <title>loading</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: black;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(500px, 90%);
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+
+      .line {
+        animation: animateShadow 6s infinite ease-in-out;
+      }
+
+      @keyframes animateShadow {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+
+        50% {
+          transform: rotate(180deg) scale(0.75);
+        }
+
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      const LINES = 100;
+      const root = document.getElementById('root');
+      // get root height
+      const rootHeight = root.clientHeight;
+      const lineHeight = rootHeight / LINES / 3;
+
+      for (let i = 0; i < LINES; i++) {
+        const line = document.createElement('div');
+        line.classList.add('line');
+        line.style.borderRadius = `${lineHeight}px`;
+        line.style.height = `${lineHeight}px`;
+        line.style.backgroundColor = 'black';
+        // delay is based on index. the delay is highest for the
+        // middle index and lowest for the first and last index
+        const delay = Math.abs(i - LINES / 2) / LINES * 2
+        // line width is inversely proportional to delay
+        const d = 1 - delay
+        const width = 100 * d
+        line.style.width = `${width < 2 ? 2 : d * 100}%`;
+        // box shadow
+        line.style.boxShadow = `0 0 3px 3px rgba(230, 230, 250, ${d * 0.66})`;
+        // center the line
+        line.style.margin = `0 auto`;
+        line.style.animationDelay = `${delay}s`; // Different delay for each line
+
+        root.appendChild(line);
+      }
+    </script>
+  </body>
+
+</html>
