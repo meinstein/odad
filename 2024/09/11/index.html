@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="visual">
-    <title>uitwaaien</title>
+    <title>loading...1</title>
     <style>
       body {
         margin: 0;
@@ -19,29 +19,29 @@
 
       #root {
         aspect-ratio: 1/1;
-        width: min(500px, 90%);
+        width: min(500px, 80%);
         display: flex;
         justify-content: space-between;
         flex-direction: column;
       }
 
       .line {
-        animation: animateShadow 5s infinite ease-in-out;
+        animation: animateShadow 6s infinite ease-in-out alternate;
       }
 
       @keyframes animateShadow {
         0% {
-          transform: rotate(15deg) scale(0.25);
+          transform: rotate(180deg) scale(0.2);
           box-shadow: 0 0 0px 0px rgba(230, 230, 250, 0);
         }
 
         50% {
           transform: rotate(0deg) scale(1);
-          box-shadow: 0px 0px 2px 2px rgba(230, 230, 250, 1);
+          box-shadow: 0px 0px 3px 3px rgba(230, 230, 250, 0.66);
         }
 
         100% {
-          transform: rotate(-15deg) scale(0.25);
+          transform: rotate(-180deg) scale(0.2);
           box-shadow: 0 0 0px 0px rgba(230, 230, 250, 0);
         }
       }
@@ -55,15 +55,16 @@
       const root = document.getElementById('root');
       // get root height
       const rootHeight = root.clientHeight;
-      const lineHeight = rootHeight / LINES / 2;
+      const lineHeight = rootHeight / LINES / 1.2;
 
       for (let i = 0; i < LINES; i++) {
         const line = document.createElement('div');
         line.classList.add('line');
-        line.style.height = `${lineHeight}px`;
+        // border radius is half of height
+        line.style.borderRadius = `${lineHeight / 2}px`;
+        line.style.height = `${lineHeight * 0.75}px`;
         line.style.backgroundColor = 'black';
-        // margin left is based on index
-        line.style.animationDelay = `${i / LINES * 3}s`; // Different delay for each line
+        line.style.animationDelay = `${i / LINES * 2}s`;
 
         root.appendChild(line);
       }
