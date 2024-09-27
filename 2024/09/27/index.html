@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <meta name="description" content="">
+    <title>geo: visualizer</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
+        font-family: monospace;
+        font-size: 12px;
+        line-height: 1.2;
+        padding: 16px;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid darkgray;
+        padding: 4px;
+        text-align: center;
+      }
+
+      button {
+        padding: 8px;
+        border: none;
+        background-color: dodgerblue;
+        color: whitesmoke;
+        cursor: pointer;
+        border-radius: 4px;
+        font-weight: bold;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root">
+      <textarea id="data" rows="8" style="width: 100%;"></textarea>
+      <button id="visualize">Visualize</button>
+    </div>
+    <script type="module">
+      const elements = {
+        data: document.getElementById('data'),
+        visualize: document.getElementById('visualize'),
+        root: document.getElementById('root'),
+      };
+
+      // when user clicks visualize, process the geo data and
+      // display the points relative to the center of the screen.
+      // put the visualized points in a canvas element and
+      // append it to the root element. the points
+      // are represented by circles with a radius of 5px.
+      // data is shaped as follows:
+      // [{"iso": "2024-09-27T23:02:04.484Z", "lat": 52.3569391,"lon": 4.9033828}]
+      // the canvas should only be 300x300px.
+      // draw lines between the points in the order they are in the data.
+      // draw a bounding box in red around the points.
+      // first step is to parse the data and figure out the coordinates
+      // that make up the bounding box given the data.
+      // plot the points relative to the center of the screen.
+      // the center of the screen is the center of the bounding box.
+
+      // create a x and y scale function that takes a lat and lon
+      // and returns the x and y coordinates mapped to the canvas.
+
+      const parseData = (data) => {
+        return JSON.parse(data);
+      };
+
+      const boundingBox = {
+        x: { min: 0, max: 300 },
+        y: { min: 0, max: 300 },
+      }
+
+      const getCoordinateBoundingBox = (coordinates) => {
+        const x = coordinates.map(({ lat }) => lat);
+        const y = coordinates.map(({ lon }) => lon);
+        return {
+          x: { min: Math.min(...x), max: Math.max(...x) },
+          y: { min: Math.min(...y), max: Math.max(...y) },
+        };
+      };
+
+      elements.visualize.addEventListener('click', () => {
+        const data = elements.data.value;
+        const parsedData = parseData(data);
+
+        // create canvas element
+        const canvas = document.createElement('canvas');
+        canvas.width = 300;
+        canvas.height = 300;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, 300, 300);
+
+        const { x, y } = getCoordinateBoundingBox(parsedData);
+        const xMin = x.min;
+        const xMax = x.max;
+        const yMin = y.min;
+        const yMax = y.max;
+        const padding = 20; // padding in pixels
+
+
+        parsedData.forEach(({ lat, lon }) => {
+          // convert lat and lon to x and y coordinates based on xMin, xMax, yMin, yMax
+          const x = ((lat - xMin) / (xMax - xMin) * (300 - 2 * padding)) + padding;
+          const y = ((lon - yMin) / (yMax - yMin) * (300 - 2 * padding)) + padding;
+
+          ctx.beginPath();
+          ctx.arc(x, y, 5, 0, Math.PI * 2);
+          ctx.fillStyle = 'black';
+          ctx.fill();
+        });
+
+        // draw lines between the points
+        ctx.beginPath();
+
+        parsedData.forEach(({ lat, lon }, index) => {
+          const x = ((lat - xMin) / (xMax - xMin) * (300 - 2 * padding)) + padding;
+          const y = ((lon - yMin) / (yMax - yMin) * (300 - 2 * padding)) + padding;
+          if (index === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        });
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+
+        elements.root.appendChild(canvas);
+      });
+    </script>
+  </body>
+
+</html>

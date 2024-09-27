@@ -44,20 +44,21 @@
       }
 
       button {
-        padding: 6px 12px;
+        padding: 8px;
         border: none;
         background-color: dodgerblue;
         color: whitesmoke;
         cursor: pointer;
         border-radius: 4px;
-        flex-grow: 1;
+        font-weight: bold;
+        flex: 1;
       }
     </style>
   </head>
 
   <body>
     <div id="root">
-      <div style="display: flex; justify-content: space-between; gap: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; gap: 1rem;">
         <button id="save-btn">save location</button>
         <button id="copy-btn">copy json</button>
         <button id="reset-btn">reset data</button>
@@ -78,6 +79,8 @@
       </div>
     </div>
     <script type="module">
+      const STORAGE_KEY = 'geo_tracker_data';
+
       const getElements = () => ({
         saveBtn: document.querySelector('#save-btn'),
         resetBtn: document.querySelector('#reset-btn'),
@@ -105,7 +108,7 @@
       };
 
       const getLocalData = () => {
-        return JSON.parse(localStorage.getItem('data')) || [];
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
       }
 
       const init = () => {
@@ -135,7 +138,7 @@
         });
 
         // save data
-        localStorage.setItem('data', JSON.stringify(data));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       };
 
       const onError = (error) => {
@@ -147,7 +150,7 @@
       });
 
       elements.resetBtn.addEventListener('click', () => {
-        localStorage.removeItem('data');
+        localStorage.removeItem(STORAGE_KEY);
         elements.tbody.innerHTML = '';
       });
 
