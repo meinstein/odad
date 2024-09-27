@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="data">
-    <meta name="description" content="Simple web app to store geolocation data">
+    <meta name="description"
+      content="Simple manual location tracker built with very basic JavaScript. Your data stays secure and local, with no sharing.">
     <title>geo: tracker</title>
     <style>
       body {
@@ -41,12 +42,22 @@
         padding: 4px;
         text-align: center;
       }
+
+      button {
+        padding: 6px 12px;
+        border: none;
+        background-color: dodgerblue;
+        color: whitesmoke;
+        cursor: pointer;
+        border-radius: 4px;
+        flex-grow: 1;
+      }
     </style>
   </head>
 
   <body>
     <div id="root">
-      <div style="display: flex; justify-content: space-between;">
+      <div style="display: flex; justify-content: space-between; gap: 1.5rem;">
         <button id="save-btn">save location</button>
         <button id="copy-btn">copy json</button>
         <button id="reset-btn">reset data</button>
