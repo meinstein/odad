@@ -18,16 +18,16 @@
       }
 
       #root {
-        width: 100%;
+        width: min(90%, 500px);
         height: 100%;
         font-family: monospace;
         font-size: 12px;
         line-height: 1.2;
         padding: 16px;
-        max-width: 500px;
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 8px;
       }
 
       p {
@@ -61,42 +61,35 @@
 
   <body>
     <div id="root">
-      <textarea id="data" rows="8" style="width: 100%;"></textarea>
+      <textarea id="data" rows="8" style="width: 100%;" placeholder="iso,lat,lon
+2024-09-28T20:56:22.113Z,52.3569468,4.9034016"></textarea>
       <button id="visualize">Visualize</button>
     </div>
     <script type="module">
+      const dims = {
+        width: 300,
+        height: 300,
+      }
+
       const elements = {
         data: document.getElementById('data'),
         visualize: document.getElementById('visualize'),
         root: document.getElementById('root'),
       };
 
-      // when user clicks visualize, process the geo data and
-      // display the points relative to the center of the screen.
-      // put the visualized points in a canvas element and
-      // append it to the root element. the points
-      // are represented by circles with a radius of 5px.
-      // data is shaped as follows:
-      // [{"iso": "2024-09-27T23:02:04.484Z", "lat": 52.3569391,"lon": 4.9033828}]
-      // the canvas should only be 300x300px.
-      // draw lines between the points in the order they are in the data.
-      // draw a bounding box in red around the points.
-      // first step is to parse the data and figure out the coordinates
-      // that make up the bounding box given the data.
-      // plot the points relative to the center of the screen.
-      // the center of the screen is the center of the bounding box.
-
-      // create a x and y scale function that takes a lat and lon
-      // and returns the x and y coordinates mapped to the canvas.
-
+      /**
+       * Data format:
+       * iso, lat, lon
+       * 2024-09-28T20:56:22.113Z, 52.3569468, 4.9034016
+       */
       const parseData = (data) => {
-        return JSON.parse(data);
+        const rows = data.split('\n');
+        const header = rows[0].split(',');
+        return rows.slice(1).map((row) => {
+          const [iso, lat, lon] = row.split(',');
+          return { iso, lat: parseFloat(lat), lon: parseFloat(lon) };
+        });
       };
-
-      const boundingBox = {
-        x: { min: 0, max: 300 },
-        y: { min: 0, max: 300 },
-      }
 
       const getCoordinateBoundingBox = (coordinates) => {
         const x = coordinates.map(({ lat }) => lat);
@@ -111,10 +104,16 @@
         const data = elements.data.value;
         const parsedData = parseData(data);
 
+        // clear existing canvas (if any)
+        const prevCanvas = elements.root.querySelector('canvas');
+        if (prevCanvas) {
+          elements.root.removeChild(prevCanvas);
+        }
+
         // create canvas element
         const canvas = document.createElement('canvas');
-        canvas.width = 300;
-        canvas.height = 300;
+        canvas.width = dims.width;
+        canvas.height = dims.height;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, 300, 300);
@@ -124,13 +123,12 @@
         const xMax = x.max;
         const yMin = y.min;
         const yMax = y.max;
-        const padding = 20; // padding in pixels
-
+        const padding = 20;
 
         parsedData.forEach(({ lat, lon }) => {
           // convert lat and lon to x and y coordinates based on xMin, xMax, yMin, yMax
-          const x = ((lat - xMin) / (xMax - xMin) * (300 - 2 * padding)) + padding;
-          const y = ((lon - yMin) / (yMax - yMin) * (300 - 2 * padding)) + padding;
+          const x = ((lat - xMin) / (xMax - xMin) * (dims.width - 2 * padding)) + padding;
+          const y = ((lon - yMin) / (yMax - yMin) * (dims.height - 2 * padding)) + padding;
 
           ctx.beginPath();
           ctx.arc(x, y, 5, 0, Math.PI * 2);
@@ -142,8 +140,8 @@
         ctx.beginPath();
 
         parsedData.forEach(({ lat, lon }, index) => {
-          const x = ((lat - xMin) / (xMax - xMin) * (300 - 2 * padding)) + padding;
-          const y = ((lon - yMin) / (yMax - yMin) * (300 - 2 * padding)) + padding;
+          const x = ((lat - xMin) / (xMax - xMin) * (dims.width - 2 * padding)) + padding;
+          const y = ((lon - yMin) / (yMax - yMin) * (dims.height - 2 * padding)) + padding;
           if (index === 0) {
             ctx.moveTo(x, y);
           } else {

@@ -60,13 +60,14 @@
     <div id="root">
       <div style="display: flex; justify-content: space-between; gap: 1rem;">
         <button id="save-btn">save location</button>
-        <button id="copy-btn">copy json</button>
+        <button id="copy-btn">copy csv</button>
         <button id="reset-btn">reset data</button>
       </div>
       <div id="list" style="margin-top: 1rem;">
         <table style="width: 100%;">
           <thead>
             <tr>
+              <th>num</th>
               <th>iso</th>
               <th>lat</th>
               <th>lon</th>
@@ -91,9 +92,10 @@
 
       const elements = getElements();
 
-      const createRow = (time, latitude, longitude) => {
+      const createRow = (idx, time, latitude, longitude) => {
         const row = document.createElement('tr');
         row.innerHTML = `
+          <td>${idx}</td>
           <td>${time}</td>
           <td>${latitude}</td>
           <td>${longitude}</td>
@@ -113,8 +115,9 @@
 
       const init = () => {
         const data = getLocalData();
-        data.forEach((item) => {
-          const row = createRow(item.iso, item.lat, item.lon);
+        // reverse order (latest first)
+        data.reverse().forEach((item, idx) => {
+          const row = createRow(data.length - idx, item.iso, item.lat, item.lon);
           elements.tbody.appendChild(row);
         });
       };
@@ -125,10 +128,11 @@
         const time = new Date(position.timestamp).toISOString();
 
         const data = getLocalData();
+        const index = data.length + 1;
+        const row = createRow(index, time, latitude, longitude);
 
-        const row = createRow(time, latitude, longitude);
-
-        elements.tbody.appendChild(row);
+        // add row to start of table
+        elements.tbody.insertBefore(row, elements.tbody.firstChild);
 
         // add new data
         data.push({
@@ -156,8 +160,10 @@
 
       elements.copyBtn.addEventListener('click', () => {
         const data = getLocalData();
-        const jsonText = JSON.stringify(data, null, 2);
-        navigator.clipboard.writeText(jsonText);
+        const csv = data.map(({ iso, lat, lon }) => `${iso},${lat},${lon}`).join('\n');
+        // add header
+        const csvWithHeader = `iso,lat,lon\n${csv}`;
+        navigator.clipboard.writeText(csvWithHeader);
       });
 
       init();
