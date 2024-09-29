@@ -44,6 +44,11 @@
         word-break: break-all;
       }
 
+      /*  first th has following hardcoded width */
+      th:first-child {
+        width: 3ch;
+      }
+
       button {
         padding: 8px;
         border: none;
@@ -60,9 +65,9 @@
   <body>
     <div id="root">
       <div style="display: flex; justify-content: space-between; gap: 1rem;">
-        <button id="save-btn">save location</button>
-        <button id="copy-btn">copy csv</button>
-        <button id="reset-btn">reset data</button>
+        <button id="save-btn">track</button>
+        <button id="copy-btn">copy</button>
+        <button style="background-color: firebrick;" id="reset-btn">reset</button>
       </div>
       <div id="list" style="margin-top: 1rem;">
         <table style="width: 100%;">
@@ -95,6 +100,7 @@
 
       const createRow = (idx, time, latitude, longitude) => {
         const row = document.createElement('tr');
+
         row.innerHTML = `
           <td>${idx}</td>
           <td>${time}</td>
