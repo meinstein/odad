@@ -59,6 +59,20 @@
         font-weight: bold;
         flex: 1;
       }
+
+      @keyframes flashGreen {
+        0% {
+          background-color: lightgreen;
+        }
+
+        100% {
+          background-color: transparent;
+        }
+      }
+
+      .flash {
+        animation: flashGreen 1.5s ease;
+      }
     </style>
   </head>
 
@@ -133,13 +147,14 @@
         const { coords } = position;
         const { latitude, longitude } = coords;
         const time = new Date(position.timestamp).toISOString();
-
         const data = getLocalData();
         const index = data.length + 1;
-        const row = createRow(index, time, latitude, longitude);
-
-        // add row to start of table
-        elements.tbody.insertBefore(row, elements.tbody.firstChild);
+        const newRow = createRow(index, time, latitude, longitude);
+        // get rid of any previous flash class
+        elements.tbody.querySelectorAll('.flash').forEach((el) => el.classList.remove('flash'));
+        // add flash class
+        newRow.classList.add('flash');
+        elements.tbody.insertBefore(newRow, elements.tbody.firstChild);
 
         // add new data
         data.push({
