@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <title>geo: zoo loop</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+        font-family: monospace;
+        font-size: 16px;
+        padding: 16px;
+        flex-direction: column;
+        line-height: 1.66;
+      }
+
+      svg {
+        border: 1px solid black;
+        margin: 16px;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="text">
+      <p>2024-09-29T08:22:31.261Z (start)</p>
+      <p>2024-09-29T11:21:14.204Z (end)</p>
+    </div>
+    <script type="module">
+      const padding = 16;
+
+      fetch('./data.csv')
+        .then(response => response.text())
+        .then(data => {
+          const rows = data.split('\n').map(row => row.split(','))
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+          svg.setAttribute('width', 300)
+          svg.setAttribute('height', 300)
+          document.body.appendChild(svg)
+
+          // the cols are iso time, lat, lon
+          // the first row is the header
+          const lat = rows.slice(1).map(row => parseFloat(row[1])).filter(lat => !isNaN(lat))
+          const lon = rows.slice(1).map(row => parseFloat(row[2])).filter(lon => !isNaN(lon))
+
+          const latMin = Math.min(...lat)
+          const latMax = Math.max(...lat)
+          const lonMin = Math.min(...lon)
+          const lonMax = Math.max(...lon)
+
+          const latScale = (300 - 2 * padding) / (latMax - latMin)
+          const lonScale = (300 - 2 * padding) / (lonMax - lonMin)
+
+          const points = rows.slice(1).map(row => {
+            const lat = parseFloat(row[1])
+            const lon = parseFloat(row[2])
+            const x = padding + (lat - latMin) * latScale
+            const y = padding + (lon - lonMin) * lonScale
+            return `${x},${y}`
+          })
+
+          const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline')
+          polyline.setAttribute('points', points.join(' '))
+          polyline.setAttribute('fill', 'none')
+          polyline.setAttribute('stroke', 'black')
+          polyline.setAttribute('stroke-width', 3)
+          svg.appendChild(polyline)
+
+          const length = polyline.getTotalLength()
+          polyline.setAttribute('stroke-dasharray', length)
+          polyline.setAttribute('stroke-dashoffset', length)
+
+          const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate')
+          animate.setAttribute('attributeName', 'stroke-dashoffset')
+          animate.setAttribute('from', length)
+          animate.setAttribute('to', 0)
+          animate.setAttribute('dur', '10s')
+          animate.setAttribute('repeatCount', 'indefinite')
+          polyline.appendChild(animate)
+        })
+    </script>
+  </body>
+
+</html>

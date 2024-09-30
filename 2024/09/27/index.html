@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="data">
-    <meta name="description" content="">
     <title>geo: visualizer</title>
     <style>
       body {
@@ -61,8 +60,8 @@
 
   <body>
     <div id="root">
-      <textarea id="data" rows="8" style="width: 100%;" placeholder="iso,lat,lon
-2024-09-28T20:56:22.113Z,52.3569468,4.9034016"></textarea>
+      <textarea id="data" rows="8" style="width: 100%; white-space: nowrap;" placeholder="iso,lat,lon
+  2024-09-28T20:56:22.113Z,52.3569468,4.9034016"></textarea>
       <button id="visualize">Visualize</button>
     </div>
     <script type="module">
@@ -114,6 +113,7 @@
         const canvas = document.createElement('canvas');
         canvas.width = dims.width;
         canvas.height = dims.height;
+        canvas.style.border = '1px solid black';
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, 300, 300);
@@ -131,7 +131,7 @@
           const y = ((lon - yMin) / (yMax - yMin) * (dims.height - 2 * padding)) + padding;
 
           ctx.beginPath();
-          ctx.arc(x, y, 5, 0, Math.PI * 2);
+          ctx.arc(x, y, 3, 0, Math.PI * 2);
           ctx.fillStyle = 'black';
           ctx.fill();
         });
@@ -148,6 +148,7 @@
             ctx.lineTo(x, y);
           }
         });
+
         ctx.strokeStyle = 'black';
         ctx.stroke();
 
