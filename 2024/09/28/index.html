@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="poem">
+    <meta name="description" content="A road sign that is all too familiar.">
+    <title>overloaded</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: whitesmoke;
+        box-sizing: border-box;
+      }
+
+      #root {
+        width: min(90%, 500px);
+        font-family: monospace;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(-5deg);
+        }
+
+        100% {
+          transform: rotate(5deg);
+        }
+      }
+
+      #sign {
+        animation: rotate 2s ease-in-out infinite alternate;
+        background: #FFD700;
+        width: 150px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border: 6px double black;
+        border-radius: 10px;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      .path {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 0;
+        height: 100%;
+        border-left: 2px dotted black;
+        transform: translateX(-50%);
+        z-index: -1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root">
+      <div class="path"></div>
+      <div id="sign">
+        <p>Let op!</p>
+        <p>situatie</p>
+        <p>gewijzigd</p>
+      </div>
+    </div>
+    <script type="module">
+
+    </script>
+  </body>
+
+</html>
