@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <title>geo: dubious coordinates</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: whitesmoke;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      #root {
+        padding: 16px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        width: min(420px, 100%);
+        gap: 8px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root">
+    </div>
+    <script type="module">
+      const files = [
+        "dam_square",
+        "rijksmuseum",
+        "heineken_experience",
+        "van_gogh_museum",
+        "anne_frank_house",
+        "artis_zoo",
+        "royal_palace",
+        "nemo_science_museum",
+        "bloemenmarkt",
+        "the_nine_streets",
+        "museumplein",
+        "westerkerk",
+        "kalverstraat",
+        "leidseplein",
+        "hortus_botanicus",
+        "vondelpark",
+        "the_jordaan",
+        "rembrandt_house_museum",
+        "stedelijk_museum",
+        "prinsengracht",
+        "the_national_maritime_museum",
+        "westerpark",
+        "concertgebouw",
+        "de_pijp",
+        "beurs_van_berlage",
+        "moco_museum",
+        "foam_photography_museum",
+        "nieuwmarkt",
+        "spui_square",
+        "oude_kerk",
+        "ndsm_wharf",
+        "eye_film_museum",
+        "p_c_hooftstraat",
+        "red_light_district",
+        "museum_of_prostitution",
+        "leidse_square_theatre",
+        "amsterdam_dungeon",
+        "hermitage_amsterdam",
+        "magere_brug",
+        "houseboat_museum",
+        "begijnhof",
+        "madame_tussauds",
+        "national_monument",
+        "museum_het_schip",
+        "de_negen_straatjes",
+        "rembrandtplein",
+        "allard_pierson_museum",
+        "sarphatipark",
+        "maritime_heritage_museum",
+        "jewish_historical_museum",
+      ]
+
+      const root = document.getElementById("root")
+
+      files.forEach(file => {
+        const img = document.createElement("img")
+        img.src = `./street_views/${file}.jpg`
+        img.alt = file
+        img.width = 100
+        img.height = 100
+        root.appendChild(img)
+      })
+
+    </script>
+  </body>
+
+</html>
