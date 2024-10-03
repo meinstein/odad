@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="data">
-    <title>geo: dubious coordinates</title>
+    <meta name="description"
+      content="When happens when you ask ChatGPT for the geo coordinates of the top 50 attractions in Amsterdam and then run the results through the Google Street View Static API? Mostly disorientation.">
+    <title>geo: disoriented</title>
     <style>
       body {
         margin: 0;
@@ -32,7 +34,29 @@
       img {
         width: 100%;
         height: 100%;
+      }
+
+      .image-container {
         border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid lightgray;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .image-container p {
+        color: white;
+        position: absolute;
+        /* respect new lines */
+        white-space: pre;
+        /* mono font */
+        font-family: monospace;
+        font-size: 12px;
+        background-color: rgba(0, 0, 0, 0.33);
+        padding: 4px;
+        border-radius: 4px;
       }
     </style>
   </head>
@@ -97,12 +121,21 @@
       const root = document.getElementById("root")
 
       files.forEach(file => {
+        const div = document.createElement("div")
+        div.className = "image-container"
         const img = document.createElement("img")
         img.src = `./street_views/${file}.jpg`
         img.alt = file
         img.width = 100
         img.height = 100
-        root.appendChild(img)
+        div.appendChild(img)
+
+        const p = document.createElement("p")
+        const fileName = file.split("_").join('\n')
+        p.textContent = fileName
+        div.appendChild(p)
+
+        root.appendChild(div)
       })
 
     </script>
