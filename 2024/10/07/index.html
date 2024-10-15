@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="visual">
+    <title>kringloop</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to bottom, #e38c3d, #de7520);
+      }
+
+      img {
+        max-width: 75%;
+        height: auto;
+        mix-blend-mode: darken;
+      }
+
+      /* slightly wiggle img */
+      img {
+        animation: wiggle 2s infinite ease-in-out;
+      }
+
+      @keyframes wiggle {
+        0% {
+          transform: scale3d(1, 1, 1);
+        }
+
+        50% {
+          transform: scale3d(0.9, 0.9, 0.9);
+        }
+
+        100% {
+          transform: scale3d(1, 1, 1);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="./image.jpg" alt="the big one">
+  </body>
+
+</html>
