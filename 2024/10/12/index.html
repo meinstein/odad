@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="visual">
+    <title>stop me if you can</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+        background-color: white;
+      }
+
+      #root {
+        aspect-ratio: 1/1;
+        width: min(300px, 50%);
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        background: black;
+        border-radius: 12.5%;
+      }
+
+      .sq {
+        aspect-ratio: 1/1;
+        width: min(300px, 50%);
+        background-color: white;
+        position: absolute;
+        animation: rotate 4s ease-in-out infinite alternate;
+        mix-blend-mode: lighten;
+        border-radius: 12.5%;
+      }
+
+
+      /* need to animate opacity a bit in order to get effect AND be completely white at start/end */
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg) scale(1.05);
+          opacity: 0.25;
+        }
+
+        50% {
+          transform: rotate(180deg) scale(0.25);
+          opacity: 0.125;
+        }
+
+        100% {
+          transform: rotate(360deg) scale(1.05);
+          opacity: 0.25;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root">
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+      <div class="sq"></div>
+    </div>
+    <script type="module">
+      const root = document.getElementById('root');
+
+      // get all child nodes of class 'sq'
+      const childNodes = Array.from(root.childNodes).filter(node => node.className === 'sq');
+
+      // iterate over nodes add successively increasing animation delay
+      childNodes.forEach((node, index) => {
+        node.style.animationDelay = `${index * 0.025}s`;
+      });
+    </script>
+  </body>
+
+</html>
