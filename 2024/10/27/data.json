@@ -1,0 +1,86 @@
+[
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj0000005B9SMAU",
+      "name": "Stedelijk Museum Amsterdam",
+      "url": "www.stedelijk.nl",
+      "visited": "22-10-2024"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj0000078iAwMAI",
+      "name": "Oude Kerk",
+      "url": "www.oudekerk.nl",
+      "visited": "19-09-2024"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj000004zdaDMAQ",
+      "name": "H'ART Museum",
+      "url": "www.hermitage.nl",
+      "visited": "16-07-2024"
+  },
+  {
+      "city": "Haarlem",
+      "id": "a1GOj000004FSg1MAG",
+      "name": "Frans Hals Museum",
+      "url": "www.franshalsmuseum.nl",
+      "visited": "20-06-2024"
+  },
+  {
+      "city": "Utrecht",
+      "id": "a1GOj000004DGEuMAO",
+      "name": "Centraal Museum",
+      "url": "www.centraalmuseum.nl",
+      "visited": "19-06-2024"
+  },
+  {
+      "city": "Amstelveen",
+      "id": "a1GOj000001MmUqMAK",
+      "name": "Museum Cobra",
+      "url": "www.cobra-museum.nl",
+      "visited": "01-03-2024"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj000001METeMAO",
+      "name": "Foam Fotografiemuseum Amsterdam",
+      "url": "www.foam.org",
+      "visited": "29-02-2024"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj0000018XmNMAU",
+      "name": "Stedelijk Museum Amsterdam",
+      "url": "www.stedelijk.nl",
+      "visited": "13-02-2024"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj000000s2nkMAA",
+      "name": "Joods Museum",
+      "url": "www.jck.nl",
+      "visited": "15-01-2024"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj0000009tVuMAI",
+      "name": "Stedelijk Museum Amsterdam",
+      "url": "www.stedelijk.nl",
+      "visited": "04-10-2023"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj0000008VbyMAE",
+      "name": "Rijksmuseum Amsterdam",
+      "url": "www.rijksmuseum.nl",
+      "visited": "27-09-2023"
+  },
+  {
+      "city": "Amsterdam",
+      "id": "a1GOj0000005B9SMAU",
+      "name": "Stedelijk Museum Amsterdam",
+      "url": "www.stedelijk.nl",
+      "visited": "12-09-2023"
+  }
+]

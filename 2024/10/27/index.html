@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+      content="Museum visits in the Netherlands using my museum card over the last 1.5 years.">
+    <meta name="keywords" content="data">
+    <title>mijn museumbezoek</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      pre {
+        margin: 0;
+        padding: 0;
+        font-family: monospace;
+        font-size: 14px;
+        padding: 14px;
+        line-height: 1.66;
+      }
+
+      span {
+        color: black;
+        font-weight: bold;
+      }
+
+      code {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <pre>
+      <code></code>
+    </pre>
+    <script type="module">
+      fetch('./data.json')
+        .then(response => response.json())
+        .then(data => {
+          const code = document.querySelector('code');
+
+          let jsonString = JSON.stringify(data, (key, value) => {
+            if (key === 'name') {
+              return `<span>${value}</span>`;
+            }
+
+            if (key === 'url') {
+              // example value = www.franshalsmuseum.nl
+              const href = value.startsWith('https') ? value : `https://${value}`;
+              return `<a href=${href}>${value}</a>`;
+            }
+
+            return value;
+          }, 2);
+
+          code.innerHTML = jsonString;
+        })
+    </script>
+  </body>
+
+</html>
