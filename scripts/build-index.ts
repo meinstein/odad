@@ -2,7 +2,7 @@ import { walk } from "https://deno.land/std/fs/mod.ts";
 import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 import { parse } from "https://deno.land/std@0.207.0/yaml/mod.ts";
 
-type Keyword = 'poem' | 'data'
+type Keyword = 'poem' | 'data' | 'visual' | 'text'
 
 type Entry = {
   path: string,
@@ -126,7 +126,8 @@ const createOdad = async () => {
   const legendMap: Record<Keyword, string> = {
     visual: 'vis.',
     poem: 'poem',
-    data: 'data'
+    data: 'data',
+    text: 'text'
   }
 
   // ADD HEADERS
