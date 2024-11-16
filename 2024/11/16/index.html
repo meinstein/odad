@@ -7,6 +7,16 @@
     <meta name="keywords" content="poem">
     <title>high five</title>
     <style>
+      html {
+        font-size: 16px;
+      }
+
+      @media (max-width: 390px) {
+        html {
+          font-size: 14px;
+        }
+      }
+
       body {
         margin: 0;
         padding: 0;
@@ -15,14 +25,15 @@
         align-items: center;
         min-height: 100dvh;
         background-color: whitesmoke;
+
       }
 
       #text {
         font-family: monospace;
-        font-size: 16px;
-        line-height: 32px;
+        font-size: 1rem;
+        line-height: 2rem;
         text-align: left;
-        padding: 16px;
+        padding: 1rem;
       }
 
       p {
