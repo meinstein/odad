@@ -14,7 +14,7 @@
         font-family: monospace;
       }
 
-      div {
+      .container {
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
@@ -25,10 +25,8 @@
 
   <body>
     <script type="module">
-      // fetch json data at ./subscriptions.json
       const data = await fetch('./subscriptions.json').then(res => res.json())
 
-      // create a VERY simple data, where each row is a link to a subscription
       const rows = data.map(subscription => {
         return `
           <a href="https://www.youtube.com/${subscription}" target="_blank">
@@ -37,11 +35,10 @@
         `
       })
 
-      // create a container for the rows
       const container = document.createElement('div')
+      container.classList.add('container')
       container.innerHTML = rows.join('')
       document.body.appendChild(container)
-
     </script>
   </body>
 
