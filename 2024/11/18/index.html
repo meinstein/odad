@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <title>subscriptions</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        font-family: monospace;
+      }
+
+      div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      // fetch json data at ./subscriptions.json
+      const data = await fetch('./subscriptions.json').then(res => res.json())
+
+      // create a VERY simple data, where each row is a link to a subscription
+      const rows = data.map(subscription => {
+        return `
+          <a href="https://www.youtube.com/${subscription}" target="_blank">
+            ${subscription}
+          </a>
+        `
+      })
+
+      // create a container for the rows
+      const container = document.createElement('div')
+      container.innerHTML = rows.join('')
+      document.body.appendChild(container)
+
+    </script>
+  </body>
+
+</html>
