@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>liked songs</title>
+    <meta name="description"
+      content="A list of songs that I've liked on Spotify since 2018.">
+    <style>
+      body {
+        margin: 0;
+        padding: 14px;
+        font-family: monospace;
+        font-size: 14px;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        line-height: 20px;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      .name {
+        color: whitesmoke;
+        font-weight: bold;
+      }
+
+      .by_line {
+        color: #808080;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      // fetch json file
+      fetch('liked_songs.json')
+        .then(response => response.json())
+        .then(data => {
+          // create a div for reach song
+          data.forEach(song => {
+            const div = document.createElement('div');
+            div.className = 'song';
+            div.innerHTML = `
+              <p>
+                <span class="name">
+                  ${song.name}
+                </span>
+                <span class="by_line">
+                  by ${song.artists.join(', ')}
+                </span>
+              </p>
+            `;
+            document.body.appendChild(div);
+          });
+        });
+    </script>
+  </body>
+
+</html>
