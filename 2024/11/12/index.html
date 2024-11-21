@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="text">
+    <title>willfully free</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: black;
+      }
+
+      #text {
+        font-family: monospace;
+        font-size: 16px;
+        line-height: 32px;
+        text-align: left;
+        padding: 32px;
+        max-width: 350px;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="text">
+    </div>
+    <script>
+      const text = 'Your employment with ACME Corporation will be on an “at will” basis, meaning that you are not guaranteed employment for any specific term or period of time and either you or ACME Corporation may terminate your employment at any time for any reason or no reason, without further obligation or liability.';
+
+      const words = text.split(' ');
+
+      const p = document.createElement('p');
+
+      words.forEach((word, index) => {
+        const span = document.createElement('span');
+        span.textContent = word + ' ';
+        if (index % 3 === 0) {
+          span.style.color = 'indianred';
+        } else if (index % 3 === 1) {
+          span.style.color = 'whitesmoke';
+        } else {
+          span.style.color = 'steelblue';
+        }
+        p.appendChild(span);
+      });
+
+      document.getElementById('text').appendChild(p);
+    </script>
+  </body>
+
+</html>
