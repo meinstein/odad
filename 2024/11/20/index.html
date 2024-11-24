@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <title>textarea</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      textarea {
+        /* completely reset textarea styling */
+        margin: 0;
+        padding: 4px;
+        /* border: none; */
+        /* outline: none; */
+        /* background-color: transparent; */
+        font-family: monospace;
+        resize: none;
+        /* ignore white space */
+        white-space: pre;
+      }
+    </style>
+  </head>
+
+  <body>
+    <textarea rows="10" cols="10"></textarea>
+     <script>
+      const text = [
+        '0---------10',
+        '|',
+        '|',
+        '|',
+        '|',
+        '|',
+        '|',
+        '|',
+        '|',
+        '10'
+      ].join('\n')
+
+      const textarea = document.querySelector('textarea')
+      textarea.textContent = text
+     </script>
+  </body>
+
+</html>
