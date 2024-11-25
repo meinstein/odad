@@ -7,6 +7,10 @@
     <meta name="keywords" content="data">
     <title>textarea</title>
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         margin: 0;
         padding: 0;
@@ -20,14 +24,17 @@
       textarea {
         /* completely reset textarea styling */
         margin: 0;
-        padding: 4px;
+        padding: 0.25rem;
         /* border: none; */
         /* outline: none; */
-        /* background-color: transparent; */
+        background-color: white;
+        font-size: 1rem;
         font-family: monospace;
         resize: none;
         /* ignore white space */
         white-space: pre;
+        width: calc(10ch + 0.5rem);
+        height: 10ch;
       }
     </style>
   </head>
@@ -36,16 +43,11 @@
     <textarea rows="10" cols="10"></textarea>
      <script>
       const text = [
-        '0---------10',
-        '|',
-        '|',
-        '|',
-        '|',
-        '|',
-        '|',
-        '|',
-        '|',
-        '10'
+        '0         5',
+        '',
+        '',
+        '',
+        '5        25'
       ].join('\n')
 
       const textarea = document.querySelector('textarea')
