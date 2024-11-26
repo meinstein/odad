@@ -4,11 +4,13 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="data">
-    <title>focus area</title>
+    <meta name="keywords" content="visual">
+<meta name="description"
+  content="An exploration of modern social media metrics, where two text areas alternate displaying icons and counts typically seen on platforms, reflecting the shift from traditional reading to visual interaction." />
+    <title>text areas for numbers</title>
     <style>
       html {
-        font-size: 12px;
+        font-size: 14px;
       }
 
       body {
@@ -29,8 +31,8 @@
         background-color: white;
         font-family: monospace;
         resize: none;
-        width: calc(5ch);
-        height: calc(5ch);
+        width: calc(6ch);
+        height: calc(9ch);
         border: 1px solid black;
         border-radius: 0.25rem;
       }
@@ -57,7 +59,11 @@
             if (textarea === document.activeElement) {
             const thousands = Math.floor(Math.random() * 100)
             const hundreds = Math.floor(Math.random() * 10)
-            textarea.textContent = `${thousands}.${hundreds}K`
+            textarea.textContent = [
+              '❤️',
+              '',
+              `${thousands}.${hundreds}K`
+            ].join('\n')
           } else {
             textarea.textContent = ''
           }
@@ -70,7 +76,7 @@
         textareas[index].focus()
         updateTextareas()
         index = (index + 1) % textareas.length
-      }, 1000)
+      }, 500)
 
 
 
