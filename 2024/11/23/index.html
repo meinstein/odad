@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="poem">
+    <title>your input is valuable</title>
+    <style>
+      body {
+        min-height: 100dvh;
+        background-color: white;
+      }
+
+      /* rotate the input 45 deg */
+      input {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 16px;
+        width: 130px;
+      }
+
+      #bar {
+        width: 130px;
+        height: 24px;
+        background-color: gold;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <input type="text" placeholder="your input">
+    <div id="bar"></div>
+    <script>
+      // focus the input when the page is loaded
+      document.querySelector('input').focus();
+    </script>
+  </body>
+
+</html>
