@@ -59,8 +59,15 @@
             if (textarea === document.activeElement) {
             const thousands = Math.floor(Math.random() * 100)
             const hundreds = Math.floor(Math.random() * 10)
-            textarea.textContent = [
+            const icons = [
+              '👍',
               '❤️',
+              '🔁',
+              '💬'
+            ]
+
+            textarea.textContent = [
+              icons[Math.floor(Math.random() * icons.length)],
               '',
               `${thousands}.${hundreds}K`
             ].join('\n')
