@@ -4,25 +4,76 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add title here</title>
+    <meta name="keywords" content="data">
+    <title>focus area</title>
     <style>
+      html {
+        font-size: 12px;
+      }
+
       body {
         margin: 0;
         padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      textarea {
+        font-size: 1rem;
+        padding: 0.5rem;
+        margin: 0;
+        background-color: white;
+        font-family: monospace;
+        resize: none;
+        width: calc(5ch);
+        height: calc(5ch);
+        border: 1px solid black;
+        border-radius: 0.25rem;
+      }
+
+      #edge {
+        height: 2.5ch;
+        width: 1px;
+        background-color: black;
       }
     </style>
   </head>
 
   <body>
-    <script type="module">
-      import { Context2D } from '../../../shared/context2d/0.0.8/index.js';
+    <textarea rows="5" cols="5"></textarea>
+    <div id="edge"></div>
+    <textarea rows="5" cols="5"></textarea>
 
-      const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
+    <script>
+      const textareas = document.querySelectorAll('textarea')
+
+      // clear the unfocused textarea and add a random number to the focused textarea
+      function updateTextareas() {
+        textareas.forEach((textarea, index) => {
+            if (textarea === document.activeElement) {
+            const thousands = Math.floor(Math.random() * 100)
+            const hundreds = Math.floor(Math.random() * 10)
+            textarea.textContent = `${thousands}.${hundreds}K`
+          } else {
+            textarea.textContent = ''
+          }
+        })
       }
 
-      const context2d = new Context2D()
-      context2d.draw(draw)
+      // alternate focus between textareas
+      let index = 0
+      setInterval(() => {
+        textareas[index].focus()
+        updateTextareas()
+        index = (index + 1) % textareas.length
+      }, 1000)
+
+
+
     </script>
   </body>
 
