@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <title>blur</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      #root {
+        max-width: 350px;
+        font-family: monospace;
+      }
+
+      @keyframes animate {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(0, 900%);
+        }
+      }
+
+      .animated {
+        animation: animate 1s linear infinite alternate;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module">
+        const root = document.getElementById('root');
+        const daysInMonth = new Date(2024, 12, 0).getDate();
+
+        const calendarGrid = document.createElement('div');
+        calendarGrid.style.display = 'grid';
+        calendarGrid.style.gridTemplateColumns = 'repeat(7, 1fr)';
+        calendarGrid.style.gap = '5px';
+
+        // Add days of the week headers
+        const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        daysOfWeek.forEach(day => {
+          const dayHeader = document.createElement('div');
+          dayHeader.textContent = day;
+          dayHeader.style.fontWeight = 'bold';
+          dayHeader.style.textAlign = 'center';
+          calendarGrid.appendChild(dayHeader);
+        });
+
+        // Add days of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dayCell = document.createElement('div');
+          dayCell.textContent = day;
+          dayCell.style.border = '1px solid #ccc';
+          dayCell.style.position = 'relative';
+          dayCell.style.padding = '12px';
+          dayCell.style.textAlign = 'center';
+          calendarGrid.appendChild(dayCell);
+
+          // animated element
+          const animatedElement = document.createElement('div');
+          animatedElement.style.position = 'absolute';
+          animatedElement.style.width = '100%';
+          animatedElement.style.height = '10%';
+          animatedElement.style.left = '0';
+          animatedElement.style.top = 0;
+          animatedElement.style.backgroundColor = 'tomato';
+          animatedElement.style.opacity = '0.125';
+          animatedElement.classList.add('animated');
+          animatedElement.style.zIndex = '1';
+          // random delay
+          animatedElement.style.animationDelay = `${Math.random() * 1.5}s`;
+          dayCell.appendChild(animatedElement);
+        }
+
+        root.appendChild(calendarGrid);
+    </script>
+  </body>
+
+</html>
