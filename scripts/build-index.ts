@@ -75,6 +75,7 @@ const addToTree = async (path: string) => {
 
 await addToTree('2023')
 await addToTree('2024')
+await addToTree('2025')
 
 // sort by date, descending
 entries.sort((a, b) => {
@@ -99,7 +100,7 @@ if (!odadDocument || !contextDocument) {
  * =============
  */
 
-const createOdad = async () => {
+export const createOdad = async () => {
   const table = odadDocument.querySelector('table')
   const thead = odadDocument.createElement('thead')
   const tbody = odadDocument.createElement('tbody')
