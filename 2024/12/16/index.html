@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <title>dagverslag</title>
+    <style>
+      html {
+        font-size: 16px;
+        font-family: monospace;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      section {
+        padding: 1.33rem;
+        max-width: 500px;
+      }
+
+      h2 {
+        font-size: 1.33rem;
+        margin-bottom: 0.5rem;
+        margin-top: 0;
+        padding: 0;
+      }
+
+      p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin: 1rem 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      const data = await fetch('./dagverslag.json').then(res => res.json())
+
+      const entries = data.filter(d => d.paragraphs.length > 0).map(dag => {
+        // NOTE: the day in the title is always off by 1 for some reason.
+        const date = dag.title.split('Dagverslag van ')[1]
+        const updatedDate = new Date(date.replace('oktober', 'october').replace('mei', 'may').replace('maart', 'march'))
+        updatedDate.setDate(updatedDate.getDate() + 1)
+        // format as 17 December 2024
+        const formattedDate = updatedDate.toLocaleDateString('nl-NL', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        })
+
+        return `
+          <section>
+            <h2>Dagverslag van ${formattedDate}</h2>
+            ${dag.paragraphs.map(p => `<p>${p}</p>`).join('')}
+          </section>
+        `
+      })
+
+      document.body.innerHTML = entries.join('')
+    </script>
+  </body>
+
+</html>
