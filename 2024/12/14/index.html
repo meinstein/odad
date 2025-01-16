@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <meta name="description" content="An overview of my shopping data over approximately five years (2020-2024) at Albert Heijn (Appie).">
+    <title>appie</title>
+    <style>
+      html {
+        font-size: 16px;
+        font-family: monospace;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      section {
+        padding: 1.33rem;
+        max-width: 500px;
+      }
+
+      h2 {
+        font-size: 1.33rem;
+        margin-bottom: 0.5rem;
+        margin-top: 0;
+        padding: 0;
+        color: #00ADE6;
+      }
+
+      p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin: 1rem 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script type="module">
+      const { categories: data } = await fetch('./data.json').then(res => res.json())
+
+      // Each one of the below has an `items` key which is a list of objects
+      // the objects are of the form { name: string, value: count }
+      const sorts = data.find(d => d.name === 'Soorten')
+      const nutriScore = data.find(d => d.name === 'Nutri-Score')
+      const brand = data.find(d => d.name === 'Merk')
+      const diet = data.find(d => d.name === 'Dieet')
+      const allergy = data.find(d => d.name === 'Allergie')
+
+      // render each section as a very minimalistic list
+      const renderSection = (section) => {
+        // calculate the relative score of each item in the section
+        const total = section.items.reduce((acc, item) => acc + item.count, 0)
+        const maxCount = Math.max(...section.items.map(item => item.count))
+        section.items.forEach(item => {
+          item.score = item.count / maxCount
+        })
+
+        const el = document.createElement('section')
+        el.innerHTML = `
+          <h2>${section.name}</h2>
+          <ul>
+            ${section.items.map(item => `
+              <li style="font-size: ${0.75 + item.score}rem">${item.name} (${item.count})</li>
+            `).join('')}
+          </ul>
+        `
+        document.body.appendChild(el)
+      }
+
+      renderSection(sorts)
+      renderSection(nutriScore)
+      renderSection(brand)
+      renderSection(diet)
+      renderSection(allergy)
+
+
+    </script>
+  </body>
+
+</html>

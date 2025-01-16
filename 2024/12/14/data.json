@@ -1,0 +1,305 @@
+{
+    "categories": [
+        {
+            "name": "Soorten",
+            "items": [
+                {
+                    "name": "Aardappel, groente, fruit",
+                    "count": 37
+                },
+                {
+                    "name": "Baby en kind",
+                    "count": 2
+                },
+                {
+                    "name": "Bakkerij",
+                    "count": 5
+                },
+                {
+                    "name": "Bier en aperitieven",
+                    "count": 8
+                },
+                {
+                    "name": "Chips, noten, toast, popcorn",
+                    "count": 6
+                },
+                {
+                    "name": "Diepvries",
+                    "count": 4
+                },
+                {
+                    "name": "Huishouden",
+                    "count": 7
+                },
+                {
+                    "name": "Kaas, vleeswaren, tapas",
+                    "count": 11
+                },
+                {
+                    "name": "Koffie, thee",
+                    "count": 2
+                },
+                {
+                    "name": "Ontbijtgranen en beleg",
+                    "count": 18
+                },
+                {
+                    "name": "Pasta, rijst en wereldkeuken",
+                    "count": 9
+                },
+                {
+                    "name": "Snoep, chocolade, koek",
+                    "count": 3
+                },
+                {
+                    "name": "Soepen, sauzen, kruiden, olie",
+                    "count": 11
+                },
+                {
+                    "name": "Tussendoortjes",
+                    "count": 14
+                },
+                {
+                    "name": "Vegetarisch, vegan en plantaardig",
+                    "count": 3
+                },
+                {
+                    "name": "Vlees, vis",
+                    "count": 6
+                },
+                {
+                    "name": "Zuivel, eieren, boter",
+                    "count": 15
+                }
+            ]
+        },
+        {
+            "name": "Nutri-Score",
+            "items": [
+                {
+                    "name": "A",
+                    "count": 52
+                },
+                {
+                    "name": "B",
+                    "count": 6
+                },
+                {
+                    "name": "C",
+                    "count": 4
+                },
+                {
+                    "name": "D",
+                    "count": 6
+                },
+                {
+                    "name": "E",
+                    "count": 3
+                }
+            ]
+        },
+        {
+            "name": "Merk",
+            "items": [
+                {
+                    "name": "AH",
+                    "count": 44
+                },
+                {
+                    "name": "AH Biologisch",
+                    "count": 14
+                },
+                {
+                    "name": "HiPRO",
+                    "count": 5
+                },
+                {
+                    "name": "AH Zaanlander",
+                    "count": 4
+                },
+                {
+                    "name": "BioToday",
+                    "count": 4
+                },
+                {
+                    "name": "AH Terra",
+                    "count": 3
+                },
+                {
+                    "name": "Fairtrade Original",
+                    "count": 3
+                },
+                {
+                    "name": "Gulpener",
+                    "count": 3
+                },
+                {
+                    "name": "Kesbeke",
+                    "count": 3
+                },
+                {
+                    "name": "Kühne",
+                    "count": 3
+                },
+                {
+                    "name": "AH Eco",
+                    "count": 2
+                },
+                {
+                    "name": "AH Glutenvrij",
+                    "count": 2
+                },
+                {
+                    "name": "Dodoni",
+                    "count": 2
+                },
+                {
+                    "name": "Lindt",
+                    "count": 2
+                },
+                {
+                    "name": "Maza",
+                    "count": 2
+                },
+                {
+                    "name": "Schnitzer",
+                    "count": 2
+                },
+                {
+                    "name": "Wasa",
+                    "count": 2
+                },
+                {
+                    "name": "AH Excellent",
+                    "count": 1
+                },
+                {
+                    "name": "BrewDog",
+                    "count": 1
+                },
+                {
+                    "name": "Caffé Gondoliere",
+                    "count": 1
+                },
+                {
+                    "name": "Duvel",
+                    "count": 1
+                },
+                {
+                    "name": "Grand' Italia",
+                    "count": 1
+                },
+                {
+                    "name": "Grisette",
+                    "count": 1
+                },
+                {
+                    "name": "Klilah",
+                    "count": 1
+                },
+                {
+                    "name": "Lay's",
+                    "count": 1
+                },
+                {
+                    "name": "Mitsuba",
+                    "count": 1
+                },
+                {
+                    "name": "Mongozo",
+                    "count": 1
+                },
+                {
+                    "name": "Palmolive",
+                    "count": 1
+                },
+                {
+                    "name": "Pilsner Urquell",
+                    "count": 1
+                },
+                {
+                    "name": "Segafredo",
+                    "count": 1
+                },
+                {
+                    "name": "Swirl",
+                    "count": 1
+                },
+                {
+                    "name": "Verstegen",
+                    "count": 1
+                },
+                {
+                    "name": "Zonnatura",
+                    "count": 1
+                }
+            ]
+        },
+        {
+            "name": "Dieet",
+            "items": [
+                {
+                    "name": "Biologisch",
+                    "count": 27
+                },
+                {
+                    "name": "Vega",
+                    "count": 57
+                },
+                {
+                    "name": "Vegan",
+                    "count": 30
+                },
+                {
+                    "name": "Laag suiker",
+                    "count": 66
+                },
+                {
+                    "name": "Laag vet",
+                    "count": 51
+                },
+                {
+                    "name": "Laag zout",
+                    "count": 58
+                }
+            ]
+        },
+        {
+            "name": "Allergie",
+            "items": [
+                {
+                    "name": "Zonder eieren",
+                    "count": 96
+                },
+                {
+                    "name": "Zonder gluten",
+                    "count": 95
+                },
+                {
+                    "name": "Zonder lactose",
+                    "count": 76
+                },
+                {
+                    "name": "Zonder melk",
+                    "count": 76
+                },
+                {
+                    "name": "Zonder noten",
+                    "count": 96
+                },
+                {
+                    "name": "Zonder pinda's",
+                    "count": 92
+                },
+                {
+                    "name": "Zonder soja",
+                    "count": 86
+                },
+                {
+                    "name": "Zonder schelpdieren",
+                    "count": 102
+                }
+            ]
+        }
+    ]
+}
