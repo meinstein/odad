@@ -4,9 +4,29 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>add title here</title>
+    <meta name="location" content="Manhattan Beach, California">
+    <meta name="keywords" content="poem">
+    <title>specialist</title>
     <style>
       body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      #text {
+        font-family: monospace;
+        font-size: 16px;
+        line-height: 32px;
+        text-align: left;
+        padding: 16px;
+      }
+
+      p {
         margin: 0;
         padding: 0;
       }
@@ -14,16 +34,13 @@
   </head>
 
   <body>
-    <script type="module">
-      import { Context2D } from '../../../shared/context2d/0.0.8/index.js';
-
-      const draw = ({ ctx, w, h, oscillate, memoize }) => {
-        // add code here
-      }
-
-      const context2d = new Context2D()
-      context2d.draw(draw)
-    </script>
+    <div id="text">
+      <p>to sir christian gaylord</p>
+      <p>caring flex phlebotomist</p>
+      <p>heed my unholy guidance:</p>
+      <p>the world is richer than</p>
+      <p>sterile office buildings</p>
+    </div>
   </body>
 
 </html>
