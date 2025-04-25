@@ -36,12 +36,31 @@
 
   <body>
     <div id="text">
-      <p>squeeze a lemon tree</p>
-      <p>between a double lot</p>
+      <p sty>when life gives you</p>
+      <p>a lemon tree squeezed</p>
+      <p>bewteen a double lot</p>
       <p>along the oceanfront</p>
-      <p>and make wine out of</p>
-      <p>the sweet sea breeze</p>
+      <p>make wine out of the</p>
+      <p>sweet sea breeze</p>
     </div>
+
+    <script>
+      const lines = document.querySelectorAll('#text p');
+      let longestLine = 0;
+
+      lines.forEach(line => {
+        const charCount = line.textContent.length;
+        if (charCount > longestLine) {
+          longestLine = charCount;
+        }
+      });
+
+      lines.forEach(line => {
+        const charCount = line.textContent.length;
+        const letterSpacing = (longestLine - charCount) / charCount;
+        line.style.letterSpacing = `${letterSpacing}ch`;
+      });
+    </script>
   </body>
 
 </html>
