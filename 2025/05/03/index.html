@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="location" content="Manhattan Beach, California">
     <meta name="keywords" content="poem">
-    <title>binocular</title>
+    <title>medicinal</title>
     <style>
       body {
         margin: 0;
@@ -24,6 +24,7 @@
         line-height: 32px;
         text-align: left;
         padding: 16px;
+
       }
 
       p {
@@ -32,34 +33,14 @@
       }
     </style>
   </head>
-
+`
   <body>
     <div id="text">
-      <p sty>when life gives you</p>
-      <p>a lemon tree squeezed</p>
-      <p>bewteen a double lot</p>
-      <p>along the oceanfront</p>
-      <p>make wine out of the</p>
-      <p>sweet sea breeze</p>
+      <p>you bashed my knee</p>
+      <p>with a hot wheel</p>
+      <p>relieving me of</p>
+      <p>my cold shoulder</p>
     </div>
-
-    <script>
-      const lines = document.querySelectorAll('#text p');
-      let longestLine = 0;
-
-      lines.forEach(line => {
-        const charCount = line.textContent.length;
-        if (charCount > longestLine) {
-          longestLine = charCount;
-        }
-      });
-
-      lines.forEach(line => {
-        const charCount = line.textContent.length;
-        const letterSpacing = (longestLine - charCount) / charCount;
-        line.style.letterSpacing = `${letterSpacing}ch`;
-      });
-    </script>
   </body>
 
 </html>
