@@ -27,6 +27,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        /* Added for more robust clipping on mobile browsers */
+        -webkit-mask-image: radial-gradient(circle, white 100%, transparent 100%);
+        mask-image: radial-gradient(circle, white 100%, transparent 100%);
       }
 
       @keyframes rotateText {
