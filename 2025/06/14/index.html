@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="visual">
+    <title>almond butter</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #e0e0e0; /* Darkened background */
+      }
+
+      .seal-container {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background-color: white;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      @keyframes rotateText {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .seal-text {
+        /* We'll make the text block larger than the container to ensure it overflows and wraps */
+        width: 500px;
+        /* Arbitrarily larger width */
+        height: 500px;
+        /* Arbitrarily larger height */
+        text-align: center;
+        /* Center the text within its block */
+        font-family: Arial, sans-serif;
+        /* A clean, simple font */
+        font-size: 1.6em;
+        /* Adjust font size to make "SEALED FOR" and "FRESHNESS" naturally align */
+        font-style: italic;
+        /* Slightly italic as in the image */
+        text-transform: uppercase;
+        /* All caps */
+        color: #333; /* Darker text color */
+        line-height: 1.2;
+        /* Adjust line height to control spacing between lines */
+        word-break: break-all;
+        /* Allows words to break at any character, essential for fitting */
+        overflow-wrap: break-word;
+        /* Ensures long words don't overflow */
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* Subtle text shadow */
+        /* positioning will be handled by flexbox in .seal-container */
+        animation: rotateText 60s linear infinite; /* Added animation */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="seal-container">
+      <div class="seal-text" id="sealText">
+      </div>
+    </div>
+
+    <script>
+      // Function to populate the seal text multiple times
+      function populateSealText() {
+        const sealTextElement = document.getElementById('sealText');
+        const baseText = 'SEALED FOR ';
+        const freshnessText = 'FRESHNESS';
+        const repeatCount = 20; // Adjust this number to control how many times the text appears
+        let htmlContent = '';
+
+        for (let i = 0; i < repeatCount; i++) {
+          htmlContent += baseText;
+          if (Math.random() < 0.5) { // 50% chance to color "FRESHNESS"
+            htmlContent += `<span style="color: indianred;">${freshnessText}</span> `;
+          } else {
+            htmlContent += `${freshnessText} `;
+          }
+        }
+        sealTextElement.innerHTML = htmlContent; // Use innerHTML to render the spans
+      }
+
+      // Populate the text when the page loads
+      document.addEventListener('DOMContentLoaded', populateSealText);
+    </script>
+  </body>
+
+</html>
