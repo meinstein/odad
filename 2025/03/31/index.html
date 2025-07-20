@@ -37,8 +37,12 @@
   <body>
 <body>
     <div id="text">
-      <p>Days Since 9/12/2023</p>
-      <p id="result"></p>
+      <p>Number of non-leap seconds</p>
+      <p>that have elapsed since</p>
+      <p>00:00:00 UTC on 1 September 2023,</p>
+      <p>the ODAD epoch:</p>
+      <p id="seconds"></p>
+      <p id="days"></p>
     </div>
 
   <script>
@@ -76,10 +80,15 @@
     // --- Display the Result ---
 
     // Find the paragraph element where the result will be displayed.
-    const resultElement = document.getElementById('result');
+    const secondsElement = document.getElementById('seconds');
 
-    // Update its content with the calculated number of days.
-    resultElement.textContent = `It has been ${differenceInDays} days.`;
+    // Update its content with the calculated number of seconds.
+    secondsElement.textContent = `${Math.floor(timeDiff / 1000)} seconds`;
+
+    const daysElement = document.getElementById('days');
+
+    // Update the second paragraph with the number of days.
+    daysElement.textContent = `(or ${differenceInDays} days)`;
   </script>
 
 </body>
