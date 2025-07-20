@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="location" content="Manhattan Beach, California">
+    <meta name="keywords" content="poem">
+    <title>odad epoch</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      #text {
+        font-family: monospace;
+        font-size: 16px;
+        line-height: 32px;
+        text-align: left;
+        padding: 16px;
+
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+<body>
+    <div id="text">
+      <p>Days Since 9/12/2023</p>
+      <p id="result"></p>
+    </div>
+
+  <script>
+    // --- Core Logic for Calculating Date Difference ---
+
+    // Set the target start date.
+    // We create the date in a way that avoids timezone ambiguity.
+    const startDate = new Date('2023-09-12T00:00:00');
+
+    // Get the current date.
+    const today = new Date();
+
+    // To accurately calculate the difference in calendar days, it's best to
+    // ignore the time-of-day component. We can do this by setting the hours,
+    // minutes, seconds, and milliseconds to zero for both dates.
+    startDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    // The getTime() method returns the number of milliseconds since the Unix Epoch.
+    // By subtracting the two dates, we get the difference in milliseconds.
+    const timeDiff = today.getTime() - startDate.getTime();
+
+    // To convert milliseconds to days, we use the following conversion:
+    // 1000 milliseconds = 1 second
+    // 60 seconds = 1 minute
+    // 60 minutes = 1 hour
+    // 24 hours = 1 day
+    const msInDay = 1000 * 60 * 60 * 24;
+
+    // Divide the time difference by the number of milliseconds in a day.
+    // Math.floor ensures we are counting full, completed days.
+    const differenceInDays = Math.floor(timeDiff / msInDay);
+
+
+    // --- Display the Result ---
+
+    // Find the paragraph element where the result will be displayed.
+    const resultElement = document.getElementById('result');
+
+    // Update its content with the calculated number of days.
+    resultElement.textContent = `It has been ${differenceInDays} days.`;
+  </script>
+
+</body>
+  </body>
+
+</html>
