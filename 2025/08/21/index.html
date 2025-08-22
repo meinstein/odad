@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="data">
-    <title>one decade of commits</title>
+    <title>one decade of commitment</title>
     <style>
       * {
         margin: 0;
@@ -14,14 +14,14 @@
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Courier New', monospace;
         background: #0d1117;
         color: #c9d1d9;
         display: flex;
         flex-direction: column;
         align-items: center;
         min-height: 100vh;
-        padding: 16px;
+        padding: 16px 16px 42px 16px;
       }
 
       .container {
@@ -40,7 +40,6 @@
         grid-template-columns: repeat(53, 1fr);
         gap: 2px;
         margin: 0 auto;
-        max-width: 800px;
       }
 
       .day {
@@ -77,6 +76,14 @@
         color: #7d8590;
       }
 
+      .stats {
+        margin-top: 30px;
+        font-size: 13px;
+        line-height: 1.8;
+        text-align: center;
+        color: #8b949e;
+      }
+
       @media (max-width: 768px) {
         .grid {
           grid-template-columns: repeat(53, 8px);
@@ -89,7 +96,7 @@
         }
 
         body {
-          padding: 10px;
+          padding: 12px 12px 32px 12px;
         }
 
         h1 {
@@ -114,10 +121,11 @@
 
   <body>
     <div class="container">
-      <h1>One Decade of Commits</h1>
+      <h1>One Decade of Commitment</h1>
       <div class="date-range"><a href="https://github.com/meinstein/" style="color: steelblue;">@meinstein</a></div>
       <div class="date-range">From Aug 21 2015 to Aug 21 2025</div>
       <div class="grid" id="grid"></div>
+      <div class="stats" id="stats"></div>
     </div>
 
     <script>
@@ -146,6 +154,7 @@
       // Load all JSON files
       async function loadData() {
         const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+        let total = 0, active = 0, max = 0, streak = 0, best = 0;
 
         for (const year of years) {
           try {
@@ -157,8 +166,12 @@
               week.contributionDays.forEach(day => {
                 const date = new Date(day.date);
                 const dateStr = formatDate(date);
+                const count = day.contributionCount;
+                total += count;
+                if (count > 0) active++;
+                if (count > max) max = count;
                 dataByDate.set(dateStr, {
-                  count: day.contributionCount,
+                  count: count,
                   color: day.color,
                   date: date
                 });
@@ -171,6 +184,7 @@
 
         // Generate all days from start to end date
         let currentDate = new Date(startDate);
+        let currentStreak = 0;
         while (currentDate <= endDate) {
           const dateStr = formatDate(currentDate);
           const dayData = dataByDate.get(dateStr);
@@ -182,14 +196,25 @@
             const level = getContributionLevel(dayData.count);
             dayElement.classList.add(`level-${level}`);
             dayElement.title = `${dateStr}: ${dayData.count} contributions`;
+            if (dayData.count > 0) {
+              currentStreak++;
+              if (currentStreak > best) best = currentStreak;
+            } else {
+              currentStreak = 0;
+            }
           } else {
             dayElement.classList.add('level-0');
             dayElement.title = `${dateStr}: No data`;
+            currentStreak = 0;
           }
 
           grid.appendChild(dayElement);
           currentDate.setDate(currentDate.getDate() + 1);
         }
+
+        // Simple stats
+        document.getElementById('stats').innerHTML =
+          `${total.toLocaleString()} commits • ${active} active days • ${best} day streak • ${max} max day`;
       }
 
       // Load data when page loads
