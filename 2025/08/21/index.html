@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="data">
+    <title>one decade of commits</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #0d1117;
+        color: #c9d1d9;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 16px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 24px;
+        font-weight: 400;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(53, 1fr);
+        gap: 2px;
+        margin: 0 auto;
+        max-width: 800px;
+      }
+
+      .day {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        background: #161b22;
+      }
+
+      .level-0 {
+        background: #161b22;
+      }
+
+      .level-1 {
+        background: #0e4429;
+      }
+
+      .level-2 {
+        background: #006d32;
+      }
+
+      .level-3 {
+        background: #26a641;
+      }
+
+      .level-4 {
+        background: #39d353;
+      }
+
+      .date-range {
+        text-align: center;
+        margin: 16px 0;
+        font-size: 14px;
+        color: #7d8590;
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: repeat(53, 8px);
+          gap: 1px;
+        }
+
+        .day {
+          width: 8px;
+          height: 8px;
+        }
+
+        body {
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 20px;
+        }
+
+      }
+
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: repeat(26, 1fr);
+          max-width: 300px;
+        }
+
+        .day {
+          width: 10px;
+          height: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>One Decade of Commits</h1>
+      <div class="date-range"><a href="https://github.com/meinstein/" style="color: steelblue;">@meinstein</a></div>
+      <div class="date-range">From Aug 21 2015 to Aug 21 2025</div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <script>
+      const startDate = new Date('2015-08-21');
+      const endDate = new Date('2025-08-21');
+      const grid = document.getElementById('grid');
+
+      // Create array to hold all days
+      const allDays = [];
+      const dataByDate = new Map();
+
+      // Function to get contribution level based on count
+      function getContributionLevel(count) {
+        if (count === 0) return 0;
+        if (count <= 3) return 1;
+        if (count <= 6) return 2;
+        if (count <= 9) return 3;
+        return 4;
+      }
+
+      // Function to format date as YYYY-MM-DD
+      function formatDate(date) {
+        return date.toISOString().split('T')[0];
+      }
+
+      // Load all JSON files
+      async function loadData() {
+        const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+
+        for (const year of years) {
+          try {
+            const response = await fetch(`./data/${year}.json`);
+            const data = await response.json();
+
+            // Process all weeks and days
+            data.data.viewer.contributionsCollection.contributionCalendar.weeks.forEach(week => {
+              week.contributionDays.forEach(day => {
+                const date = new Date(day.date);
+                const dateStr = formatDate(date);
+                dataByDate.set(dateStr, {
+                  count: day.contributionCount,
+                  color: day.color,
+                  date: date
+                });
+              });
+            });
+          } catch (error) {
+            console.error(`Failed to load data for ${year}:`, error);
+          }
+        }
+
+        // Generate all days from start to end date
+        let currentDate = new Date(startDate);
+        while (currentDate <= endDate) {
+          const dateStr = formatDate(currentDate);
+          const dayData = dataByDate.get(dateStr);
+
+          const dayElement = document.createElement('div');
+          dayElement.className = 'day';
+
+          if (dayData) {
+            const level = getContributionLevel(dayData.count);
+            dayElement.classList.add(`level-${level}`);
+            dayElement.title = `${dateStr}: ${dayData.count} contributions`;
+          } else {
+            dayElement.classList.add('level-0');
+            dayElement.title = `${dateStr}: No data`;
+          }
+
+          grid.appendChild(dayElement);
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      }
+
+      // Load data when page loads
+      loadData();
+    </script>
+  </body>
+
+</html>
