@@ -9,37 +9,130 @@
     <title>kss principle</title>
     <style>
       body {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100dvh;
-        background-color: whitesmoke;
-      }
-
-      #text {
         font-family: monospace;
-        font-size: 16px;
-        line-height: 32px;
-        text-align: left;
-        padding: 16px;
-
+        font-size: 10px;
+        line-height: 1.2;
+        width: 200px;
+        padding: 10px;
       }
 
-      p {
-        margin: 0;
-        padding: 0;
+      .center {
+        text-align: center;
+      }
+
+      .right {
+        text-align: right;
+      }
+
+      .large {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .medium {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .small {
+        font-size: 8px;
+      }
+
+      .extra-large {
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      .receipt-container {
+        position: relative;
+        width: 200px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding-right: 20px;
+        box-sizing: border-box;
+      }
+
+      .rotate-text-wrapper {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 25px;
+        height: 100%;
+        overflow: hidden;
+        background-color: #90EE90;
+      }
+
+      .rotate {
+        transform: rotate(90deg);
+        transform-origin: top left;
+        position: absolute;
+        left: 22px;
+        white-space: nowrap;
+        font-size: 8px;
+        height: 20px;
+        line-height: 20px;
+        width: 300px;
       }
     </style>
   </head>
 
   <body>
-    <div id="text">
-      <p>kind</p>
-      <p>strong</p>
-      <p>safe</p>
+
+    <div class="receipt-container">
+      <div class="rotate-text-wrapper">
+        <div class="rotate">
+          SH DISPLAY FACE UP ON DASH DISPLAY FACE UP ON DASH DISPLAY FACE UP ON DASH DISPLAY FACE UP
+          ON DASH DISPLAY FACE UP ON DASH DISPLAY FACE UP ON DASH DISPLAY FAC
+        </div>
+      </div>
+
+      <div class="center">
+        <div class="medium">RECEIPT</div>
+        <div>Welcome to Santa Monica</div>
+        <div>2030 Ocean Way</div>
+        <div>Display Ticket</div>
+        <div>On Dashboard</div>
+      </div>
+
+      <div class="center large" style="margin-top: 10px;">
+        Stall # 270
+      </div>
+
+      <div class="center small" style="margin-top: 5px;">
+        Expiration Date/Time
+      </div>
+
+      <div class="center extra-large" style="margin-top: 5px;">
+        11:46 AM
+      </div>
+      <div class="center extra-large" style="margin-top: 5px;">
+        NOV 02, 2025
+      </div>
+
+      <div style="margin-top: 15px;">
+        <div>Purchase Date/Time: 09:46am Nov 02, 2025</div>
+        <div>Total Due: $2.00 <span class="right" style="display: inline-block; width: 60px;">Rate:
+            2 Hours $2.00</span></div>
+        <div>Total Paid: $2.00 <span class="right" style="display: inline-block; width: 60px;">Pmt
+            Type: CC (Swi</span></div>
+        <div>Ticket #: 00007917</div>
+        <div>S/N #: 520122250237</div>
+        <div>Setting: 2030 - B</div>
+        <div>Mach Name: 2030 B2 - NEW</div>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <div>****-8402, Visa <span class="right" style="display: inline-block; width: 60px;">Auth #:
+            00288</span></div>
+      </div>
+
+      <div class="center" style="margin-top: 15px;">
+        <div>All Taxes Included</div>
+        <div>For Service Please Call:</div>
+        <div>(310)458-8583</div>
+      </div>
     </div>
+
   </body>
 
 </html>
