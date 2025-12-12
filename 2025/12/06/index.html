@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="location" content="Santa Monica, California">
+    <meta name="keywords" content="text">
+    <title>überstasi</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #111;
+        color: #eee;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .inbox {
+        max-width: 420px;
+        width: 100%;
+      }
+
+      .email {
+        padding: 14px 10px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .email:first-child {
+        border-top: 1px solid #333;
+      }
+
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #555;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .content {
+        flex: 1;
+      }
+
+      .sender {
+        font-weight: bold;
+        margin-bottom: 3px;
+      }
+
+      .subject {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        margin-bottom: 2px;
+      }
+
+      .snippet {
+        font-size: 0.85rem;
+        opacity: 0.6;
+      }
+
+      .time {
+        font-size: 0.8rem;
+        opacity: 0.6;
+        white-space: nowrap;
+        margin-left: auto;
+      }
+
+      .eyes {
+        display: inline-block;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.7;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="inbox">
+      <!-- Home Depot creepy email -->
+      <div class="email">
+        <div class="avatar" style="background:#3b82f6;">T</div>
+        <div class="content">
+          <div class="sender">The Home Depot</div>
+          <div class="subject">We Saw You Looking <span class="eyes">👀</span></div>
+          <div class="snippet">Thought you might still want that item…</div>
+        </div>
+        <div class="time">7:29 AM</div>
+      </div>
+
+      <!-- Similar targeting emails -->
+      <div class="email">
+        <div class="avatar" style="background:#10b981;">K</div>
+        <div class="content">
+          <div class="sender">Kohl's</div>
+          <div class="subject">That thing you viewed is cheaper now <span class="eyes">👀</span></div>
+          <div class="snippet">It's waiting in your cart.</div>
+        </div>
+        <div class="time">6:02 AM</div>
+      </div>
+
+      <div class="email">
+        <div class="avatar" style="background:#f59e0b;">A</div>
+        <div class="content">
+          <div class="sender">Amazon</div>
+          <div class="subject">Still thinking about this?</div>
+          <div class="snippet">We saved your browsing history for you.</div>
+        </div>
+        <div class="time">Yesterday</div>
+      </div>
+
+      <div class="email">
+        <div class="avatar" style="background:#ef4444;">T</div>
+        <div class="content">
+          <div class="sender">Target</div>
+          <div class="subject">Not to be weird but…</div>
+          <div class="snippet">We noticed you left something behind.</div>
+        </div>
+        <div class="time">Tue</div>
+      </div>
+
+      <div class="email">
+        <div class="avatar" style="background:#8b5cf6;">W</div>
+        <div class="content">
+          <div class="sender">Wayfair</div>
+          <div class="subject">Your browsing caught our eye <span class="eyes">👀</span></div>
+          <div class="snippet">These items look perfect for your home.</div>
+        </div>
+        <div class="time">Mon</div>
+      </div>
+    </div>
+  </body>
+</html>
