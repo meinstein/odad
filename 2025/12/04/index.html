@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="location" content="Santa Monica, California">
+    <meta name="keywords" content="text">
+    <title>collect calls</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        background-color: whitesmoke;
+      }
+
+      .notification-stack {
+        position: relative;
+        width: 320px;
+        margin-bottom: 24px;
+      }
+
+      .notification-back-1 {
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 60px;
+        background-color: #ededed;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .notification-back-2 {
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 280px;
+        height: 60px;
+        background-color: #e8e8e8;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .notification-back-3 {
+        position: absolute;
+        bottom: -18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 260px;
+        height: 60px;
+        background-color: #e3e3e3;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .notification {
+        position: relative;
+        background-color: white;
+        border-radius: 16px;
+        padding: 14px 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+
+      .notification-title {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0 0 4px 0;
+      }
+
+      .notification-body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #666;
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="notification-stack">
+      <div class="notification-back-3"></div>
+      <div class="notification-back-2"></div>
+      <div class="notification-back-1"></div>
+      <div class="notification">
+        <p class="notification-title" style="display: flex; justify-content: space-between;">
+          <span>Your cart is calling</span>
+          <span style="color: gray; font-size: 12px; font-weight: 400">2m ago</span>
+        </p>
+        <p class="notification-body">Tap now to complete your purchase</p>
+      </div>
+    </div>
+  </body>
+
+</html>
