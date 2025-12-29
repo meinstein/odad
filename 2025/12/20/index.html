@@ -21,22 +21,55 @@
       #text {
         font-family: monospace;
         font-size: 16px;
-        line-height: 32px;
-        text-align: left;
         padding: 16px;
       }
 
-      p {
-        margin: 0;
-        padding: 0;
+      table {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
       }
     </style>
   </head>
 
   <body>
     <div id="text">
-      <p>Angel's trumpet | Jardim da Estrela [<a href="https://en.wikipedia.org/wiki/Brugmansia">wiki</a>]</p>
-      <p>Japanese camellia | Jardim da Estrela [<a href="https://en.wikipedia.org/wiki/Camellia">wiki</a>]</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Plant</th>
+            <th>Location</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Angel's trumpet</td>
+            <td>Jardim da Estrela</td>
+            <td><a href="https://en.wikipedia.org/wiki/Brugmansia">wiki</a></td>
+          </tr>
+          <tr>
+            <td>Camellia</td>
+            <td>Jardim da Estrela</td>
+            <td><a href="https://en.wikipedia.org/wiki/Camellia">wiki</a></td>
+          </tr>
+          <tr>
+            <td>Candelabra aloe</td>
+            <td>Jardim Botânico de Lisboa</td>
+            <td><a href="https://en.wikipedia.org/wiki/Aloe_arborescens">wiki</a></td>
+          </tr>
+          <tr>
+            <td>Hardy aloe</td>
+            <td>Jardim Botânico de Lisboa</td>
+            <td><a href="https://en.wikipedia.org/wiki/Aloiampelos_striatula">wiki</a></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </body>
 
