@@ -1,6 +1,6 @@
 import { walk } from "https://deno.land/std/fs/mod.ts";
-import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 import { parse } from "https://deno.land/std@0.207.0/yaml/mod.ts";
+import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 
 type Keyword = 'poem' | 'data' | 'visual' | 'text'
 
@@ -76,6 +76,7 @@ const addToTree = async (path: string) => {
 await addToTree('2023')
 await addToTree('2024')
 await addToTree('2025')
+await addToTree('2026')
 
 // sort by date, descending
 entries.sort((a, b) => {
