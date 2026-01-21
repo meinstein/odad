@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="visual">
+    <title>value poop</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        background: #f8f9fa;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      svg {
+        max-width: 320px;
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="320" height="50000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 50000">
+      <!-- Y axis -->
+      <line x1="40" y1="0" x2="40" y2="400" stroke="#666" stroke-width="1.5"/>
+      <text x="20" y="100" font-size="12" fill="#666" font-weight="500" transform="rotate(-90 20 100)" text-anchor="middle">value</text>
+
+      <!-- X axis -->
+      <line x1="40" y1="200" x2="320" y2="200" stroke="#666" stroke-width="1.5"/>
+      <text x="270" y="218" font-size="12" fill="#666" font-weight="500">time</text>
+
+      <!-- The infinite line -->
+      <path
+        d="M 40,160 C 50,110 65,45 85,30 C 105,15 115,20 125,35 C 135,50 145,100 155,300 C 165,600 180,1500 200,4000 C 220,8000 240,15000 260,25000 C 280,35000 300,42000 320,49800"
+        fill="none"
+        stroke="#e74c3c"
+        stroke-width="2"
+        stroke-linecap="round"/>
+    </svg>
+  </body>
+</html>
