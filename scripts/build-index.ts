@@ -2,7 +2,7 @@ import { walk } from "https://deno.land/std/fs/mod.ts";
 import { parse } from "https://deno.land/std@0.207.0/yaml/mod.ts";
 import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 
-type Keyword = 'poem' | 'data' | 'visual' | 'text' | 'film'
+type Keyword = 'poem' | 'data' | 'visual' | 'text' | 'documentary'
 
 type Entry = {
   path: string,
@@ -130,7 +130,7 @@ export const createOdad = async () => {
     poem: 'poem',
     data: 'data',
     text: 'text',
-    film: 'film',
+    documentary: 'docu',
   }
 
   // ADD HEADERS
