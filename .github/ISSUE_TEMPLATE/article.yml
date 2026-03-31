@@ -2,8 +2,6 @@ name: Article Entry
 description: Submit a new article for processing
 title: "[New Article Submission]"
 labels: ["article"]
-assignees:
-  - github-copilot
 
 body:
   - type: dropdown
