@@ -1,0 +1,72 @@
+name: Article Entry
+description: Submit a new article for processing
+title: "[Article]: "
+labels: ["article"]
+body:
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - english
+        - dutch
+        - german
+        - swiss-german
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      placeholder: e.g. John Doe
+
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: Article title
+    validations:
+      required: true
+
+  - type: input
+    id: website
+    attributes:
+      label: Website
+      placeholder: e.g. nytimes.com
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Public URL
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: input
+    id: archive_url
+    attributes:
+      label: Archive URL
+      placeholder: https://...
+
+  - type: input
+    id: private_url
+    attributes:
+      label: Private URL
+      placeholder: https://...
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      placeholder: Add any additional context here
