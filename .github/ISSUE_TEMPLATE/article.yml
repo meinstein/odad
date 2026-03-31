@@ -27,8 +27,6 @@ body:
     attributes:
       label: Date
       placeholder: YYYY-MM-DD
-    validations:
-      required: true
 
   - type: input
     id: title

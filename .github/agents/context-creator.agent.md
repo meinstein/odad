@@ -7,6 +7,7 @@ target: github-copilot
 Create new context from issue:
 
 1. Parse issue for date and content.
+	- If no date is provided in the issue content, use the issue creation date in YYYY-MM-DD format.
 2. Run:
 	deno run --allow-read --allow-write scripts/new-context.ts --date=YYYY/MM/DD --type=article
 3. Fill the generated YAML with issue content.
