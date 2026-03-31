@@ -3,7 +3,7 @@ description: Submit a new article for processing
 title: "[New Article Submission]"
 labels: ["article"]
 assignees:
-  - "github-copilot"
+  - "context-creator"
 
 body:
   - type: dropdown
