@@ -1,6 +1,7 @@
 ---
 name: context-creator
 description: Agent specializing in creating new context based on issues.
+target: github-copilot
 ---
 
 Create new context from issue:
