@@ -1,7 +1,9 @@
 name: Article Entry
 description: Submit a new article for processing
-title: "[Article]: "
+title: "New Article Submission"
 labels: ["article"]
+assignees: [""]
+
 body:
   - type: dropdown
     id: language
@@ -38,14 +40,6 @@ body:
       required: true
 
   - type: input
-    id: website
-    attributes:
-      label: Website
-      placeholder: e.g. nytimes.com
-    validations:
-      required: true
-
-  - type: input
     id: url
     attributes:
       label: Public URL
@@ -57,12 +51,6 @@ body:
     id: archive_url
     attributes:
       label: Archive URL
-      placeholder: https://...
-
-  - type: input
-    id: private_url
-    attributes:
-      label: Private URL
       placeholder: https://...
 
   - type: textarea
