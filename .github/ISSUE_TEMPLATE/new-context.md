@@ -42,7 +42,7 @@ Generate a YAML file using this template:
 
 ```yml
 type: article
-language: english | dutch | german | swiss-german
+language: english | dutch | german
 author: null
 date: "YYYY-MM-DD"
 title: null
