@@ -4,7 +4,7 @@ author: null
 date: '2026-04-01'
 title: foo bar
 website: nytimes.com
-url: nytimes.com/foo-bar
+url: https://nytimes.com/foo-bar
 archive_url: null
 private_url: null
 notes: null
