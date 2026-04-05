@@ -1,0 +1,19 @@
+{
+  "version": "2.7.11",
+  "lint": {
+    "files": {
+      "include": ["./**/*.ts", "./**/*.js"]
+    }
+  },
+  "fmt": {
+    "files": {
+      "include": ["./**/*.ts", "./**/*.js"]
+    }
+  },
+  "imports": {
+    "deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
+    "@std/cli": "jsr:@std/cli@^1.0.28",
+    "@std/fs": "jsr:@std/fs@^1.0.23",
+    "@std/yaml": "jsr:@std/yaml@^1.0.12"
+  }
+}

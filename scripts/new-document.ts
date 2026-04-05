@@ -1,4 +1,4 @@
-import { parseArgs } from "https://deno.land/std@0.207.0/cli/parse_args.ts";
+import { parseArgs } from "@std/cli"
 import { validateDate } from "./common.ts";
 import { createOdad } from "./build-index.ts";
 
