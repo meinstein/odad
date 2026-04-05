@@ -6,18 +6,6 @@ labels: poem
 assignees: copilot
 ---
 
-## Copilot Task
-
-Use this issue to create exactly one new index.html file.
-
-Priority of truth:
-
-1. Draft poem text in this issue
-2. Explicit metadata fields in this issue
-3. Optional notes
-
-If sources conflict, prefer the higher-priority source.
-
 ## Required Inputs
 
 ### Date
@@ -39,6 +27,21 @@ ADD_POEM_TEXT_HERE
 ### Notes
 
 ADD_NOTES_ABOUT_POEM_REFINEMENTS_HERE
+
+---
+
+## Copilot Task
+
+Use this issue to create exactly one new index.html file.
+
+Priority of truth:
+
+1. Draft poem text in this issue
+2. Explicit metadata fields in this issue
+3. Optional notes
+
+If sources conflict, prefer the higher-priority source.
+
 
 ## General refinement rules
 

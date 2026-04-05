@@ -6,17 +6,6 @@ labels: article
 assignees: copilot
 ---
 
-## Copilot Task
-
-Use this issue to create exactly one new context.yml file.
-
-Priority of truth:
-
-1. Explicit field values in this issue
-2. Optional notes
-
-If sources conflict, prefer the higher-priority source.
-
 ## Required Inputs
 
 ### Date
@@ -29,9 +18,9 @@ PASTE_ARTICLE_URL_HERE
 
 ### Select Language
 
-- [] english
-- [] dutch
-- [] german
+english
+dutch
+german
 
 ### Title
 
@@ -60,6 +49,17 @@ ADD_PRIVATE_URL_HERE
 ADD_NOTES_ABOUT_ARTICLE_HERE
 
 ---
+
+## Copilot Task
+
+Use this issue to create exactly one new context.yml file.
+
+Priority of truth:
+
+1. Explicit field values in this issue
+2. Optional notes
+
+If sources conflict, prefer the higher-priority source.
 
 ## Output Contract
 
