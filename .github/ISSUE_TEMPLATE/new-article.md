@@ -2,8 +2,8 @@
 name: New Article
 about: Submit a new article for context extraction
 title: "[ARTICLE] INSERT_URL_HERE"
-labels: ["article"]
-assignees: ["@copilot"]
+labels: article
+assignees: copilot
 ---
 
 ## Copilot Task
@@ -21,15 +21,13 @@ If sources conflict, prefer the higher-priority source.
 
 ### Date
 
-NOTE: Use format: `YYYY-MM-DD`
-
-[2026-MM-DD]
+2026-MM-DD
 
 ### Public URL
 
 PASTE_ARTICLE_URL_HERE
 
-### Language
+### Select Language
 
 - [] english
 - [] dutch
