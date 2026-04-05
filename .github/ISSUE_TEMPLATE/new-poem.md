@@ -1,7 +1,7 @@
 ---
 name: New Poem
 about: Create poem to HTML document
-title: "[Poem] [INSERT_TITLE_HERE]"
+title: "[Poem] INSERT_TITLE_HERE"
 labels: ["poem"]
 assignees: ["copilot"]
 ---
@@ -24,21 +24,21 @@ If sources conflict, prefer the higher-priority source.
 
 Use format: `YYYY-MM-DD`
 
-[ADD DATE HERE]
+ADD_DATE_HERE
 
 ### Location
 
-[ADD LOCATION HERE]
+ADD_LOCATION_HERE
 
 ### Draft poem text
 
-[ADD POEM TEXT HERE]
+ADD_POEM_TEXT_HERE
 
 ## Optional Inputs
 
 ### Notes
 
-[ADD NOTES ABOUT POEM REFINEMENTS HERE]
+ADD_NOTES_ABOUT_POEM_REFINEMENTS_HERE
 
 ## General refinement rules
 
