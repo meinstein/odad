@@ -1,10 +1,9 @@
-
 ---
 name: New Article
 about: Submit a new article for context extraction
 title: "[ARTICLE] INSERT_URL_HERE"
 labels: ["article"]
-assignees: ["copilot"]
+assignees: ["@copilot"]
 ---
 
 ## Copilot Task

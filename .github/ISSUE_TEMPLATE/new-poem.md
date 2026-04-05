@@ -3,7 +3,7 @@ name: New Poem
 about: Create poem to HTML document
 title: "[Poem] INSERT_TITLE_HERE"
 labels: ["poem"]
-assignees: ["copilot"]
+assignees: ["@copilot"]
 ---
 
 ## Copilot Task
