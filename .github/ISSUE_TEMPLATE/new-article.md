@@ -61,6 +61,19 @@ Priority of truth:
 
 If sources conflict, prefer the higher-priority source.
 
+## LLM Content Scraping and Tagging
+
+Scrape the text content of the article at the provided Public URL. Analyze the main body of the article and generate a list of relevant tags that describe what the article is about. Add these tags to the context.yml output under a new field:
+
+```yml
+tags:
+	- tag1
+	- tag2
+	- ...
+```
+
+Tags should be concise, lowercase, and reflect the main topics, entities, or themes present in the article.
+
 ## Output Contract
 
 Generate one YAML file using this template:
@@ -76,9 +89,13 @@ url: <from Public URL field, or null>
 archive_url: <from Archive URL field, or null>
 private_url: <from Private URL field, or null>
 notes: <from Notes field, or null>
+tags:
+	- tag1
+	- tag2
+	- ...
 ```
 
-If a field is not provided, set it to null.
+If a field is not provided, set it to null. If no tags are generated, set `tags: []`.
 
 Save file as: `<YYYY>/<MM>/<DD>/context/<unix_timestamp_of_issue_created_at>/context.yml`
 
