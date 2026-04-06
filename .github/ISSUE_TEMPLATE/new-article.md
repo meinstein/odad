@@ -1,7 +1,7 @@
 ---
 name: New Article
 about: Submit a new article for context extraction
-title: "[ARTICLE] INSERT_URL_HERE"
+title: "[ARTICLE] INSERT_DATE_HERE"
 labels: article
 assignees: copilot
 ---
@@ -16,29 +16,11 @@ assignees: copilot
 
 PASTE_ARTICLE_URL_HERE
 
-### Select Language
-
-english
-dutch
-german
-
-### Title
-
-ADD_TITLE_HERE
-
-### Website
-
-ADD_WEBSITE_HERE
-
-### Author
-
-ADD_AUTHOR_HERE
-
-## Optional Inputs
-
 ### Archive URL
 
-ADD_ARCHIVE_URL_HERE
+PASTE_ARCHIVE_URL_HERE
+
+## Optional Inputs
 
 ### Private URL
 
@@ -58,19 +40,19 @@ Priority of truth:
 
 1. Explicit field values in this issue
 2. Optional notes
+3. Values inferred from the fetched archive content
 
 If sources conflict, prefer the higher-priority source.
 
-## LLM Content Scraping and Tagging
+## LLM Content Fetching and Field Inference
 
-Scrape the text content of the article at the provided Public URL. Analyze the main body of the article and generate a list of relevant tags that describe what the article is about. Add these tags to the context.yml output under a new field:
+Fetch the article content from the Archive URL. Use the fetched content to infer any fields not explicitly provided in this issue, including:
 
-```yml
-tags:
-	- tag1
-	- tag2
-	- ...
-```
+- **title**: infer from the article's `<title>` tag or main heading
+- **language**: infer from the content's language (use BCP 47 codes, e.g. `en`, `fr`)
+- **date**: infer from the article's published/updated date metadata or byline
+- **website**: infer from the archive URL's origin domain (e.g. `example.com`)
+- **tags**: analyze the main body of the article and generate a list of relevant tags that describe what the article is about
 
 Tags should be concise, lowercase, and reflect the main topics, entities, or themes present in the article.
 
@@ -80,11 +62,11 @@ Generate one YAML file using this template:
 
 ```yml
 type: article
-language: <from Language field, or null>
+language: <from Language field, or inferred from article content>
 author: <from Author field, or null>
-date: <from Date field, or null>
-title: <from Title field, or null>
-website: <from Website field, or null>
+date: <from Date field, or inferred from article content>
+title: <from Title field, or inferred from article content>
+website: <from Website field, or inferred from archive URL>
 url: <from Public URL field, or null>
 archive_url: <from Archive URL field, or null>
 private_url: <from Private URL field, or null>
@@ -95,7 +77,7 @@ tags:
 	- ...
 ```
 
-If a field is not provided, set it to null. If no tags are generated, set `tags: []`.
+Explicit field values in this issue always take precedence over inferred values. If a field cannot be provided or inferred, set it to null. If no tags are generated, set `tags: []`.
 
 Save file as: `<YYYY>/<MM>/<DD>/context/<unix_timestamp_of_issue_created_at>/context.yml`
 
