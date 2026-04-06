@@ -1,16 +1,12 @@
 ---
 name: New Article
 about: Submit a new article for context extraction
-title: "[ARTICLE] INSERT_DATE_HERE"
+title: "[ARTICLE] YYYY-MM-DD"
 labels: article
 assignees: copilot
 ---
 
 ## Required Inputs
-
-### Date
-
-2026-MM-DD
 
 ### Public URL
 
@@ -50,7 +46,7 @@ Fetch the article content from the Archive URL. Use the fetched content to infer
 
 - **title**: infer from the article's `<title>` tag or main heading
 - **language**: infer from the content's language (use BCP 47 codes, e.g. `en`, `fr`)
-- **date**: infer from the article's published/updated date metadata or byline
+- **date**: infer from the article's published/updated date metadata or byline; set to null if not present
 - **website**: infer from the archive URL's origin domain (e.g. `example.com`)
 - **tags**: analyze the main body of the article and generate a list of relevant tags that describe what the article is about
 
@@ -64,7 +60,7 @@ Generate one YAML file using this template:
 type: article
 language: <from Language field, or inferred from article content>
 author: <from Author field, or null>
-date: <from Date field, or inferred from article content>
+date: <from Date field, or inferred from article content, or null>
 title: <from Title field, or inferred from article content>
 website: <from Website field, or inferred from archive URL>
 url: <from Public URL field, or null>
@@ -83,7 +79,7 @@ Save file as: `<YYYY>/<MM>/<DD>/context/<unix_timestamp_of_issue_created_at>/con
 
 Where:
 
-- YYYY/MM/DD is based on the Date field
+- YYYY/MM/DD is based on the date in the issue title
 - unix_timestamp_of_issue_created_at is based on the GitHub issue creation timestamp
 
 Then:
